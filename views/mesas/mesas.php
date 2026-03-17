@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Seleccionar Mesa</title>
+  <title>Seleccionar Mesa chiquita</title>
   <link rel="stylesheet" href="<?php echo ASSETS_URL; ?>css/estilos.css">
   <link rel="stylesheet" href="<?php echo BASE_URL; ?>public/css/mesas.css">
 </head>
