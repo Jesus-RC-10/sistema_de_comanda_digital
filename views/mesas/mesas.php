@@ -8,7 +8,7 @@
 </head>
 <body>
   <header>
-    <h1>Selecciona tu Mesa</h1>
+    <h1>Bienvenido al antro perras elija su mesa</h1>
   </header>
 
   <main>
