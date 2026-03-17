@@ -1,0 +1,12 @@
+# Node dependencies (si llegas a usar npm)
+node_modules/
+
+# Mac / Windows system files
+.DS_Store
+Thumbs.db
+
+# Config IDE / Editores
+.vscode/
+.idea/
+
+# No ignoramos init-db porque necesitamos que los demás tengan tu esquema de la base de datos
