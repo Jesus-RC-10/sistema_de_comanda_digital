@@ -1,9 +1,8 @@
 RewriteEngine On
 
-# Si tu proyecto está en la carpeta ComandaN, necesitas esto:
-RewriteBase /ComandaN/
+RewriteBase /
 
-# Redirigir todas las solicitudes al index.php
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^(.*)$ index.php?url=$1 [QSA,L]
+
+RewriteRule ^(.*)$ ComandaN/index.php?url=$1 [QSA,L]
