@@ -4,8 +4,10 @@
 // Configuración básica
 session_start();
 
-// IMPORTANTE: Configurar la ruta correcta
-define('BASE_URL', 'http://' . $_SERVER['HTTP_HOST'] . '/sistema_de_comanda_digital/ComandaN/');
+// IMPORTANTE: Configurar la ruta correcta dinámicamente
+$protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http';
+$baseDir = rtrim(dirname($_SERVER['SCRIPT_NAME']), '/\\') . '/';
+define('BASE_URL', $protocol . '://' . $_SERVER['HTTP_HOST'] . $baseDir);
 define('ASSETS_URL', BASE_URL . 'assets/');
 
 // Resto del código permanece igual...

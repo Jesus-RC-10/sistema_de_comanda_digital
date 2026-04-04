@@ -1,8 +1,10 @@
 RewriteEngine On
 
-RewriteBase /
+# Redirigir la raíz a ComandaN/ (para que en Docker http://localhost:8081/ lleve a la app)
+RewriteRule ^$ ComandaN/ [R=301,L]
 
+# Si no están accediendo a ComandaN, y el archivo no existe en la raíz, reescribir internamente
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-
-RewriteRule ^(.*)$ ComandaN/index.php?url=$1 [QSA,L]
+RewriteCond %{REQUEST_URI} !^/ComandaN/ [NC]
+RewriteRule ^(.*)$ ComandaN/$1 [L]
