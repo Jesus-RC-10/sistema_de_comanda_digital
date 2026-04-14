@@ -467,3 +467,16 @@ COMMIT;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+
+
+/* cambio en la tabla productos y nueva tablas recetas*/
+ALTER TABLE productos ADD COLUMN imagen VARCHAR(255) DEFAULT NULL;
+
+CREATE TABLE recetas_producto (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    producto_id INT NOT NULL,
+    ingrediente_id INT NOT NULL,
+    cantidad DECIMAL(10,3) NOT NULL,
+    FOREIGN KEY (producto_id) REFERENCES productos(id) ON DELETE CASCADE,
+    FOREIGN KEY (ingrediente_id) REFERENCES ingredientes(id) ON DELETE CASCADE
+);
