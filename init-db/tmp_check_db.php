@@ -1,6 +1,6 @@
 <?php
 try {
-    $db = new PDO('mysql:host=127.0.0.1;dbname=sistema_de_comanda_digital_v1;charset=utf8', 'root', '');
+    $db = new PDO('mysql:host=127.0.0.1;dbname=sistema_comanda_digital_v1;charset=utf8', 'root', '');
     $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
     echo "ULTIMOS PEDIDOS\n";

@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Base de datos: `sistema_de_comanda_digital_v1`
+-- Base de datos: `sistema_comanda_digital_v1`
 --
 
 -- --------------------------------------------------------
