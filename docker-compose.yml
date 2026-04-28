@@ -9,7 +9,7 @@ services:
       - DB_HOST=db
       - DB_USER=root
       - DB_PASS=root
-      - DB_NAME=sistema_comanda_digital_v1
+      - DB_NAME=sistema_de_comanda_digital_v1
     depends_on:
       - db
 
@@ -20,7 +20,7 @@ services:
       - "3307:3306" # Puerto de MySQL en el host (3307 para evitar chocar con XAMPP)
     environment:
       - MYSQL_ROOT_PASSWORD=root
-      - MYSQL_DATABASE=sistema_comanda_digital_v1
+      - MYSQL_DATABASE=sistema_de_comanda_digital_v1
     volumes:
       - db_data:/var/lib/mysql
       - ./init-db:/docker-entrypoint-initdb.d # La primera vez que se levanta, lee aquí y crea tu BD original
