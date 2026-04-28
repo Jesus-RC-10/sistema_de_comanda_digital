@@ -21,11 +21,11 @@ class AuthController {
                 if ($rol == 'admin') {
                     header("Location: index.php?action=admin&seccion=dashboard");
                 } else if ($rol == 'mesero') {
-                    header("Location: " . BASE_URL . "mesero");
+                    header("Location: " . BASE_URL . "index.php?url=mesero");
                 } else if ($rol == 'caja') {
-                    header("Location: " . BASE_URL . "caja");
+                    header("Location: " . BASE_URL . "index.php?url=caja");
                 } else if ($rol == 'cocina') {
-                    header("Location: " . BASE_URL . "cocina");
+                    header("Location: " . BASE_URL . "index.php?url=cocina");
                 } else {
                     // Fallback para roles desconocidos
                     header("Location: index.php?action=admin&seccion=dashboard");

@@ -8,7 +8,7 @@ require_once __DIR__ . '/../layout/header.php';
     <!-- Formulario para agregar mesa -->
     <div class="report-section">
         <h3>➕ Agregar Nueva Mesa</h3>
-        <form method="POST" class="form-grid">
+        <form method="POST" action="<?php echo BASE_URL; ?>index.php?action=admin&seccion=mesas" class="form-grid">
             <input type="hidden" name="accion" value="agregar_mesa">
             <input type="hidden" name="seccion_activa" value="mesas">
             <div class="form-group">
@@ -57,7 +57,7 @@ require_once __DIR__ . '/../layout/header.php';
                             <td><?php echo $row['ubicacion']; ?></td>
                             <td><?php echo $estado_color; ?></td>
                             <td>
-                                <form method="POST" style="display:inline;">
+                                <form method="POST" action="<?php echo BASE_URL; ?>index.php?action=admin&seccion=mesas" style="display:inline;">
                                     <input type="hidden" name="accion" value="eliminar_mesa">
                                     <input type="hidden" name="mesa_id" value="<?php echo $row['id']; ?>">
                                     <input type="hidden" name="seccion_activa" value="mesas">

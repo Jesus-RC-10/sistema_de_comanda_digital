@@ -1,0 +1,257 @@
+version: "2"
+type: backend
+tech_stack:
+  - PHP 8.2
+  - MySQL 8.0
+  - Apache
+  - Docker
+  - HTML5/CSS3/JavaScript
+  - MVC Architecture
+
+routes:
+  - path: /index.php?action=login
+    file: views/auth/login.php
+    auth_required: false
+    description: User login page
+  - path: /index.php?action=admin&seccion=dashboard
+    file: views/admin/dashboard.php
+    auth_required: true
+    description: Admin dashboard
+  - path: /index.php?action=admin&seccion=usuarios
+    file: views/admin/usuarios.php
+    auth_required: true
+    description: User management
+  - path: /index.php?action=admin&seccion=menu
+    file: views/admin/menu.php
+    auth_required: true
+    description: Menu management
+  - path: /index.php?action=admin&seccion=inventario
+    file: views/admin/inventario.php
+    auth_required: true
+    description: Inventory management
+  - path: /index.php?action=admin&seccion=mesas
+    file: views/admin/mesas.php
+    auth_required: true
+    description: Table management
+  - path: /index.php?action=admin&seccion=reportes
+    file: views/admin/reportes.php
+    auth_required: true
+    description: Reports
+  - path: /index.php?url=mesa
+    file: views/menu/menu.php
+    auth_required: false
+    description: Customer menu/ordering page
+  - path: /index.php?url=mesero
+    file: views/mesero/mesero.php
+    auth_required: true
+    description: Waiter panel
+  - path: /index.php?url=cocina
+    file: views/cocina/cocina.php
+    auth_required: true
+    description: Kitchen display
+  - path: /index.php?url=caja
+    file: views/caja/caja.php
+    auth_required: true
+    description: Cashier/payment panel
+
+features:
+  - name: User Login
+    description: Login with username and password credentials, with role-based redirection
+    files:
+      - controllers/AuthController.php
+      - models/User.php
+      - views/auth/login.php
+    entry_route: /index.php?action=login
+    user_interactions:
+      - Enter username in input field
+      - Enter password in input field
+      - Click Login button to submit
+      - See error message on invalid credentials
+      - Get redirected based on role (admin, mesero, cocina, caja)
+    api_calls:
+      - method: POST
+        endpoint: /index.php?action=login
+    auth_required: false
+
+  - name: User Logout
+    description: End user session and redirect to login page
+    files:
+      - controllers/AuthController.php
+    entry_route: /index.php?action=logout
+    user_interactions:
+      - Click logout button
+      - Get redirected to login page
+    auth_required: true
+
+  - name: Admin Dashboard
+    description: View key metrics and navigate to admin sections
+    files:
+      - controllers/AdminController.php
+      - views/admin/dashboard.php
+    entry_route: /index.php?action=admin&seccion=dashboard
+    user_interactions:
+      - View sales metrics
+      - View recent orders
+      - Navigate to different admin sections
+    auth_required: true
+
+  - name: User Management
+    description: CRUD operations for system users
+    files:
+      - controllers/AdminController.php
+      - models/User.php
+      - views/admin/usuarios.php
+    entry_route: /index.php?action=admin&seccion=usuarios
+    user_interactions:
+      - View list of users
+      - Create new user
+      - Edit existing user
+      - Activate/deactivate user
+    api_calls:
+      - method: POST
+        endpoint: /index.php?action=admin&seccion=usuarios
+    auth_required: true
+
+  - name: Menu Management
+    description: CRUD operations for menu items and categories
+    files:
+      - controllers/MenuController.php
+      - models/Producto.php
+      - views/admin/menu.php
+    entry_route: /index.php?action=admin&seccion=menu
+    user_interactions:
+      - View menu items
+      - Add new product
+      - Edit product details
+      - Activate/deactivate product
+    api_calls:
+      - method: POST
+        endpoint: /index.php?action=admin&seccion=menu
+    auth_required: true
+
+  - name: Inventory Management
+    description: Manage ingredients stock and alerts
+    files:
+      - controllers/AdminController.php
+      - models/Inventario.php
+      - views/admin/inventario.php
+    entry_route: /index.php?action=admin&seccion=inventario
+    user_interactions:
+      - View ingredient stock levels
+      - Update ingredient quantities
+      - Set minimum stock thresholds
+      - View low stock alerts
+    api_calls:
+      - method: POST
+        endpoint: /index.php?action=admin&seccion=inventario
+    auth_required: true
+
+  - name: Table Management
+    description: Manage restaurant tables
+    files:
+      - controllers/MesaController.php
+      - models/Mesa.php
+      - views/admin/mesas.php
+    entry_route: /index.php?action=admin&seccion=mesas
+    user_interactions:
+      - View table status
+      - Add new table
+      - Edit table details
+      - Activate/deactivate table
+    api_calls:
+      - method: POST
+        endpoint: /index.php?action=admin&seccion=mesas
+    auth_required: true
+
+  - name: Customer Ordering (Mesa)
+    description: Browse menu and place orders from table
+    files:
+      - controllers/OrderController.php
+      - views/menu/menu.php
+    entry_route: /index.php?url=mesa
+    user_interactions:
+      - Browse menu by category
+      - Select products
+      - Add items to cart
+      - Review cart
+      - Confirm order
+      - View digital ticket
+    api_calls:
+      - method: POST
+        endpoint: /index.php?url=pedido
+    auth_required: false
+
+  - name: Waiter Panel
+    description: View and manage orders for waiters
+    files:
+      - controllers/MeseroController.php
+      - views/mesero/mesero.php
+    entry_route: /index.php?url=mesero
+    user_interactions:
+      - View active orders
+      - Check order status
+      - Assist tables
+    auth_required: true
+
+  - name: Kitchen Display
+    description: View and update order preparation status
+    files:
+      - controllers/CocinaController.php
+      - views/cocina/cocina.php
+    entry_route: /index.php?url=cocina
+    user_interactions:
+      - View incoming orders in real-time
+      - Update order status (pending, preparing, ready)
+      - Filter by dish type
+    api_calls:
+      - method: POST
+        endpoint: /index.php?url=cocina/actualizar
+    auth_required: true
+
+  - name: Cashier Panel
+    description: Process payments and manage sales
+    files:
+      - controllers/CajaController.php
+      - models/Venta.php
+      - views/caja/caja.php
+    entry_route: /index.php?url=caja
+    user_interactions:
+      - View pending payments
+      - View paid sales history
+      - Process payment
+      - Calculate change
+      - Cancel pending order
+    api_calls:
+      - method: POST
+        endpoint: /index.php?url=caja/pagar
+    auth_required: true
+
+  - name: Reports
+    description: Generate and view sales reports
+    files:
+      - controllers/ReportController.php
+      - views/admin/reportes.php
+      - generar_pdf.php
+    entry_route: /index.php?action=admin&seccion=reportes
+    user_interactions:
+      - Select report type (daily, weekly, monthly)
+      - View sales summary
+      - Generate PDF report
+    auth_required: true
+
+known_limitations:
+  - issue: CSRF protection not fully implemented on all forms
+    location: Multiple view files
+    impact: Potential security vulnerability for form submissions
+  - issue: Product customization (add/remove ingredients) only partially implemented
+    location: views/menu/menu.php
+    impact: Customers cannot fully customize dishes as specified
+  - issue: Help button for calling waiter not fully implemented
+    location: views/menu/menu.php
+    impact: Customers cannot request assistance from tablet
+  - issue: Inventory auto-deduction on order confirmation pending
+    location: models/Pedido.php
+    impact: Stock levels may not reflect actual consumption
+  - issue: Real-time notifications require page refresh
+    location: Multiple files
+    impact: Not truly real-time, uses polling instead of websockets

@@ -16,6 +16,9 @@ const downloadTicketBtn = document.getElementById('downloadTicket');
 const continueOrderingBtn = document.getElementById('continueOrdering');
 const closeTicketBtn = document.getElementById('closeTicket');
 
+// Variable para almacenar el ID del pedido actual
+let currentPedidoId = null;
+
 // Event Listeners para botones "Agregar"
 document.querySelectorAll('.add-to-cart').forEach(btn => {
     btn.addEventListener('click', () => {
@@ -23,7 +26,6 @@ document.querySelectorAll('.add-to-cart').forEach(btn => {
         const nombre = btn.dataset.nombre;
         const precio = parseFloat(btn.dataset.precio);
 
-        // Buscar si ya existe en carrito
         const existingItem = cart.find(item => item.id === id);
         
         if (existingItem) {
@@ -80,15 +82,18 @@ function enviarPedido() {
         method: 'POST',
         body: new FormData(pedidoForm)
     })
-    .then(response => {
-        // No intentamos parsear como JSON, solo verificamos si la respuesta fue exitosa
-        if (response.ok) {
+    .then(response => response.json().then(data => ({status: response.status, body: data})))
+    .then(result => {
+        if (result.status >= 200 && result.status < 300 && result.body.success) {
             console.log('Pedido enviado exitosamente a mesero y cocina');
-            // Mostrar modal de confirmación después de enviar el pedido
-            showOrderConfirmation();
+            currentPedidoId = result.body.pedido_id;
+            showOrderConfirmation(result.body.ticket, result.body.total);
+
+           
         } else {
-            console.error('Error al enviar pedido');
-            showNotification('Error al enviar el pedido');
+            const msg = result.body.message || 'Error al enviar el pedido';
+            console.error(msg);
+            showNotification(msg);
         }
     })
     .catch(error => {
@@ -100,89 +105,55 @@ function enviarPedido() {
 }
 
 // Mostrar confirmación de pedido
-function showOrderConfirmation() {
+function showOrderConfirmation(ticketText = null, total = null) {
     // Cerrar modal del carrito
     cartModal.style.display = 'none';
     
-    // Generar detalles del pedido
+    // Generar detalles del pedido (puede usar el ticket del servidor si está disponible)
     const now = new Date();
-    const fecha = now.toLocaleDateString();
-    const hora = now.toLocaleTimeString();
-    
-    let orderHTML = `
-        <div class="ticket-header">
-        <h3>TAQUERÍA EL INFORMÁTICO</h3>
-        <div class="separator">---</div>
-        <p>Mesa: ${document.querySelector('h1').textContent.match(/Mesa (\d+)/)[1]}</p>
-        <p>Fecha: ${fecha}    Hora: ${hora}</p>
-        <div class="separator">---</div>
-        <div class="order-items">
-    `;
-    
-    let total = 0;
-    cart.forEach(item => {
-        const itemTotal = item.precio * item.cantidad;
-        total += itemTotal;
-        orderHTML += `
-            <div class="order-item">
-            ${item.nombre}    x${item.cantidad} $${itemTotal.toFixed(2)}
-            </div>
-        `;
-    });
-    
-    orderHTML += `
-        </div>
-        <div class="separator">---</div>
-        <div class="order-total">
-            TOTAL: $${total.toFixed(2)}
-        </div>
-        <div class="separator">---</div>
-        <p class="thank-you">¡Gracias por tu pedido!</p>
-        </div>
-    `;
+    const fecha = now.toLocaleDateString('es-ES');
+    const hora = now.toLocaleTimeString('es-ES', {hour: '2-digit', minute:'2-digit'});
+
+    let orderHTML = '<div class="ticket-container">';
+    orderHTML += '<div class="ticket-header">';
+    orderHTML += '<h2>🍽️ TAQUERÍA EL INFORMÁTICO</h2>';
+    orderHTML += '<div class="ticket-line"></div>';
+    orderHTML += '<p class="ticket-info"><strong>Mesa:</strong> ' + document.querySelector('h1').textContent.match(/Mesa (\d+)/)[1] + '</p>';
+    orderHTML += '<p class="ticket-info"><strong>Fecha:</strong> ' + fecha + ' | <strong>Hora:</strong> ' + hora + '</p>';
+    orderHTML += '<div class="ticket-line"></div>';
+    orderHTML += '</div>';
+
+    if (ticketText) {
+        orderHTML += '<div class="ticket-body"><pre class="ticket-text">' + ticketText + '</pre></div>';
+    } else {
+        orderHTML += '<div class="ticket-body">';
+        orderHTML += '<div class="ticket-items">';
+        let totalCalc = 0;
+        cart.forEach(item => {
+            const itemTotal = item.precio * item.cantidad;
+            totalCalc += itemTotal;
+            orderHTML += '<div class="ticket-item">';
+            orderHTML += '<span class="item-name">' + item.nombre + '</span>';
+            orderHTML += '<span class="item-qty">x' + item.cantidad + '</span>';
+            orderHTML += '<span class="item-price">$' + itemTotal.toFixed(2) + '</span>';
+            orderHTML += '</div>';
+        });
+        orderHTML += '</div>';
+        orderHTML += '<div class="ticket-line"></div>';
+        orderHTML += '<div class="ticket-total"><strong>TOTAL: $' + (total || totalCalc).toFixed(2) + '</strong></div>';
+        orderHTML += '</div>';
+    }
+
+    orderHTML += '<div class="ticket-footer">';
+    orderHTML += '<div class="ticket-line"></div>';
+    orderHTML += '<p class="ticket-thanks">¡Gracias por tu pedido!</p>';
+    orderHTML += '<p class="ticket-note">Recoge tu pedido en caja cuando esté listo.</p>';
+    orderHTML += '</div>';
+    orderHTML += '</div>';
     
     orderDetails.innerHTML = orderHTML;
     orderModal.style.display = 'flex';
 }
-
-// Descargar ticket
-downloadTicketBtn.addEventListener('click', () => {
-    // Aquí iría la lógica para descargar el ticket
-    // Por ahora solo mostramos un mensaje
-    showNotification('Funcionalidad de descargar ticket en desarrollo');
-});
-
-// Seguir pidiendo
-continueOrderingBtn.addEventListener('click', () => {
-    orderModal.style.display = 'none';
-    // Limpiar carrito después de finalizar pedido
-    cart.length = 0;
-    renderCart();
-    // Redirigir al menú principal (sin mesa específica)
-    window.location.href = MENU_URL;
-});
-
-// Cerrar ticket
-closeTicketBtn.addEventListener('click', () => {
-    orderModal.style.display = 'none';
-    // Limpiar carrito después de finalizar pedido
-    cart.length = 0;
-    renderCart();
-    // Redirigir al menú principal (sin mesa específica)
-    window.location.href = MENU_URL;
-});
-
-// Cerrar modal de pedido
-closeOrderModal.addEventListener('click', () => {
-    orderModal.style.display = 'none';
-});
-
-// Cerrar modal al hacer clic fuera
-orderModal.addEventListener('click', (e) => {
-    if (e.target === orderModal) {
-        orderModal.style.display = 'none';
-    }
-});
 
 // Función para renderizar el carrito
 function renderCart() {
@@ -308,4 +279,83 @@ function showNotification(message) {
 // Inicializar carrito
 document.addEventListener('DOMContentLoaded', function() {
     renderCart();
+    
+    // Event listeners para el modal de pedido
+    // Descargar ticket
+    downloadTicketBtn.addEventListener('click', () => {
+        // Aquí iría la lógica para descargar el ticket
+        // Por ahora solo mostramos un mensaje
+        showNotification('Funcionalidad de descargar ticket en desarrollo');
+    });
+
+    // Seguir pidiendo
+    continueOrderingBtn.addEventListener('click', () => {
+        orderModal.style.display = 'none';
+        // Limpiar carrito después de finalizar pedido
+        cart.length = 0;
+        renderCart();
+        showNotification('Pedido registrado. Puedes seguir pidiendo.');
+    });
+
+    // Cerrar ticket
+    closeTicketBtn.addEventListener('click', () => {
+        orderModal.style.display = 'none';
+        // Limpiar carrito después de finalizar pedido
+        cart.length = 0;
+        renderCart();
+        showNotification('Pedido registrado. Accede a caja manualmente cuando lo desees.');
+    });
+
+    // Cerrar modal de pedido
+    closeOrderModal.addEventListener('click', () => {
+        orderModal.style.display = 'none';
+    });
+
+    // Cerrar modal al hacer clic fuera
+    orderModal.addEventListener('click', (e) => {
+        if (e.target === orderModal) {
+            orderModal.style.display = 'none';
+        }
+    });
 });
+
+// Función para enviar ticket por email
+function enviarTicketPorEmail(email) {
+    if (!currentPedidoId) {
+        showNotification('Error: No se encontró el ID del pedido');
+        return;
+    }
+
+    // Mostrar indicador de carga
+    confirmSendEmail.disabled = true;
+    confirmSendEmail.textContent = 'Enviando...';
+
+    fetch(BASE_URL + 'index.php?url=menu/enviarEmail', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            pedido_id: currentPedidoId,
+            email: email
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            showNotification('Ticket enviado exitosamente a ' + email);
+            emailModal.style.display = 'none';
+            customerEmail.value = '';
+        } else {
+            showNotification('Error al enviar el email: ' + (data.message || 'Error desconocido'));
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showNotification('Error de conexión al enviar el email');
+    })
+    .finally(() => {
+        confirmSendEmail.disabled = false;
+        confirmSendEmail.textContent = 'Enviar Ticket';
+    });
+}

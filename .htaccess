@@ -1,6 +1,9 @@
 RewriteEngine On
 
-# Si el archivo o directorio no existe en la raíz, reescribir a index.php para el enrutamiento MVC
+# Configurar la base para el proyecto dinámicamente o removerla
+# (No se requiere RewriteBase cuando está en el mismo directorio)
+
+# Redirigir todas las solicitudes al index.php
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^(.*)$ index.php?url=$1 [QSA,L]

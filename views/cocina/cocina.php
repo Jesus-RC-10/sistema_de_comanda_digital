@@ -3,18 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <title>Área de Cocina</title>
-  <link rel="stylesheet" href="<?php echo ASSETS_URL; ?>css/estilos.css">
+  <link rel="stylesheet" href="<?php echo ASSETS_URL; ?>css/estilos.css?v=3">
 </head>
 <body>
   <header>
-    <div class="header-main">
-        <h1>Cocina (Tacos y Postres)</h1>
-        <div class="user-info">
-            <span>Usuario: <strong><?php echo $_SESSION['usuario_nombre'] ?? 'Invitado'; ?></strong></span>
-            <span>(<?php echo $_SESSION['usuario_rol'] ?? 'Sin Rol'; ?>)</span>
-            <a href="<?php echo BASE_URL; ?>index.php?action=logout" class="logout-link">Cerrar Sesión</a>
-        </div>
-    </div>
+    <h1>Pedidos en Cocina - Tacos y Postres</h1>
   </header>
   <main id="pedidosContainer">
     <?php if (empty($data['pedidos'])): ?>
@@ -53,8 +46,8 @@
 
   <!-- DEFINIR LAS VARIABLES JS PRIMERO -->
   <script>
-    // Usa la variable BASE_URL de PHP
-    const BASE_URL = '<?php echo BASE_URL; ?>';
+    // Define la URL base directamente
+    const BASE_URL = 'http://localhost/comanda1/';
     const COCINA_URL = BASE_URL + 'cocina/obtenerPedidosActualizados'; 
     const ESTADO_URL = BASE_URL + 'cocina/actualizarDetalle';
   </script>

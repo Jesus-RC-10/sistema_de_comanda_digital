@@ -1,51 +1,369 @@
-body {
-  font-family: Arial, sans-serif;
-  background: #f4f4f4;
-  margin: 0;
-  padding: 0;
-}
-
+/* Mejoras para el header de caja */
 header {
-  background: #8B0000;
+  background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
   color: white;
-  padding: 15px;
+  padding: 1.5rem 1rem;
   text-align: center;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
 }
 
-.pedido {
-  background: #fff;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  padding: 15px;
-  margin: 20px;
+header h1 {
+  font-size: 2rem;
+  margin: 0;
+  font-weight: bold;
+  text-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
+  position: relative;
+  z-index: 1;
 }
 
-.pedido h3 {
-  margin: 0 0 10px 0;
-  color: #8B0000;
+header h1::before {
+  content: '💰';
+  margin-right: 0.5rem;
 }
 
-.pago-form {
-  margin-top: 10px;
+/* Mejoras para el main */
+main {
+  max-width: 1100px;
+  margin: 1.5rem auto;
+  padding: 0 1rem;
 }
 
-button,
-.add-to-cart,
-.checkout-btn,
-.cart-btn {
-  background: var(--primary-color);
-  color: white;
-  border: none;
-  padding: 10px 15px;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: all 0.3s ease;
+section {
+  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+  border-radius: 20px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  border: 2px solid transparent;
+  background-clip: padding-box;
+  position: relative;
+  overflow: hidden;
 }
 
-button:hover,
-.add-to-cart:hover,
-.checkout-btn:hover,
-.cart-btn:hover {
-  background: var(--secondary-color);
-  transform: scale(1.05);
+section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 6px;
+  background: linear-gradient(90deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+}
+
+section h2 {
+  color: var(--primary-color);
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+  font-weight: bold;
+  text-align: center;
+  position: relative;
+}
+
+section h2::before {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 3px;
+  background: linear-gradient(90deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+  border-radius: 2px;
+}
+
+/* Mensaje cuando no hay ventas */
+section p {
+  text-align: center;
+  font-size: 1rem;
+  color: #666;
+  padding: 2rem 1rem;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border-radius: 15px;
+  border: 2px dashed #dee2e6;
+  margin: 2rem 0;
+}
+
+section p::before {
+  content: '📭';
+  font-size: 2rem;
+  display: block;
+  margin-bottom: 1rem;
+}
+
+/* Acciones generales */
+.acciones-generales {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+/* Footer */
+footer {
+  text-align: center;
+  padding: 1rem;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border-top: 3px solid var(--border-color);
+  margin-top: 3rem;
+  border-radius: 15px 15px 0 0;
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+
+footer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+}
+
+footer p {
+  color: #666;
+  margin: 0;
+  font-size: 0.9rem;
+  position: relative;
+  z-index: 1;
+}
+
+#refresh-indicator {
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+  color: #888;
+  transition: color 0.3s ease;
+  position: relative;
+  z-index: 1;
+}
+
+#refresh-indicator.updating {
+  color: #dc3545;
+  font-weight: bold;
+}
+
+.ventas-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1rem;
+}
+
+.venta-card {
+    border: none;
+    border-radius: 15px;
+    padding: 1.5rem;
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.venta-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 5px;
+    background: linear-gradient(90deg, #8B0000, #DC143C);
+}
+
+.venta-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.2);
+}
+
+.venta-card.pendiente {
+    border-left: 5px solid #ffc107;
+    background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+}
+
+.venta-card.pendiente::before {
+    background: linear-gradient(90deg, #ffc107, #ff8c00);
+}
+
+.venta-card.pagada {
+    border-left: 5px solid #28a745;
+    background: linear-gradient(135deg, #d4edda 0%, #a8d5ba 100%);
+}
+
+.venta-card.pagada::before {
+    background: linear-gradient(90deg, #28a745, #20c997);
+}
+
+.venta-card h3 {
+    margin: 0 0 0.5rem 0;
+    color: #8B0000;
+    font-size: 1.2rem;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+}
+
+.venta-card.pagada h3::after {
+    content: ' ✓';
+    color: #28a745;
+    margin-left: 0.5rem;
+}
+
+.venta-card p {
+    margin: 0.3rem 0;
+    color: #555;
+}
+
+.venta-card form {
+    margin-top: 1rem;
+}
+
+.venta-card input, .venta-card select {
+    width: 100%;
+    padding: 0.75rem;
+    margin-bottom: 0.75rem;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+}
+
+.venta-card input:focus, .venta-card select:focus {
+    outline: none;
+    border-color: #8B0000;
+    box-shadow: 0 0 0 3px rgba(139, 0, 0, 0.1);
+}
+
+/* Modificado por Oswaldo Ramírez: Estilos para mostrar detalles del pedido */
+.pedido-detalles {
+    margin-top: 1rem;
+    padding: 1rem;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-radius: 8px;
+    border: 1px solid #dee2e6;
+}
+
+.pedido-detalles h4 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1rem;
+    color: #495057;
+    font-weight: bold;
+}
+
+.pedido-detalles ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.pedido-detalles li {
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #e9ecef;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.pedido-detalles li:last-child {
+    border-bottom: none;
+}
+
+.venta-card button {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-right: 0.5rem;
+    font-weight: bold;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.venta-card button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s;
+}
+
+.venta-card button:hover::before {
+    left: 100%;
+}
+
+.venta-card button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.venta-card button[type="submit"] {
+    background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+    color: white;
+}
+
+.venta-card button[type="submit"]:hover {
+    background: linear-gradient(135deg, #218838 0%, #1aa085 100%);
+}
+
+.btn-cancelar {
+    background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+    color: white;
+}
+
+.btn-cancelar:hover {
+    background: linear-gradient(135deg, #bd2130 0%, #a02622 100%);
+}
+
+.btn-borrar-todos {
+    background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%);
+    color: white;
+    padding: 0.75rem 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.btn-borrar-todos:hover {
+    background: linear-gradient(135deg, #545b62 0%, #495057 100%);
+}
+
+.acciones-generales {
+    margin-bottom: 1rem;
+}
+    font-size: 1rem;
+}
+
+.acciones-generales {
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.venta-card button {
+    width: 100%;
+    background-color: #DC143C;
+    color: white;
+    border: none;
+    padding: 0.5rem;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.venta-card button:hover {
+    background-color: #b01030;
+}
+    border-radius: 6px;
+    cursor: pointer;
+    margin-top: 1rem;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+button:hover {
+    opacity: 0.9;
+}
+
+.confirmacion-section {
+    text-align: center;
 }

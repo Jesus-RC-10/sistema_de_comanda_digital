@@ -6,7 +6,7 @@ class OrderModel {
     public function __construct() {
         // Configuración de la conexión PDO
         $host = "localhost";
-        $dbname = "sistema_comanda_digital_v1"; // Cambia esto
+        $dbname = "sistema_de_comanda_digital_v1"; // Cambia esto
         $user = "root";                // Usuario de XAMPP
         $pass = "";                    // Contraseña (vacía por defecto en XAMPP)
         $charset = "utf8mb4";
@@ -24,23 +24,31 @@ class OrderModel {
     }
 
     // Guardar pedido y detalles
-    public function saveOrder($mesa, $items, $usuario_id = 1) {
+    public function saveOrder($mesa, $items) {
         try {
             $this->pdo->beginTransaction();
-            
-            // Insertar pedido con usuario_id
-            $stmt = $this->pdo->prepare("INSERT INTO pedidos (mesa_id, usuario_id, fecha, estado) VALUES (?, ?, NOW(), 'pendiente')");
-            $stmt->execute([$mesa, $usuario_id]);
+
+            // Calcular total
+            $total = 0;
+            foreach ($items as $item) {
+                $total += $item['precio_unitario'] * $item['cantidad'];
+            }
+
+            // Insertar pedido
+            $stmt = $this->pdo->prepare("INSERT INTO pedidos (mesa_id, usuario_id, estado, total) VALUES (?, 1, 'pendiente', ?)");
+            $stmt->execute([$mesa, $total]);
             $pedidoId = $this->pdo->lastInsertId();
 
             // Insertar detalles
-            $stmtDetalle = $this->pdo->prepare("INSERT INTO pedido_detalles (pedido_id, producto, cantidad, precio_unitario) VALUES (?, ?, ?, ?)");
+            $stmtDetalle = $this->pdo->prepare("INSERT INTO pedido_detalles (pedido_id, producto_id, cantidad, precio_unitario, subtotal) VALUES (?, ?, ?, ?, ?)");
             foreach ($items as $item) {
+                $subtotal = $item['precio_unitario'] * $item['cantidad'];
                 $stmtDetalle->execute([
                     $pedidoId,
-                    $item['nombre'],
+                    $item['producto_id'],
                     $item['cantidad'],
-                    $item['precio']
+                    $item['precio_unitario'],
+                    $subtotal
                 ]);
             }
 
@@ -52,16 +60,12 @@ class OrderModel {
         }
     }
 
-    // Obtener pedidos pendientes
-    public function getPendingOrders() {
-        $stmt = $this->pdo->query("
-            SELECT pd.id AS pedido_id, p.mesa_id, pd.producto, pd.cantidad
-            FROM pedido_detalles pd
-            JOIN pedidos p ON pd.pedido_id = p.id
-            WHERE p.estado = 'pendiente'
-            ORDER BY p.id ASC
-        ");
-        return $stmt->fetchAll();
+    // Obtener total de un pedido por ID
+    public function getOrderTotal($pedidoId) {
+        $stmt = $this->pdo->prepare("SELECT total FROM pedidos WHERE id = ?");
+        $stmt->execute([$pedidoId]);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result ? $result['total'] : 0;
     }
 
     // Marcar pedido como completado

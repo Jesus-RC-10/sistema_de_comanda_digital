@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 17-03-2026 a las 07:03:32
+-- Tiempo de generación: 24-04-2026 a las 03:17:19
 -- Versión del servidor: 10.4.32-MariaDB
--- Versión de PHP: 8.2.12
+-- Versión de PHP: 8.0.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Base de datos: `sistema_comanda_digital_v1`
+-- Base de datos: `sistema_de_comanda_digital_v1`
 --
 
 -- --------------------------------------------------------
@@ -176,7 +176,11 @@ INSERT INTO `pedidos` (`id`, `mesa_id`, `usuario_id`, `estado`, `total`, `notas`
 (3, 1, 2, 'pendiente', 105.00, NULL, '2026-03-10 16:23:54', '2026-03-10 16:23:54'),
 (4, 1, 2, 'pendiente', 25.00, NULL, '2026-03-10 16:25:17', '2026-03-10 16:25:17'),
 (5, 3, 2, 'pendiente', 35.00, NULL, '2026-03-12 14:59:10', '2026-03-12 14:59:10'),
-(6, 1, 2, 'pendiente', 70.00, NULL, '2026-03-12 15:33:40', '2026-03-12 15:33:40');
+(6, 1, 2, 'pendiente', 70.00, NULL, '2026-03-12 15:33:40', '2026-03-12 15:33:40'),
+(7, 3, 2, 'pendiente', 86.00, NULL, '2026-04-23 22:28:11', '2026-04-23 22:28:11'),
+(9, 1, 1, 'pendiente', 42.00, NULL, '2026-04-23 22:35:25', '2026-04-23 22:35:25'),
+(10, 1, 1, 'pendiente', 42.00, NULL, '2026-04-23 22:35:42', '2026-04-23 22:35:42'),
+(11, 3, 2, 'pendiente', 70.00, NULL, '2026-04-23 22:37:08', '2026-04-23 22:37:08');
 
 -- --------------------------------------------------------
 
@@ -209,7 +213,15 @@ INSERT INTO `pedido_detalles` (`id`, `pedido_id`, `producto_id`, `cantidad`, `pr
 (7, 3, 10, 2, 35.00, 70.00, NULL, 'pendiente'),
 (8, 4, 8, 1, 25.00, 25.00, NULL, 'pendiente'),
 (9, 5, 9, 1, 35.00, 35.00, NULL, 'pendiente'),
-(10, 6, 9, 2, 35.00, 70.00, NULL, 'pendiente');
+(10, 6, 9, 2, 35.00, 70.00, NULL, 'pendiente'),
+(11, 7, 4, 2, 8.00, 16.00, NULL, 'pendiente'),
+(12, 7, 10, 2, 35.00, 70.00, NULL, 'pendiente'),
+(13, 9, 1, 2, 15.00, 30.00, NULL, 'pendiente'),
+(14, 9, 4, 1, 12.00, 12.00, NULL, 'pendiente'),
+(15, 10, 1, 2, 15.00, 30.00, NULL, 'pendiente'),
+(16, 10, 4, 1, 12.00, 12.00, NULL, 'pendiente'),
+(17, 11, 9, 1, 35.00, 35.00, NULL, 'pendiente'),
+(18, 11, 10, 1, 35.00, 35.00, NULL, 'pendiente');
 
 -- --------------------------------------------------------
 
@@ -226,24 +238,48 @@ CREATE TABLE `productos` (
   `imagen_url` varchar(500) DEFAULT NULL,
   `stock` int(11) DEFAULT 0,
   `activo` tinyint(1) DEFAULT 1,
-  `tiempo_preparacion` int(11) DEFAULT 15
+  `tiempo_preparacion` int(11) DEFAULT 15,
+  `imagen` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `productos`
 --
 
-INSERT INTO `productos` (`id`, `nombre`, `descripcion`, `precio`, `categoria_id`, `imagen_url`, `stock`, `activo`, `tiempo_preparacion`) VALUES
-(1, 'Taco campechano', 'taco campechano sin verduras ni queso', 25.00, 1, NULL, 20, 0, 15),
-(2, 'Taco de costilla', 'taco de costilla sin verduras', 35.00, 1, NULL, 15, 0, 15),
-(3, 'Taco de suadero con queso', 'Taco de suadero con queso sin verduras', 28.00, 1, NULL, 12, 0, 15),
-(4, 'Inca Kola', 'Refresco peruano 500ml', 8.00, 3, NULL, 50, 1, 15),
-(5, 'Chicha Morada', 'Bebida tradicional de maíz morado', 7.00, 3, NULL, 30, 0, 15),
-(6, 'Mazamorra Morada', 'Postre tradicional peruano', 12.00, 4, NULL, 10, 0, 15),
-(7, 'Arroz con Leche', 'Postre de arroz con canela', 10.00, 4, NULL, 8, 0, 15),
-(8, 'Taco al pastor', 'taco al pastor sencillo sin verdura ni queso', 25.00, 1, NULL, 50, 1, 15),
-(9, 'Taco al pastor con queso', 'taco al pastor con queso sin verduras', 35.00, 1, NULL, 50, 1, 15),
-(10, 'Taco de suadero', 'Taco de suadero sin queso ni verduras', 35.00, 1, NULL, 50, 1, 15);
+INSERT INTO `productos` (`id`, `nombre`, `descripcion`, `precio`, `categoria_id`, `imagen_url`, `stock`, `activo`, `tiempo_preparacion`, `imagen`) VALUES
+(1, 'Taco campechano', 'taco campechano sin verduras ni queso', 25.00, 1, NULL, 20, 0, 15, NULL),
+(2, 'Taco de costilla', 'taco de costilla sin verduras', 35.00, 1, NULL, 15, 0, 15, NULL),
+(3, 'Taco de suadero con queso', 'Taco de suadero con queso sin verduras', 28.00, 1, NULL, 12, 0, 15, NULL),
+(4, 'Inca Kola', 'Refresco peruano 500ml', 8.00, 3, NULL, 50, 1, 15, NULL),
+(5, 'Chicha Morada', 'Bebida tradicional de maíz morado', 7.00, 3, NULL, 30, 0, 15, NULL),
+(6, 'Mazamorra Morada', 'Postre tradicional peruano', 12.00, 4, NULL, 10, 0, 15, NULL),
+(7, 'Arroz con Leche', 'Postre de arroz con canela', 10.00, 4, NULL, 8, 0, 15, NULL),
+(8, 'Taco al pastor', 'taco al pastor sencillo sin verdura ni queso', 25.00, 1, NULL, 50, 1, 15, NULL),
+(9, 'Taco al pastor con queso', 'taco al pastor con queso sin verduras', 35.00, 1, NULL, 50, 1, 15, NULL),
+(10, 'Taco de suadero', 'Taco de suadero sin queso ni verduras', 35.00, 1, NULL, 50, 0, 15, NULL),
+(11, 'taco de perro', 'orden de taco de perro', 40.00, 1, NULL, 4, 1, 15, '1776984695_taco.jpg'),
+(12, 'Taco Uriel', 'Taquito Uva', 15.00, 1, NULL, 20, 1, 15, '1776992752_tacouri.jpeg');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `recetas_producto`
+--
+
+CREATE TABLE `recetas_producto` (
+  `id` int(11) NOT NULL,
+  `producto_id` int(11) NOT NULL,
+  `ingrediente_id` int(11) NOT NULL,
+  `cantidad` decimal(10,3) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `recetas_producto`
+--
+
+INSERT INTO `recetas_producto` (`id`, `producto_id`, `ingrediente_id`, `cantidad`) VALUES
+(1, 11, 5, 0.130),
+(2, 12, 6, 1.000);
 
 -- --------------------------------------------------------
 
@@ -269,7 +305,8 @@ CREATE TABLE `usuarios` (
 INSERT INTO `usuarios` (`id`, `usuario`, `password_hash`, `nombre`, `rol`, `activo`, `fecha_creacion`, `ultimo_login`) VALUES
 (1, 'admin', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Administrador Principal', 'admin', 1, '2025-09-30 01:24:45', '2025-11-23 18:49:00'),
 (2, 'mesero1', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Juan Pérez', 'mesero', 1, '2025-09-30 01:24:45', NULL),
-(3, 'cocina1', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'María García', 'cocina', 1, '2025-09-30 01:24:45', NULL);
+(3, 'cocina1', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'María García', 'cocina', 1, '2025-09-30 01:24:45', NULL),
+(4, 'caja', '$2y$10$d/5wQy2tJcgRxKBv7LEYq.8lt8QwMpGwZ533JM6VEY91Mjbx.AVMa', 'Uriel', 'caja', 1, '2026-04-23 22:25:05', NULL);
 
 -- --------------------------------------------------------
 
@@ -287,6 +324,15 @@ CREATE TABLE `ventas` (
   `fecha_creacion` timestamp NOT NULL DEFAULT current_timestamp(),
   `usuario_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `ventas`
+--
+
+INSERT INTO `ventas` (`id`, `pedido_id`, `total`, `metodo_pago`, `estado`, `fecha_pago`, `fecha_creacion`, `usuario_id`) VALUES
+(1, 7, 86.00, '', 'pendiente', NULL, '2026-04-23 22:28:11', NULL),
+(2, 10, 42.00, '', 'pendiente', NULL, '2026-04-23 22:35:43', NULL),
+(3, 11, 70.00, '', 'pendiente', NULL, '2026-04-23 22:37:08', NULL);
 
 --
 -- Índices para tablas volcadas
@@ -348,6 +394,14 @@ ALTER TABLE `productos`
   ADD KEY `categoria_id` (`categoria_id`);
 
 --
+-- Indices de la tabla `recetas_producto`
+--
+ALTER TABLE `recetas_producto`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `producto_id` (`producto_id`),
+  ADD KEY `ingrediente_id` (`ingrediente_id`);
+
+--
 -- Indices de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
@@ -394,37 +448,43 @@ ALTER TABLE `inventario`
 -- AUTO_INCREMENT de la tabla `mesas`
 --
 ALTER TABLE `mesas`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT de la tabla `pedidos`
 --
 ALTER TABLE `pedidos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT de la tabla `pedido_detalles`
 --
 ALTER TABLE `pedido_detalles`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT de la tabla `productos`
 --
 ALTER TABLE `productos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+
+--
+-- AUTO_INCREMENT de la tabla `recetas_producto`
+--
+ALTER TABLE `recetas_producto`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT de la tabla `ventas`
 --
 ALTER TABLE `ventas`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- Restricciones para tablas volcadas
@@ -457,6 +517,13 @@ ALTER TABLE `productos`
   ADD CONSTRAINT `productos_ibfk_1` FOREIGN KEY (`categoria_id`) REFERENCES `categorias_menu` (`id`);
 
 --
+-- Filtros para la tabla `recetas_producto`
+--
+ALTER TABLE `recetas_producto`
+  ADD CONSTRAINT `recetas_producto_ibfk_1` FOREIGN KEY (`producto_id`) REFERENCES `productos` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `recetas_producto_ibfk_2` FOREIGN KEY (`ingrediente_id`) REFERENCES `ingredientes` (`id`) ON DELETE CASCADE;
+
+--
 -- Filtros para la tabla `ventas`
 --
 ALTER TABLE `ventas`
@@ -467,16 +534,3 @@ COMMIT;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-
-
-/* cambio en la tabla productos y nueva tablas recetas*/
-ALTER TABLE productos ADD COLUMN imagen VARCHAR(255) DEFAULT NULL;
-
-CREATE TABLE recetas_producto (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    producto_id INT NOT NULL,
-    ingrediente_id INT NOT NULL,
-    cantidad DECIMAL(10,3) NOT NULL,
-    FOREIGN KEY (producto_id) REFERENCES productos(id) ON DELETE CASCADE,
-    FOREIGN KEY (ingrediente_id) REFERENCES ingredientes(id) ON DELETE CASCADE
-);

@@ -3,23 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <title>Área de Meseros</title>
-  <link rel="stylesheet" href="<?php echo ASSETS_URL; ?>css/estilos.css">
+  <link rel="stylesheet" href="<?php echo ASSETS_URL; ?>css/estilos.css?v=3">
   <link rel="stylesheet" href="<?php echo ASSETS_URL; ?>css/mesero-ayuda.css">
 </head>
 <body>
   <header>
-    <div class="header-main">
-        <h1>Pedidos Activos</h1>
-        <div class="user-info">
-            <span>Usuario: <strong><?php echo $_SESSION['usuario_nombre'] ?? 'Invitado'; ?></strong></span>
-            <span>(<?php echo $_SESSION['usuario_rol'] ?? 'Sin Rol'; ?>)</span>
-            <a href="<?php echo BASE_URL; ?>index.php?action=logout" class="logout-link">Cerrar Sesión</a>
-        </div>
-    </div>
-    <div class="header-actions">
-        <a href="index.php?url=mesa" class="btn-nuevo-pedido">➕ Nuevo Pedido</a>
-        <button id="botonAyuda">Ayuda</button>
-    </div>
+    <h1>Pedidos Activos</h1>
+    <button id="botonAyuda">Ayuda</button>
   </header>
 
   <main id="pedidosContainer">

@@ -25,7 +25,25 @@ class Mesa {
     }
     
     public function crear($data) {
-        $sql = "INSERT INTO mesas (numero_mesa, ubicacion) VALUES (?, ?)";
+        $sqlCheck = "SELECT id, activa FROM mesas WHERE numero_mesa = ?";
+        $stmtCheck = $this->db->prepare($sqlCheck);
+        $stmtCheck->bind_param("s", $data['numero_mesa']);
+        $stmtCheck->execute();
+        $res = $stmtCheck->get_result();
+        
+        if ($res->num_rows > 0) {
+            $row = $res->fetch_assoc();
+            if ($row['activa'] == 1) {
+                return false;
+            } else {
+                $sqlRe = "UPDATE mesas SET ubicacion = ?, activa = 1, estado = 'libre' WHERE id = ?";
+                $stmtRe = $this->db->prepare($sqlRe);
+                $stmtRe->bind_param("si", $data['ubicacion'], $row['id']);
+                return $stmtRe->execute();
+            }
+        }
+        
+        $sql = "INSERT INTO mesas (numero_mesa, ubicacion, activa, estado) VALUES (?, ?, 1, 'libre')";
         $stmt = $this->db->prepare($sql);
         $stmt->bind_param("ss", $data['numero_mesa'], $data['ubicacion']);
         return $stmt->execute();

@@ -26,7 +26,7 @@ class AdminController {
             $this->procesarFormulario();
         }
         
-        $seccion = $_GET['seccion'] ?? 'dashboard';
+        $seccion = $this->determineSection();
         
         switch($seccion) {
             case 'dashboard':
@@ -268,6 +268,37 @@ class AdminController {
         $sql = "SELECT * FROM alertas_sistema WHERE leida = 0 ORDER BY fecha_creacion DESC LIMIT 10";
         return $db->query($sql)->fetch_all(MYSQLI_ASSOC);
     }
+
+    private function determineSection() {
+        if (isset($_GET['seccion']) && !empty($_GET['seccion'])) {
+            return $_GET['seccion'];
+        }
+
+        if (isset($_POST['seccion_activa']) && !empty($_POST['seccion_activa'])) {
+            return $_POST['seccion_activa'];
+        }
+
+        if (isset($_POST['accion']) && !empty($_POST['accion'])) {
+            return $this->getSectionForAction($_POST['accion']);
+        }
+
+        return 'dashboard';
+    }
+
+    private function getSectionForAction($accion) {
+        $mapping = [
+            'agregar_mesa' => 'mesas',
+            'eliminar_mesa' => 'mesas',
+            'agregar_producto' => 'menu',
+            'eliminar_producto' => 'menu',
+            'agregar_usuario' => 'usuarios',
+            'eliminar_usuario' => 'usuarios',
+            'actualizar_inventario' => 'inventario',
+            'agregar_ingrediente' => 'inventario'
+        ];
+
+        return $mapping[$accion] ?? 'dashboard';
+    }
     
     private function getAlertasRecientes() {
         $db = Database::getConnection();
@@ -275,9 +306,12 @@ class AdminController {
         return $db->query($sql)->fetch_all(MYSQLI_ASSOC);
     }
     
-    private function redirect($seccion) {
-        header("Location: " . BASE_URL . "index.php?action=admin&seccion=" . $seccion);
+    private function redirect($seccion = null) {
+        if (!$seccion) {
+            $seccion = $this->determineSection();
+        }
 
+        header("Location: " . BASE_URL . "index.php?action=admin&seccion=" . $seccion);
         exit();
     }
     

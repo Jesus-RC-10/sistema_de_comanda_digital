@@ -41,7 +41,7 @@
         </form>
         
         <div class="admin-info">
-            <p>Usuarios de prueba: admin, mesero1, cocina1, caja1 | Contraseña: 123456</p>
+            <p>Usuarios de prueba: admin, mesero1, cocina1, caja | Contraseña: 123456</p>
         </div>
     </div>
 

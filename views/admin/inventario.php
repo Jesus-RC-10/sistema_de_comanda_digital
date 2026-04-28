@@ -8,7 +8,7 @@ require_once __DIR__ . '/../layout/header.php';
     <!-- Inventario de ingredientes -->
     <div class="report-section">
         <h3>➕ Agregar Nuevo Insumo al Inventario</h3>
-        <form method="POST" style="margin-bottom: 20px; display: flex; gap: 10px; flex-wrap: wrap; align-items: flex-end;">
+        <form method="POST" action="<?php echo BASE_URL; ?>index.php?action=admin&seccion=inventario" style="margin-bottom: 20px; display: flex; gap: 10px; flex-wrap: wrap; align-items: flex-end;">
             <input type="hidden" name="accion" value="agregar_ingrediente">
             <input type="hidden" name="seccion_activa" value="inventario">
             
@@ -17,12 +17,27 @@ require_once __DIR__ . '/../layout/header.php';
                 <input type="text" name="nombre" required placeholder="Ej: Tortillas" style="padding: 6px;">
             </div>
             <div class="form-group" style="margin: 0;">
-                <label>Categoría (Ej. Abarrotes, Carnes):</label>
-                <input type="text" name="categoria" required style="padding: 6px;">
+                <label>Categoría:</label>
+                <select name="categoria" required style="padding: 6px;">
+                    <option value="vegetales">Vegetales</option>
+                    <option value="carnes">Carnes</option>
+                    <option value="lacteos">Lácteos</option>
+                    <option value="granos">Granos</option>
+                    <option value="especias">Especias</option>
+                    <option value="bebidas">Bebidas</option>
+                    <option value="otros">Otros</option>
+                </select>
             </div>
             <div class="form-group" style="margin: 0;">
-                <label>Unidad (Ej. Onzas, Pzas):</label>
-                <input type="text" name="unidad_medida" required style="padding: 6px;">
+                <label>Unidad:</label>
+                <select name="unidad_medida" required style="padding: 6px;">
+                    <option value="kg">Kilogramos (kg)</option>
+                    <option value="gr">Gramos (gr)</option>
+                    <option value="lt">Litros (lt)</option>
+                    <option value="ml">Mililitros (ml)</option>
+                    <option value="unidad">Unidad</option>
+                    <option value="paquete">Paquete</option>
+                </select>
             </div>
             <div class="form-group" style="margin: 0;">
                 <label>Stock Inicial:</label>
@@ -60,7 +75,7 @@ require_once __DIR__ . '/../layout/header.php';
                             <td><strong><?php echo $ingrediente['nombre']; ?></strong></td>
                             <td><?php echo $ingrediente['categoria']; ?></td>
                             <td>
-                                <form method="POST" style="display:inline;">
+                                <form method="POST" action="<?php echo BASE_URL; ?>index.php?action=admin&seccion=inventario" style="display:inline;">
                                     <input type="hidden" name="accion" value="actualizar_inventario">
                                     <input type="hidden" name="ingrediente_id" value="<?php echo $ingrediente['id']; ?>">
                                     <input type="hidden" name="seccion_activa" value="inventario">

@@ -8,7 +8,7 @@ require_once __DIR__ . '/../layout/header.php';
     <!-- Formulario para agregar producto -->
     <div class="report-section">
         <h3>➕ Agregar Nuevo Producto y su Receta</h3>
-        <form method="POST" class="form-grid" enctype="multipart/form-data">
+        <form method="POST" action="<?php echo BASE_URL; ?>index.php?action=admin&seccion=menu" class="form-grid" enctype="multipart/form-data">
             <input type="hidden" name="accion" value="agregar_producto">
             <input type="hidden" name="seccion_activa" value="menu">
             
@@ -89,7 +89,7 @@ require_once __DIR__ . '/../layout/header.php';
                             <td>$<?php echo number_format($row['precio'], 2); ?></td>
                             <td><?php echo $row['categoria']; ?></td>
                             <td>
-                                <form method="POST" style="display:inline;">
+                                <form method="POST" action="<?php echo BASE_URL; ?>index.php?action=admin&seccion=menu" style="display:inline;">
                                     <input type="hidden" name="accion" value="eliminar_producto">
                                     <input type="hidden" name="producto_id" value="<?php echo $row['id']; ?>">
                                     <button type="submit" class="btn-sm btn-danger" onclick="return confirm('¿Está seguro de eliminar este producto?')">Eliminar</button>

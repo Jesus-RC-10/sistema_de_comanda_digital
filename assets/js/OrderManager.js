@@ -3,20 +3,52 @@ class OrderManager {
         this.cartManager = cartManager;
     }
 
-    saveOrder() {
-        const pedidos = JSON.parse(localStorage.getItem("pedidos")) || {};
-        const mesaKey = "mesa_" + this.cartManager.getMesaNumero();
-        const pedido = this.cartManager.getCart().map(i => ({
-            nombre: i.name,
-            cantidad: i.quantity,
-            precio: i.price,
-            estado: "pendiente"
-        }));
-
-        pedidos[mesaKey] = pedido;
-        localStorage.setItem("pedidos", JSON.stringify(pedidos));
+    async saveOrder() {
+        const cart = this.cartManager.getCart();
+        const mesaNumero = this.cartManager.getMesaNumero();
         
-        return pedido;
+        // Preparar datos para enviar al servidor
+        const orderData = {
+            mesa: mesaNumero,
+            items: cart.map(item => ({
+                nombre: item.name,
+                cantidad: item.quantity,
+                precio: item.price
+            }))
+        };
+
+        try {
+            const response = await fetch('index.php?action=order/save', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(orderData)
+            });
+
+            const result = await response.json();
+            
+            if (result.status === 'success') {
+                // Guardar también en localStorage como respaldo (opcional)
+                const pedidos = JSON.parse(localStorage.getItem("pedidos")) || {};
+                const mesaKey = "mesa_" + mesaNumero;
+                pedidos[mesaKey] = orderData.items;
+                localStorage.setItem("pedidos", JSON.stringify(pedidos));
+                
+                return { success: true, pedido_id: result.pedido_id };
+            } else {
+                throw new Error(result.message || 'Error al guardar el pedido');
+            }
+        } catch (error) {
+            console.error('Error al guardar pedido:', error);
+            // Como respaldo, guardar en localStorage si falla la conexión
+            const pedidos = JSON.parse(localStorage.getItem("pedidos")) || {};
+            const mesaKey = "mesa_" + mesaNumero;
+            pedidos[mesaKey] = orderData.items;
+            localStorage.setItem("pedidos", JSON.stringify(pedidos));
+            
+            throw error;
+        }
     }
 
     generateTicket() {

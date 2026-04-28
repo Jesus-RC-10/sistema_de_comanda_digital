@@ -102,15 +102,29 @@ class ModalManager {
         }
     }
 
-    handleCheckout() {
+    async handleCheckout() {
         if (this.cartManager.getCart().length === 0) {
             NotificationManager.show('Tu carrito está vacío');
             return;
         }
 
-        this.orderManager.saveOrder();
-        this.showTicketModal();
-        this.cartManager.clearCart();
-        this.hideCartModal();
+        try {
+            const result = await this.orderManager.saveOrder();
+            if (result.success) {
+                NotificationManager.show('Pedido guardado exitosamente');
+                this.showTicketModal();
+                this.cartManager.clearCart();
+                this.hideCartModal();
+            } else {
+                NotificationManager.show('Error al guardar el pedido');
+            }
+        } catch (error) {
+            console.error('Error al procesar el pedido:', error);
+            NotificationManager.show('Error al guardar el pedido. Revisa la conexión.');
+            // Aún así mostrar el ticket como respaldo
+            this.showTicketModal();
+            this.cartManager.clearCart();
+            this.hideCartModal();
+        }
     }
 }

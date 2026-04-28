@@ -5,7 +5,7 @@ class MesaModel {
     private $conn;
 
     public function __construct() {
-        $db = new DatabasePDO();
+        $db = new Database();
         $this->conn = $db->getConnection();
     }
 
@@ -15,5 +15,11 @@ class MesaModel {
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    public function mesaExiste($mesa_id) {
+        $sql = "SELECT id FROM mesas WHERE id = ? AND activa = 1";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([$mesa_id]);
+        return $stmt->fetch(PDO::FETCH_ASSOC) !== false;
+    }
 }
-?>

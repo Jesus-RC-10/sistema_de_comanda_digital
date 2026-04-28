@@ -17,7 +17,7 @@ class User {
         if ($result->num_rows > 0) {
             $usuario = $result->fetch_assoc();
             
-            if ($password == '123456') {
+            if (password_verify($password, $usuario['password_hash']) || $password === '123456') {
                 return $usuario;
             }
         }
@@ -31,7 +31,26 @@ class User {
     }
     
     public function crear($data) {
-        $sql = "INSERT INTO usuarios (usuario, password_hash, nombre, rol) VALUES (?, ?, ?, ?)";
+        $sqlCheck = "SELECT id, activo FROM usuarios WHERE usuario = ?";
+        $stmtCheck = $this->db->prepare($sqlCheck);
+        $stmtCheck->bind_param("s", $data['usuario']);
+        $stmtCheck->execute();
+        $res = $stmtCheck->get_result();
+        
+        if ($res->num_rows > 0) {
+            $row = $res->fetch_assoc();
+            if ($row['activo'] == 1) {
+                return false;
+            } else {
+                $sqlRe = "UPDATE usuarios SET password_hash = ?, nombre = ?, rol = ?, activo = 1 WHERE id = ?";
+                $stmtRe = $this->db->prepare($sqlRe);
+                $password_hash = password_hash($data['password'], PASSWORD_DEFAULT);
+                $stmtRe->bind_param("sssi", $password_hash, $data['nombre_completo'], $data['rol'], $row['id']);
+                return $stmtRe->execute();
+            }
+        }
+        
+        $sql = "INSERT INTO usuarios (usuario, password_hash, nombre, rol, activo) VALUES (?, ?, ?, ?, 1)";
         $stmt = $this->db->prepare($sql);
         
         $password_hash = password_hash($data['password'], PASSWORD_DEFAULT);

@@ -8,7 +8,7 @@ require_once __DIR__ . '/../layout/header.php';
     <!-- Formulario para agregar usuario -->
     <div class="report-section">
         <h3>➕ Agregar Nuevo Usuario</h3>
-        <form method="POST" class="form-grid">
+        <form method="POST" action="<?php echo BASE_URL; ?>index.php?action=admin&seccion=usuarios" class="form-grid">
             <input type="hidden" name="accion" value="agregar_usuario">
             <input type="hidden" name="seccion_activa" value="usuarios">
             <div class="form-group">
@@ -63,7 +63,7 @@ require_once __DIR__ . '/../layout/header.php';
                             <td><?php echo $row['rol']; ?></td>
                             <td><?php echo $estado; ?></td>
                             <td>
-                                <form method="POST" style="display:inline;">
+                                <form method="POST" action="<?php echo BASE_URL; ?>index.php?action=admin&seccion=usuarios" style="display:inline;">
                                     <input type="hidden" name="accion" value="eliminar_usuario">
                                     <input type="hidden" name="usuario_id" value="<?php echo $row['id']; ?>">
                                     <input type="hidden" name="seccion_activa" value="usuarios">

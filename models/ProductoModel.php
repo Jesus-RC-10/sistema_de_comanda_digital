@@ -5,7 +5,7 @@ class ProductoModel {
     private $conn;
 
     public function __construct() {
-        $db = new DatabasePDO();
+        $db = new Database();
         $this->conn = $db->getConnection();
     }
 

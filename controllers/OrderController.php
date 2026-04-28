@@ -25,8 +25,21 @@ class OrderController {
         }
 
         try {
-            $usuario_id = $_SESSION['usuario_id'] ?? 1;
-            $pedidoId = $this->orderModel->saveOrder($data['mesa'], $data['items'], $usuario_id);
+            $pedidoId = $this->orderModel->saveOrder($data['mesa'], $data['items']);
+            
+            // Obtener el total del pedido desde la base de datos
+            $stmt = $this->orderModel->pdo->prepare("SELECT total FROM pedidos WHERE id = ?");
+            $stmt->execute([$pedidoId]);
+            $pedido = $stmt->fetch(PDO::FETCH_ASSOC);
+            $total = $pedido['total'];
+            
+            // Crear venta pendiente
+            require_once 'models/VentaModel.php';
+            $ventaModel = new VentaModel();
+            if (!$ventaModel->crearVentaPendiente($pedidoId, $total)) {
+                throw new Exception("Error al crear la venta pendiente.");
+            }
+            
             echo json_encode(['status' => 'success', 'pedido_id' => $pedidoId]);
         } catch (Exception $e) {
             http_response_code(500);

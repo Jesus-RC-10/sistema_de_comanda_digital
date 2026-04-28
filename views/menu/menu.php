@@ -3,20 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <title>Menú - Mesa <?php echo $data['mesa']; ?></title>
-  <link rel="stylesheet" href="<?php echo ASSETS_URL; ?>css/estilos.css">
-  <link rel="stylesheet" href="<?php echo ASSETS_URL; ?>css/help-buttons.css">
+  <link rel="stylesheet" href="<?php echo ASSETS_URL; ?>css/estilos.css?v=3">
+  <link rel="stylesheet" href="<?php echo ASSETS_URL; ?>css/help-buttons.css?v=1">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
   <header>
-    <div class="header-main">
-        <h1>Taquería El Informático - Mesa <?php echo $data['mesa']; ?></h1>
-        <div class="user-info">
-            <span>Usuario: <strong><?php echo $_SESSION['usuario_nombre'] ?? 'Invitado'; ?></strong></span>
-            <span>(<?php echo $_SESSION['usuario_rol'] ?? 'Sin Rol'; ?>)</span>
-            <a href="<?php echo BASE_URL; ?>index.php?action=logout" class="logout-link">Cerrar Sesión</a>
-        </div>
-    </div>
+    <h1>Taquería El Informático - Mesa <?php echo $data['mesa']; ?></h1>
   </header>
 
   <main>
@@ -133,10 +126,11 @@
     // Variables globales para URLs
     const BASE_URL = '<?php echo BASE_URL; ?>';
     const MENU_URL = '<?php echo BASE_URL; ?>index.php?url=menu';
+    const CAJA_URL = '<?php echo BASE_URL; ?>index.php?url=caja';
     const COCINA_URL = '<?php echo BASE_URL; ?>index.php?url=cocina/actualizarDetalle';
   </script>
 
-  <script src="<?php echo ASSETS_URL; ?>js/carrito.js"></script>
+  <script src="<?php echo ASSETS_URL; ?>js/carrito.js?v=3"></script>
   <script src="<?php echo ASSETS_URL; ?>js/help-buttons.js"></script>
 </body>
 </html>
