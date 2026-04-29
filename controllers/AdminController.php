@@ -227,7 +227,9 @@ class AdminController {
         $db = Database::getConnection();
         
         $sql_categorias = "SELECT * FROM categorias_menu WHERE activa = 1";
-        $categorias = $db->query($sql_categorias)->fetch_all(MYSQLI_ASSOC);
+        $stmt = $db->prepare($sql_categorias);
+        $stmt->execute();
+        $categorias = $stmt->fetchAll(PDO::FETCH_ASSOC);
         
         $inventarioModel = new Inventario();
         $ingredientes = $inventarioModel->getAll();
@@ -266,7 +268,9 @@ class AdminController {
     private function getAlertasSistema() {
         $db = Database::getConnection();
         $sql = "SELECT * FROM alertas_sistema WHERE leida = 0 ORDER BY fecha_creacion DESC LIMIT 10";
-        return $db->query($sql)->fetch_all(MYSQLI_ASSOC);
+        $stmt = $db->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     private function determineSection() {
@@ -303,7 +307,9 @@ class AdminController {
     private function getAlertasRecientes() {
         $db = Database::getConnection();
         $sql = "SELECT * FROM alertas_sistema ORDER BY fecha_creacion DESC LIMIT 5";
-        return $db->query($sql)->fetch_all(MYSQLI_ASSOC);
+        $stmt = $db->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
     
     private function redirect($seccion = null) {

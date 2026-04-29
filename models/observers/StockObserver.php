@@ -73,14 +73,16 @@ class StockObserver {
         // PATRÓN OBSERVER APLICADO AQUÍ:
         // Guardar alerta en base de datos para mostrar en el panel
         $db = Database::getConnection();
-        $sql = "INSERT INTO alertas_sistema (tipo, mensaje, nivel, leida) VALUES (?, ?, ?, 0)";
+        $sql = "INSERT INTO alertas_sistema (tipo, mensaje, nivel, leida) VALUES (:tipo, :mensaje, :nivel, 0)";
         $stmt = $db->prepare($sql);
         
         $tipo = 'stock_bajo';
         $mensaje = "Stock bajo en {$ingrediente['nombre']}";
         $nivel = 'alto';
         
-        $stmt->bind_param("sss", $tipo, $mensaje, $nivel);
+        $stmt->bindValue(':tipo', $tipo, PDO::PARAM_STR);
+        $stmt->bindValue(':mensaje', $mensaje, PDO::PARAM_STR);
+        $stmt->bindValue(':nivel', $nivel, PDO::PARAM_STR);
         $stmt->execute();
     }
 }

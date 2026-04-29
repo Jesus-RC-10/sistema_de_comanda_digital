@@ -1,12 +1,11 @@
 <?php
-require_once 'config/db.php';
+require_once __DIR__ . '/../config/database.php';
 
 class VentaModel {
     private $conn;
 
     public function __construct() {
-        $db = new Database();
-        $this->conn = $db->getConnection();
+        $this->conn = Database::getConnection();
     }
 
     /**

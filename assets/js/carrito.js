@@ -105,14 +105,28 @@ function enviarPedido() {
 }
 
 // Mostrar confirmación de pedido
-function showOrderConfirmation(ticketText = null, total = null) {
+async function showOrderConfirmation(ticketText = null, total = null) {
     // Cerrar modal del carrito
     cartModal.style.display = 'none';
     
-    // Generar detalles del pedido (puede usar el ticket del servidor si está disponible)
-    const now = new Date();
-    const fecha = now.toLocaleDateString('es-ES');
-    const hora = now.toLocaleTimeString('es-ES', {hour: '2-digit', minute:'2-digit'});
+    // Obtener la fecha y hora del servidor (no del cliente)
+    let fecha = '';
+    let hora = '';
+    
+    try {
+        const response = await fetch('index.php?action=menu/getServerDateTime');
+        const data = await response.json();
+        if (data.success) {
+            fecha = data.fecha;
+            hora = data.hora.substring(0, 5); // Mostrar solo HH:MM
+        }
+    } catch (error) {
+        console.error('Error al obtener fecha del servidor:', error);
+        // Fallback a fecha local si falla
+        const now = new Date();
+        fecha = now.toLocaleDateString('es-ES');
+        hora = now.toLocaleTimeString('es-ES', {hour: '2-digit', minute:'2-digit'});
+    }
 
     let orderHTML = '<div class="ticket-container">';
     orderHTML += '<div class="ticket-header">';

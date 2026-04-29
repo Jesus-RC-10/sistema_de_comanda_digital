@@ -9,8 +9,10 @@ class Pedido {
     
     public function getPedidosActivos() {
         $sql = "SELECT COUNT(*) as total FROM pedidos WHERE estado IN ('pendiente', 'confirmado', 'en_preparacion')";
-        $result = $this->db->query($sql);
-        return $result->fetch_assoc()['total'];
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result['total'];
     }
 }
 ?>

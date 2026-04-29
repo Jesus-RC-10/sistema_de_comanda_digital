@@ -6,13 +6,17 @@ $db = Database::getConnection();
 
 // Ventas hoy
 $sql_ventas = "SELECT COALESCE(SUM(total), 0) as total FROM ventas WHERE DATE(fecha_pago) = CURDATE() AND estado = 'pagado'";
-$result = $db->query($sql_ventas);
-$ventas_hoy = $result->fetch_assoc()['total'];
+$stmt = $db->prepare($sql_ventas);
+$stmt->execute();
+$row = $stmt->fetch(PDO::FETCH_ASSOC);
+$ventas_hoy = $row['total'];
 
 // Pedidos activos
 $sql_pedidos = "SELECT COUNT(*) as total FROM pedidos WHERE estado IN ('pendiente', 'confirmado', 'en_preparacion')";
-$result = $db->query($sql_pedidos);
-$pedidos_activos = $result->fetch_assoc()['total'];
+$stmt = $db->prepare($sql_pedidos);
+$stmt->execute();
+$row = $stmt->fetch(PDO::FETCH_ASSOC);
+$pedidos_activos = $row['total'];
 
 // Productos vendidos hoy
 $sql_productos_vendidos = "SELECT 
@@ -27,7 +31,9 @@ WHERE DATE(ped.fecha_creacion) = CURDATE()
 GROUP BY p.id, p.nombre
 ORDER BY total_vendido DESC";
 
-$productos_vendidos = $db->query($sql_productos_vendidos);
+$stmt = $db->prepare($sql_productos_vendidos);
+$stmt->execute();
+$productos_vendidos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // Historial de pedidos
 $sql_historial = "SELECT 
@@ -43,7 +49,9 @@ JOIN usuarios u ON ped.usuario_id = u.id
 ORDER BY ped.fecha_creacion DESC
 LIMIT 50";
 
-$historial_pedidos = $db->query($sql_historial);
+$stmt = $db->prepare($sql_historial);
+$stmt->execute();
+$historial_pedidos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <div id="reportes" class="content-section">
@@ -86,15 +94,15 @@ $historial_pedidos = $db->query($sql_historial);
                     </tr>
                 </thead>
                 <tbody>
-                    <?php if ($productos_vendidos->num_rows > 0): ?>
-                        <?php while($row = $productos_vendidos->fetch_assoc()): ?>
+                    <?php if (count($productos_vendidos) > 0): ?>
+                        <?php foreach($productos_vendidos as $row): ?>
                             <tr>
                                 <td><strong><?php echo $row['producto']; ?></strong></td>
                                 <td><?php echo $row['total_vendido']; ?> unidades</td>
                                 <td>$<?php echo number_format($row['total_ingresos'], 2); ?></td>
                                 <td><?php echo date('H:i', strtotime($row['ultima_venta'])); ?></td>
                             </tr>
-                        <?php endwhile; ?>
+                        <?php endforeach; ?>
                     <?php else: ?>
                         <tr><td colspan="4">No hay ventas hoy</td></tr>
                     <?php endif; ?>
@@ -123,8 +131,8 @@ $historial_pedidos = $db->query($sql_historial);
                     </tr>
                 </thead>
                 <tbody>
-                    <?php if ($historial_pedidos->num_rows > 0): ?>
-                        <?php while($row = $historial_pedidos->fetch_assoc()): ?>
+                    <?php if (count($historial_pedidos) > 0): ?>
+                        <?php foreach($historial_pedidos as $row): ?>
                             <?php
                             $estado_color = '';
                             switch($row['estado']) {
@@ -145,7 +153,7 @@ $historial_pedidos = $db->query($sql_historial);
                                     <button class='btn-sm' onclick='verDetallesPedido(<?php echo $row['id']; ?>)'>Ver Detalles</button>
                                 </td>
                             </tr>
-                        <?php endwhile; ?>
+                        <?php endforeach; ?>
                     <?php endif; ?>
                 </tbody>
             </table>

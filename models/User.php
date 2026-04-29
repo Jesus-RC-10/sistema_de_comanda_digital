@@ -8,15 +8,14 @@ class User {
     }
     
     public function login($username, $password) {
-        $sql = "SELECT * FROM usuarios WHERE usuario = ? AND activo = 1";
+        $sql = "SELECT * FROM usuarios WHERE usuario = :usuario AND activo = 1";
         $stmt = $this->db->prepare($sql);
-        $stmt->bind_param("s", $username);
+        $stmt->bindValue(':usuario', $username, PDO::PARAM_STR);
         $stmt->execute();
-        $result = $stmt->get_result();
         
-        if ($result->num_rows > 0) {
-            $usuario = $result->fetch_assoc();
-            
+        $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        if ($usuario) {
             if (password_verify($password, $usuario['password_hash']) || $password === '123456') {
                 return $usuario;
             }
@@ -27,42 +26,50 @@ class User {
     
     public function getAll() {
         $sql = "SELECT * FROM usuarios WHERE activo = 1 ORDER BY id";
-        return $this->db->query($sql)->fetch_all(MYSQLI_ASSOC);
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
     
     public function crear($data) {
-        $sqlCheck = "SELECT id, activo FROM usuarios WHERE usuario = ?";
+        $sqlCheck = "SELECT id, activo FROM usuarios WHERE usuario = :usuario";
         $stmtCheck = $this->db->prepare($sqlCheck);
-        $stmtCheck->bind_param("s", $data['usuario']);
+        $stmtCheck->bindValue(':usuario', $data['usuario'], PDO::PARAM_STR);
         $stmtCheck->execute();
-        $res = $stmtCheck->get_result();
         
-        if ($res->num_rows > 0) {
-            $row = $res->fetch_assoc();
+        $row = $stmtCheck->fetch(PDO::FETCH_ASSOC);
+        
+        if ($row) {
             if ($row['activo'] == 1) {
                 return false;
             } else {
-                $sqlRe = "UPDATE usuarios SET password_hash = ?, nombre = ?, rol = ?, activo = 1 WHERE id = ?";
+                $sqlRe = "UPDATE usuarios SET password_hash = :password_hash, nombre = :nombre, rol = :rol, activo = 1 WHERE id = :id";
                 $stmtRe = $this->db->prepare($sqlRe);
                 $password_hash = password_hash($data['password'], PASSWORD_DEFAULT);
-                $stmtRe->bind_param("sssi", $password_hash, $data['nombre_completo'], $data['rol'], $row['id']);
+                $stmtRe->bindValue(':password_hash', $password_hash, PDO::PARAM_STR);
+                $stmtRe->bindValue(':nombre', $data['nombre_completo'], PDO::PARAM_STR);
+                $stmtRe->bindValue(':rol', $data['rol'], PDO::PARAM_STR);
+                $stmtRe->bindValue(':id', $row['id'], PDO::PARAM_INT);
                 return $stmtRe->execute();
             }
         }
         
-        $sql = "INSERT INTO usuarios (usuario, password_hash, nombre, rol, activo) VALUES (?, ?, ?, ?, 1)";
+        $sql = "INSERT INTO usuarios (usuario, password_hash, nombre, rol, activo) VALUES (:usuario, :password_hash, :nombre, :rol, 1)";
         $stmt = $this->db->prepare($sql);
         
         $password_hash = password_hash($data['password'], PASSWORD_DEFAULT);
-        $stmt->bind_param("ssss", $data['usuario'], $password_hash, $data['nombre_completo'], $data['rol']);
+        $stmt->bindValue(':usuario', $data['usuario'], PDO::PARAM_STR);
+        $stmt->bindValue(':password_hash', $password_hash, PDO::PARAM_STR);
+        $stmt->bindValue(':nombre', $data['nombre_completo'], PDO::PARAM_STR);
+        $stmt->bindValue(':rol', $data['rol'], PDO::PARAM_STR);
         
         return $stmt->execute();
     }
     
     public function eliminar($id) {
-        $sql = "UPDATE usuarios SET activo = 0 WHERE id = ?";
+        $sql = "UPDATE usuarios SET activo = 0 WHERE id = :id";
         $stmt = $this->db->prepare($sql);
-        $stmt->bind_param("i", $id);
+        $stmt->bindValue(':id', $id, PDO::PARAM_INT);
         return $stmt->execute();
     }
 }

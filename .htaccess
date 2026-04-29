@@ -1,8 +1,5 @@
 RewriteEngine On
 
-# Configurar la base para el proyecto dinámicamente o removerla
-# (No se requiere RewriteBase cuando está en el mismo directorio)
-
 # Redirigir todas las solicitudes al index.php
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d

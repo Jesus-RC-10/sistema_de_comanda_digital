@@ -1,8 +1,8 @@
 <?php
-require_once 'models/ProductoModel.php';
-require_once 'models/PedidoModel.php';
-require_once 'models/MesaModel.php';
-require_once 'models/VentaModel.php';
+require_once __DIR__ . '/../models/ProductoModel.php';
+require_once __DIR__ . '/../models/PedidoModel.php';
+require_once __DIR__ . '/../models/MesaModel.php';
+require_once __DIR__ . '/../models/VentaModel.php';
 
 class MenuController {
     public function index() {
@@ -25,7 +25,7 @@ class MenuController {
             'assets_url' => ASSETS_URL
         ];
 
-        require_once 'views/menu/menu.php';
+        require_once __DIR__ . '/../views/menu/menu.php';
     }
 
     public function confirmar() {
@@ -157,6 +157,19 @@ class MenuController {
             'message' => 'Error al solicitar asistencia'
         ]);
         exit();
+    }
+
+    public function getServerDateTime() {
+        if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+            header('Content-Type: application/json');
+            echo json_encode([
+                'success' => true,
+                'fecha' => date('d/m/Y'),
+                'hora' => date('H:i:s'),
+                'timestamp' => time()
+            ]);
+            exit();
+        }
     }
 
     public function enviarEmail() {
