@@ -1,1178 +1,201 @@
 [
   {
-    "id": "TC001",
-    "title": "Iniciar sesión y redirigir al módulo según rol",
-    "description": "Verifica que un usuario con credenciales válidas inicia sesión y es redirigido a su interfaz correspondiente según el rol.",
-    "category": "User Authentication",
+    "id": "test-001",
+    "title": "Login con credenciales válidas de admin",
+    "description": "Verificar que un administrador puede iniciar sesión con usuario admin y contraseña 123456",
     "steps": [
-      {
-        "type": "action",
-        "description": "Navigate to /index.php?action=login"
-      },
-      {
-        "type": "action",
-        "description": "Fill {{LOGIN_USER}} into the username field"
-      },
-      {
-        "type": "action",
-        "description": "Fill {{LOGIN_PASSWORD}} into the password field"
-      },
-      {
-        "type": "action",
-        "description": "Submit the login form"
-      },
-      {
-        "type": "assertion",
-        "description": "Verify the user is redirected to a role-specific dashboard page"
-      }
+      "Navegar a http://localhost:8081/",
+      "Esperar a que cargue la página de login",
+      "Llenar el campo de usuario con 'admin'",
+      "Llenar el campo de contraseña con '123456'",
+      "Hacer clic en el botón de Login",
+      "Verificar que aparece el dashboard de administración"
     ],
-    "priority": "High"
+    "auth_required": false,
+    "role": "admin"
   },
   {
-    "id": "TC002",
-    "title": "Procesar un pago pendiente con método de pago, cálculo de cambio y registro en historial",
-    "description": "Este caso verifica que caja pueda seleccionar un pago pendiente, elegir método, ingresar monto recibido, calcular cambio, procesar el pago, generar recibo y ver el registro en historial.",
-    "category": "Cashier Interface",
+    "id": "test-002",
+    "title": "Login con credenciales válidas de mesero",
+    "description": "Verificar que un mesero puede iniciar sesión con usuario mesero1 y contraseña 123456",
     "steps": [
-      {
-        "type": "action",
-        "description": "Navigate to /index.php?action=login"
-      },
-      {
-        "type": "action",
-        "description": "Fill in the email field with {{LOGIN_USER}}"
-      },
-      {
-        "type": "action",
-        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
-      },
-      {
-        "type": "action",
-        "description": "Submit the login form"
-      },
-      {
-        "type": "action",
-        "description": "Click the navigation option to open the cashier interface"
-      },
-      {
-        "type": "action",
-        "description": "Open a pending payment from the pending payments list"
-      },
-      {
-        "type": "action",
-        "description": "Select a valid payment method"
-      },
-      {
-        "type": "action",
-        "description": "Fill a sufficient amount into the received amount field"
-      },
-      {
-        "type": "action",
-        "description": "Process the payment"
-      },
-      {
-        "type": "action",
-        "description": "Generate the receipt"
-      },
-      {
-        "type": "assertion",
-        "description": "Verify the payment appears in the payment history list"
-      }
+      "Navegar a http://localhost:8081/",
+      "Esperar a que cargue la página de login",
+      "Llenar el campo de usuario con 'mesero1'",
+      "Llenar el campo de contraseña con '123456'",
+      "Hacer clic en el botón de Login",
+      "Verificar que aparece el panel de mesero"
     ],
-    "priority": "High"
+    "auth_required": false,
+    "role": "mesero"
   },
   {
-    "id": "TC003",
-    "title": "Ver pedidos activos, filtrar por mesa, actualizar estado y cerrar una orden",
-    "description": "Este caso verifica que un mesero pueda localizar una mesa, abrir el detalle de una orden activa, actualizar su estado, cerrarla y que deje de aparecer en la lista de pedidos activos.",
-    "category": "Waiter Interface",
+    "id": "test-003",
+    "title": "Login con credenciales válidas de cocina",
+    "description": "Verificar que personal de cocina puede iniciar sesión con usuario cocina1 y contraseña 123456",
     "steps": [
-      {
-        "type": "action",
-        "description": "Navigate to /index.php?action=login"
-      },
-      {
-        "type": "action",
-        "description": "Fill in the email field with {{LOGIN_USER}}"
-      },
-      {
-        "type": "action",
-        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
-      },
-      {
-        "type": "action",
-        "description": "Submit the login form"
-      },
-      {
-        "type": "action",
-        "description": "Click the navigation option to open the waiter interface"
-      },
-      {
-        "type": "action",
-        "description": "Filter active orders by selecting a table"
-      },
-      {
-        "type": "action",
-        "description": "Open the order details for an active order in the filtered results"
-      },
-      {
-        "type": "action",
-        "description": "Update the order status to a different valid status"
-      },
-      {
-        "type": "action",
-        "description": "Close the order"
-      },
-      {
-        "type": "assertion",
-        "description": "Verify the closed order is no longer shown in the active orders list"
-      }
+      "Navegar a http://localhost:8081/",
+      "Esperar a que cargue la página de login",
+      "Llenar el campo de usuario con 'cocina1'",
+      "Llenar el campo de contraseña con '123456'",
+      "Hacer clic en el botón de Login",
+      "Verificar que aparece la pantalla de cocina"
     ],
-    "priority": "High"
+    "auth_required": false,
+    "role": "cocina"
   },
   {
-    "id": "TC004",
-    "title": "Actualizar estado de un pedido a en preparación y luego a listo",
-    "description": "Este caso verifica que cocina pueda abrir el detalle de un pedido entrante y cambiar su estado a en preparación y después a listo, reflejando el cambio en la lista.",
-    "category": "Kitchen Interface",
+    "id": "test-004",
+    "title": "Login con credenciales válidas de caja",
+    "description": "Verificar que personal de caja puede iniciar sesión con usuario caja y contraseña 123456",
     "steps": [
-      {
-        "type": "action",
-        "description": "Navigate to /index.php?action=login"
-      },
-      {
-        "type": "action",
-        "description": "Fill in the email field with {{LOGIN_USER}}"
-      },
-      {
-        "type": "action",
-        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
-      },
-      {
-        "type": "action",
-        "description": "Submit the login form"
-      },
-      {
-        "type": "action",
-        "description": "Click the navigation option to open the kitchen interface"
-      },
-      {
-        "type": "action",
-        "description": "Filter incoming orders by selecting an order type"
-      },
-      {
-        "type": "action",
-        "description": "Open the order details for an incoming order"
-      },
-      {
-        "type": "action",
-        "description": "Update the order preparation status to in preparation"
-      },
-      {
-        "type": "action",
-        "description": "Mark the order as ready"
-      },
-      {
-        "type": "assertion",
-        "description": "Verify the order status is shown as ready in the kitchen orders list or details view"
-      }
+      "Navegar a http://localhost:8081/",
+      "Esperar a que cargue la página de login",
+      "Llenar el campo de usuario con 'caja'",
+      "Llenar el campo de contraseña con '123456'",
+      "Hacer clic en el botón de Login",
+      "Verificar que aparece el panel de caja"
     ],
-    "priority": "High"
+    "auth_required": false,
+    "role": "caja"
   },
   {
-    "id": "TC005",
-    "title": "Crear un producto de menú y verlo en la lista",
-    "description": "Verifica que el administrador puede crear un producto con datos requeridos y que aparece en la lista de productos.",
-    "category": "Menu Management",
+    "id": "test-005",
+    "title": "Login con credenciales inválidas muestra error",
+    "description": "Verificar que el sistema muestra un mensaje de error al ingresar credenciales incorrectas",
     "steps": [
-      {
-        "type": "action",
-        "description": "Navigate to /index.php?action=login"
-      },
-      {
-        "type": "action",
-        "description": "Fill {{LOGIN_USER}} into the username field"
-      },
-      {
-        "type": "action",
-        "description": "Fill {{LOGIN_PASSWORD}} into the password field"
-      },
-      {
-        "type": "action",
-        "description": "Submit the login form"
-      },
-      {
-        "type": "action",
-        "description": "Navigate to /index.php?action=admin&seccion=menu"
-      },
-      {
-        "type": "action",
-        "description": "Start adding a new product"
-      },
-      {
-        "type": "action",
-        "description": "Fill Producto UI Test 01 into the product name field"
-      },
-      {
-        "type": "action",
-        "description": "Fill 99.90 into the product price field"
-      },
-      {
-        "type": "action",
-        "description": "Submit the product form"
-      },
-      {
-        "type": "assertion",
-        "description": "Verify the new product appears in the product list"
-      }
+      "Navegar a http://localhost:8081/",
+      "Esperar a que cargue la página de login",
+      "Llenar el campo de usuario con 'invalido'",
+      "Llenar el campo de contraseña con 'incorrecta'",
+      "Hacer clic en el botón de Login",
+      "Verificar que aparece un mensaje de error indicando credenciales inválidas"
     ],
-    "priority": "High"
+    "auth_required": false
   },
   {
-    "id": "TC006",
-    "title": "Crear una mesa y verla en el listado",
-    "description": "Verifica que un administrador puede agregar una nueva mesa y que aparece en el listado de mesas.",
-    "category": "Table Management",
+    "id": "test-006",
+    "title": "Navegación del cliente - selección de mesa",
+    "description": "Verificar que un cliente puede ver las mesas disponibles y seleccionar una",
     "steps": [
-      {
-        "type": "action",
-        "description": "Navigate to /index.php?action=login"
-      },
-      {
-        "type": "action",
-        "description": "Fill {{LOGIN_USER}} into the username field"
-      },
-      {
-        "type": "action",
-        "description": "Fill {{LOGIN_PASSWORD}} into the password field"
-      },
-      {
-        "type": "action",
-        "description": "Submit the login form"
-      },
-      {
-        "type": "action",
-        "description": "Click the navigation option to open table management"
-      },
-      {
-        "type": "action",
-        "description": "Start adding a new table"
-      },
-      {
-        "type": "action",
-        "description": "Fill a unique table identifier into the table name/number field"
-      },
-      {
-        "type": "action",
-        "description": "Fill a valid location/area into the table location field"
-      },
-      {
-        "type": "action",
-        "description": "Submit the table form"
-      },
-      {
-        "type": "assertion",
-        "description": "Verify the new table is displayed in the table list"
-      }
+      "Navegar a http://localhost:8081/?url=mesa",
+      "Verificar que se muestran las mesas disponibles",
+      "Hacer clic en una mesa disponible",
+      "Verificar que redirige al menú con el parámetro de mesa"
     ],
-    "priority": "High"
+    "auth_required": false
   },
   {
-    "id": "TC007",
-    "title": "Crear usuario con rol y verlo en el listado",
-    "description": "Verifica que un administrador puede crear un usuario seleccionando un rol y que aparece en el listado de usuarios.",
-    "category": "User Management",
+    "id": "test-007",
+    "title": "Navegación del menú de cliente",
+    "description": "Verificar que el menú muestra productos organizados por categorías con botones de agregar al carrito",
     "steps": [
-      {
-        "type": "action",
-        "description": "Navigate to /index.php?action=login"
-      },
-      {
-        "type": "action",
-        "description": "Fill {{LOGIN_USER}} into the username field"
-      },
-      {
-        "type": "action",
-        "description": "Fill {{LOGIN_PASSWORD}} into the password field"
-      },
-      {
-        "type": "action",
-        "description": "Submit the login form"
-      },
-      {
-        "type": "action",
-        "description": "Click the navigation option to open user management"
-      },
-      {
-        "type": "action",
-        "description": "Start adding a new user"
-      },
-      {
-        "type": "action",
-        "description": "Fill a unique username into the username field"
-      },
-      {
-        "type": "action",
-        "description": "Fill a valid password into the password field"
-      },
-      {
-        "type": "action",
-        "description": "Select a role for the new user"
-      },
-      {
-        "type": "action",
-        "description": "Submit the user form"
-      },
-      {
-        "type": "assertion",
-        "description": "Verify the new user is displayed in the user list"
-      }
+      "Navegar a http://localhost:8081/?url=menu&mesa=1",
+      "Verificar que se muestran productos agrupados por categorías",
+      "Verificar que cada producto tiene un botón de agregar al carrito",
+      "Hacer clic en un botón de agregar al carrito",
+      "Verificar que el carrito se actualiza con el producto"
     ],
-    "priority": "Medium"
+    "auth_required": false
   },
   {
-    "id": "TC008",
-    "title": "Evitar procesar pago con monto insuficiente",
-    "description": "Este caso verifica que caja bloquee el cobro cuando el monto recibido es insuficiente, mostrando un error de validación y manteniéndose en la interfaz de caja.",
-    "category": "Cashier Interface",
+    "id": "test-008",
+    "title": "Dashboard de admin muestra métricas",
+    "description": "Verificar que el panel de administración muestra estadísticas después del login",
     "steps": [
-      {
-        "type": "action",
-        "description": "Navigate to /index.php?action=login"
-      },
-      {
-        "type": "action",
-        "description": "Fill in the email field with {{LOGIN_USER}}"
-      },
-      {
-        "type": "action",
-        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
-      },
-      {
-        "type": "action",
-        "description": "Submit the login form"
-      },
-      {
-        "type": "action",
-        "description": "Click the navigation option to open the cashier interface"
-      },
-      {
-        "type": "action",
-        "description": "Open a pending payment from the pending payments list"
-      },
-      {
-        "type": "action",
-        "description": "Select a valid payment method"
-      },
-      {
-        "type": "action",
-        "description": "Fill an insufficient amount into the received amount field"
-      },
-      {
-        "type": "action",
-        "description": "Attempt to process the payment"
-      },
-      {
-        "type": "assertion",
-        "description": "Verify an insufficient amount validation error is visible"
-      }
+      "Navegar a http://localhost:8081/",
+      "Iniciar sesión con usuario 'admin' y contraseña '123456'",
+      "Verificar que el dashboard muestra métricas o información del sistema",
+      "Verificar que existe navegación hacia las secciones de admin"
     ],
-    "priority": "Medium"
+    "auth_required": true,
+    "role": "admin"
   },
   {
-    "id": "TC009",
-    "title": "Editar una mesa y ver cambios reflejados",
-    "description": "Verifica que un administrador puede editar los detalles de una mesa existente y que el listado refleja la actualización.",
-    "category": "Table Management",
+    "id": "test-009",
+    "title": "Panel de mesero muestra pedidos activos",
+    "description": "Verificar que el mesero puede ver los pedidos activos después de iniciar sesión",
     "steps": [
-      {
-        "type": "action",
-        "description": "Navigate to /index.php?action=login"
-      },
-      {
-        "type": "action",
-        "description": "Fill {{LOGIN_USER}} into the username field"
-      },
-      {
-        "type": "action",
-        "description": "Fill {{LOGIN_PASSWORD}} into the password field"
-      },
-      {
-        "type": "action",
-        "description": "Submit the login form"
-      },
-      {
-        "type": "action",
-        "description": "Click the navigation option to open table management"
-      },
-      {
-        "type": "action",
-        "description": "Start adding a new table"
-      },
-      {
-        "type": "action",
-        "description": "Fill a unique table identifier into the table name/number field"
-      },
-      {
-        "type": "action",
-        "description": "Fill a valid location/area into the table location field"
-      },
-      {
-        "type": "action",
-        "description": "Submit the table form"
-      },
-      {
-        "type": "action",
-        "description": "Open the edit action for the newly created table"
-      },
-      {
-        "type": "action",
-        "description": "Update the table location/area field with a different valid value"
-      },
-      {
-        "type": "action",
-        "description": "Submit the changes"
-      },
-      {
-        "type": "assertion",
-        "description": "Verify the table list shows the updated table details"
-      }
+      "Navegar a http://localhost:8081/",
+      "Iniciar sesión con usuario 'mesero1' y contraseña '123456'",
+      "Verificar que se muestra una lista de pedidos o un mensaje de sin pedidos",
+      "Verificar que la interfaz tiene controles para gestionar pedidos"
     ],
-    "priority": "Medium"
+    "auth_required": true,
+    "role": "mesero"
   },
   {
-    "id": "TC010",
-    "title": "Ver métricas y tabla de productos en el dashboard de admin",
-    "description": "Verifica que el administrador puede ver las métricas principales y la tabla de productos en el dashboard.",
-    "category": "Admin Dashboard",
+    "id": "test-010",
+    "title": "Pantalla de cocina muestra pedidos pendientes",
+    "description": "Verificar que la cocina puede ver los pedidos pendientes después de iniciar sesión",
     "steps": [
-      {
-        "type": "action",
-        "description": "Navigate to /index.php?action=login"
-      },
-      {
-        "type": "action",
-        "description": "Fill {{LOGIN_USER}} into the username field"
-      },
-      {
-        "type": "action",
-        "description": "Fill {{LOGIN_PASSWORD}} into the password field"
-      },
-      {
-        "type": "action",
-        "description": "Submit the login form"
-      },
-      {
-        "type": "action",
-        "description": "Navigate to /index.php?action=admin&seccion=dashboard"
-      },
-      {
-        "type": "assertion",
-        "description": "Verify sales statistics, active orders count, and occupied tables count are displayed"
-      },
-      {
-        "type": "assertion",
-        "description": "Verify a menu products table is displayed"
-      }
+      "Navegar a http://localhost:8081/",
+      "Iniciar sesión con usuario 'cocina1' y contraseña '123456'",
+      "Verificar que se muestra una lista de pedidos pendientes o mensaje de sin pedidos",
+      "Verificar que la interfaz permite actualizar estados de pedidos"
     ],
-    "priority": "Medium"
+    "auth_required": true,
+    "role": "cocina"
   },
   {
-    "id": "TC011",
-    "title": "Crear ingrediente y verlo en el inventario",
-    "description": "Verifica que un administrador puede registrar un ingrediente y que aparece en el listado de inventario.",
-    "category": "Inventory Management",
+    "id": "test-011",
+    "title": "Panel de caja muestra ventas pendientes",
+    "description": "Verificar que caja puede ver las ventas pendientes de pago después de iniciar sesión",
     "steps": [
-      {
-        "type": "action",
-        "description": "Navigate to /index.php?action=login"
-      },
-      {
-        "type": "action",
-        "description": "Fill {{LOGIN_USER}} into the username field"
-      },
-      {
-        "type": "action",
-        "description": "Fill {{LOGIN_PASSWORD}} into the password field"
-      },
-      {
-        "type": "action",
-        "description": "Submit the login form"
-      },
-      {
-        "type": "action",
-        "description": "Click the navigation option to open inventory management"
-      },
-      {
-        "type": "action",
-        "description": "Start adding a new ingredient"
-      },
-      {
-        "type": "action",
-        "description": "Fill a unique ingredient name into the ingredient name field"
-      },
-      {
-        "type": "action",
-        "description": "Fill a valid unit or description into the unit/description field"
-      },
-      {
-        "type": "action",
-        "description": "Fill a valid initial stock quantity into the stock quantity field"
-      },
-      {
-        "type": "action",
-        "description": "Submit the ingredient form"
-      },
-      {
-        "type": "assertion",
-        "description": "Verify the new ingredient is displayed in the ingredient list"
-      }
+      "Navegar a http://localhost:8081/",
+      "Iniciar sesión con usuario 'caja' y contraseña '123456'",
+      "Verificar que se muestran ventas pendientes o mensaje de sin ventas",
+      "Verificar que la interfaz tiene opciones para procesar pagos"
     ],
-    "priority": "Medium"
+    "auth_required": true,
+    "role": "caja"
   },
   {
-    "id": "TC012",
-    "title": "Actualizar stock de un ingrediente y ver cantidad actualizada",
-    "description": "Verifica que un administrador puede actualizar el stock de un ingrediente existente y que la nueva cantidad se refleja en el listado.",
-    "category": "Inventory Management",
+    "id": "test-012",
+    "title": "Logout redirige a página de login",
+    "description": "Verificar que al cerrar sesión el usuario es redirigido a la página de login",
     "steps": [
-      {
-        "type": "action",
-        "description": "Navigate to /index.php?action=login"
-      },
-      {
-        "type": "action",
-        "description": "Fill {{LOGIN_USER}} into the username field"
-      },
-      {
-        "type": "action",
-        "description": "Fill {{LOGIN_PASSWORD}} into the password field"
-      },
-      {
-        "type": "action",
-        "description": "Submit the login form"
-      },
-      {
-        "type": "action",
-        "description": "Click the navigation option to open inventory management"
-      },
-      {
-        "type": "action",
-        "description": "Start adding a new ingredient"
-      },
-      {
-        "type": "action",
-        "description": "Fill a unique ingredient name into the ingredient name field"
-      },
-      {
-        "type": "action",
-        "description": "Fill a valid unit or description into the unit/description field"
-      },
-      {
-        "type": "action",
-        "description": "Fill a valid initial stock quantity into the stock quantity field"
-      },
-      {
-        "type": "action",
-        "description": "Submit the ingredient form"
-      },
-      {
-        "type": "action",
-        "description": "Start updating stock for the newly created ingredient"
-      },
-      {
-        "type": "action",
-        "description": "Fill a different valid stock quantity into the stock quantity field"
-      },
-      {
-        "type": "action",
-        "description": "Submit the stock update"
-      },
-      {
-        "type": "assertion",
-        "description": "Verify the ingredient list shows the updated stock quantity"
-      }
+      "Navegar a http://localhost:8081/",
+      "Iniciar sesión con usuario 'admin' y contraseña '123456'",
+      "Navegar a la URL de logout: http://localhost:8081/?action=logout",
+      "Verificar que se redirige a la página de login"
     ],
-    "priority": "Medium"
+    "auth_required": true,
+    "role": "admin"
   },
   {
-    "id": "TC013",
-    "title": "Editar un producto existente y ver el cambio en la lista",
-    "description": "Verifica que el administrador puede editar un producto existente y que el listado refleja la actualización.",
-    "category": "Menu Management",
+    "id": "test-013",
+    "title": "Formulario de login tiene campos requeridos",
+    "description": "Verificar que el formulario de login tiene los campos de usuario y contraseña y el botón de envío",
     "steps": [
-      {
-        "type": "action",
-        "description": "Navigate to /index.php?action=login"
-      },
-      {
-        "type": "action",
-        "description": "Fill {{LOGIN_USER}} into the username field"
-      },
-      {
-        "type": "action",
-        "description": "Fill {{LOGIN_PASSWORD}} into the password field"
-      },
-      {
-        "type": "action",
-        "description": "Submit the login form"
-      },
-      {
-        "type": "action",
-        "description": "Navigate to /index.php?action=admin&seccion=menu"
-      },
-      {
-        "type": "action",
-        "description": "Start adding a new product"
-      },
-      {
-        "type": "action",
-        "description": "Fill Producto UI Test Edit 01 into the product name field"
-      },
-      {
-        "type": "action",
-        "description": "Fill 50.00 into the product price field"
-      },
-      {
-        "type": "action",
-        "description": "Submit the product form"
-      },
-      {
-        "type": "action",
-        "description": "Open the edit action for the product created in this test"
-      },
-      {
-        "type": "action",
-        "description": "Fill Producto UI Test Edit 01 Updated into the product name field"
-      },
-      {
-        "type": "action",
-        "description": "Submit the product update form"
-      },
-      {
-        "type": "assertion",
-        "description": "Verify the updated product name appears in the product list"
-      }
+      "Navegar a http://localhost:8081/",
+      "Verificar que existe un campo de entrada para usuario",
+      "Verificar que existe un campo de entrada para contraseña",
+      "Verificar que existe un botón de Login/Iniciar Sesión"
     ],
-    "priority": "Medium"
+    "auth_required": false
   },
   {
-    "id": "TC014",
-    "title": "Editar usuario cambiando rol o estado activo",
-    "description": "Verifica que un administrador puede editar un usuario existente, cambiar su rol o estado activo y ver el cambio reflejado en el listado.",
-    "category": "User Management",
+    "id": "test-014",
+    "title": "Acceso sin autenticación redirige a login",
+    "description": "Verificar que intentar acceder a rutas protegidas sin login redirige al formulario de login",
     "steps": [
-      {
-        "type": "action",
-        "description": "Navigate to /index.php?action=login"
-      },
-      {
-        "type": "action",
-        "description": "Fill {{LOGIN_USER}} into the username field"
-      },
-      {
-        "type": "action",
-        "description": "Fill {{LOGIN_PASSWORD}} into the password field"
-      },
-      {
-        "type": "action",
-        "description": "Submit the login form"
-      },
-      {
-        "type": "action",
-        "description": "Click the navigation option to open user management"
-      },
-      {
-        "type": "action",
-        "description": "Start adding a new user"
-      },
-      {
-        "type": "action",
-        "description": "Fill a unique username into the username field"
-      },
-      {
-        "type": "action",
-        "description": "Fill a valid password into the password field"
-      },
-      {
-        "type": "action",
-        "description": "Select a role for the new user"
-      },
-      {
-        "type": "action",
-        "description": "Submit the user form"
-      },
-      {
-        "type": "action",
-        "description": "Open the edit action for the newly created user"
-      },
-      {
-        "type": "action",
-        "description": "Change the user role or toggle the active state"
-      },
-      {
-        "type": "action",
-        "description": "Submit the changes"
-      },
-      {
-        "type": "assertion",
-        "description": "Verify the user list reflects the updated role or active state"
-      }
+      "Navegar a http://localhost:8081/?url=admin sin haber iniciado sesión",
+      "Verificar que el sistema redirige a la página de login o muestra un mensaje de acceso denegado"
     ],
-    "priority": "Medium"
+    "auth_required": false
   },
   {
-    "id": "TC015",
-    "title": "Eliminar una mesa y confirmar que desaparece del listado",
-    "description": "Verifica que un administrador puede eliminar una mesa y que deja de aparecer en el listado de mesas.",
-    "category": "Table Management",
+    "id": "test-015",
+    "title": "Admin puede acceder a gestión de usuarios",
+    "description": "Verificar que el admin puede navegar a la sección de gestión de usuarios",
     "steps": [
-      {
-        "type": "action",
-        "description": "Navigate to /index.php?action=login"
-      },
-      {
-        "type": "action",
-        "description": "Fill {{LOGIN_USER}} into the username field"
-      },
-      {
-        "type": "action",
-        "description": "Fill {{LOGIN_PASSWORD}} into the password field"
-      },
-      {
-        "type": "action",
-        "description": "Submit the login form"
-      },
-      {
-        "type": "action",
-        "description": "Click the navigation option to open table management"
-      },
-      {
-        "type": "action",
-        "description": "Start adding a new table"
-      },
-      {
-        "type": "action",
-        "description": "Fill a unique table identifier into the table name/number field"
-      },
-      {
-        "type": "action",
-        "description": "Fill a valid location/area into the table location field"
-      },
-      {
-        "type": "action",
-        "description": "Submit the table form"
-      },
-      {
-        "type": "action",
-        "description": "Initiate deletion for the newly created table"
-      },
-      {
-        "type": "action",
-        "description": "Confirm deletion in the app confirmation UI"
-      },
-      {
-        "type": "assertion",
-        "description": "Verify the deleted table is not displayed in the table list"
-      }
+      "Navegar a http://localhost:8081/",
+      "Iniciar sesión con usuario 'admin' y contraseña '123456'",
+      "Navegar a http://localhost:8081/?url=admin/usuarios",
+      "Verificar que se muestra la lista de usuarios o una interfaz de gestión"
     ],
-    "priority": "Medium"
-  },
-  {
-    "id": "TC016",
-    "title": "Configurar mínimo mayor que stock y ver alerta de stock bajo",
-    "description": "Verifica que al establecer un mínimo superior al stock actual se muestra una alerta de stock bajo para ese ingrediente.",
-    "category": "Inventory Management",
-    "steps": [
-      {
-        "type": "action",
-        "description": "Navigate to /index.php?action=login"
-      },
-      {
-        "type": "action",
-        "description": "Fill {{LOGIN_USER}} into the username field"
-      },
-      {
-        "type": "action",
-        "description": "Fill {{LOGIN_PASSWORD}} into the password field"
-      },
-      {
-        "type": "action",
-        "description": "Submit the login form"
-      },
-      {
-        "type": "action",
-        "description": "Click the navigation option to open inventory management"
-      },
-      {
-        "type": "action",
-        "description": "Start adding a new ingredient"
-      },
-      {
-        "type": "action",
-        "description": "Fill a unique ingredient name into the ingredient name field"
-      },
-      {
-        "type": "action",
-        "description": "Fill a valid unit or description into the unit/description field"
-      },
-      {
-        "type": "action",
-        "description": "Fill a small valid initial stock quantity into the stock quantity field"
-      },
-      {
-        "type": "action",
-        "description": "Submit the ingredient form"
-      },
-      {
-        "type": "action",
-        "description": "Start editing minimum stock for the newly created ingredient"
-      },
-      {
-        "type": "action",
-        "description": "Fill a minimum stock value that is greater than the current stock quantity into the minimum field"
-      },
-      {
-        "type": "action",
-        "description": "Submit the changes"
-      },
-      {
-        "type": "assertion",
-        "description": "Verify a low-stock alert is displayed for the ingredient"
-      }
-    ],
-    "priority": "Medium"
-  },
-  {
-    "id": "TC017",
-    "title": "Navegar del dashboard de admin a reportes",
-    "description": "Verifica que el administrador puede navegar desde el dashboard hacia la sección de reportes y ver los tipos de reportes disponibles.",
-    "category": "Admin Dashboard",
-    "steps": [
-      {
-        "type": "action",
-        "description": "Navigate to /index.php?action=login"
-      },
-      {
-        "type": "action",
-        "description": "Fill {{LOGIN_USER}} into the username field"
-      },
-      {
-        "type": "action",
-        "description": "Fill {{LOGIN_PASSWORD}} into the password field"
-      },
-      {
-        "type": "action",
-        "description": "Submit the login form"
-      },
-      {
-        "type": "action",
-        "description": "Navigate to /index.php?action=admin&seccion=dashboard"
-      },
-      {
-        "type": "action",
-        "description": "Click the navigation option to open reports"
-      },
-      {
-        "type": "assertion",
-        "description": "Verify available report types are displayed"
-      }
-    ],
-    "priority": "Medium"
-  },
-  {
-    "id": "TC018",
-    "title": "Ver listado de usuarios",
-    "description": "Verifica que un administrador puede acceder al listado de usuarios y verlo cargado correctamente.",
-    "category": "User Management",
-    "steps": [
-      {
-        "type": "action",
-        "description": "Navigate to /index.php?action=login"
-      },
-      {
-        "type": "action",
-        "description": "Fill {{LOGIN_USER}} into the username field"
-      },
-      {
-        "type": "action",
-        "description": "Fill {{LOGIN_PASSWORD}} into the password field"
-      },
-      {
-        "type": "action",
-        "description": "Submit the login form"
-      },
-      {
-        "type": "action",
-        "description": "Click the navigation option to open user management"
-      },
-      {
-        "type": "assertion",
-        "description": "Verify the user list is displayed"
-      }
-    ],
-    "priority": "Medium"
-  },
-  {
-    "id": "TC019",
-    "title": "Rechazar inicio de sesión con credenciales inválidas",
-    "description": "Verifica que al ingresar credenciales inválidas se muestra un error y el usuario permanece en la pantalla de login.",
-    "category": "User Authentication",
-    "steps": [
-      {
-        "type": "action",
-        "description": "Navigate to /index.php?action=login"
-      },
-      {
-        "type": "action",
-        "description": "Fill invalid_user into the username field"
-      },
-      {
-        "type": "action",
-        "description": "Fill wrong_password into the password field"
-      },
-      {
-        "type": "action",
-        "description": "Submit the login form"
-      },
-      {
-        "type": "assertion",
-        "description": "Verify a login validation error is visible"
-      },
-      {
-        "type": "assertion",
-        "description": "Verify the user remains on the login page"
-      }
-    ],
-    "priority": "Low"
-  },
-  {
-    "id": "TC020",
-    "title": "Ver listado de mesas y su estado",
-    "description": "Verifica que el administrador puede ver el listado de mesas y que se muestran sus estados de forma visible.",
-    "category": "Table Management",
-    "steps": [
-      {
-        "type": "action",
-        "description": "Navigate to /index.php?action=login"
-      },
-      {
-        "type": "action",
-        "description": "Fill {{LOGIN_USER}} into the username field"
-      },
-      {
-        "type": "action",
-        "description": "Fill {{LOGIN_PASSWORD}} into the password field"
-      },
-      {
-        "type": "action",
-        "description": "Submit the login form"
-      },
-      {
-        "type": "action",
-        "description": "Click the navigation option to open table management"
-      },
-      {
-        "type": "assertion",
-        "description": "Verify the table list is displayed with table status information"
-      }
-    ],
-    "priority": "Low"
-  },
-  {
-    "id": "TC021",
-    "title": "Validar campos requeridos al crear un producto",
-    "description": "Verifica que al omitir un campo requerido al crear un producto se muestra un error de validación y no se crea el producto.",
-    "category": "Menu Management",
-    "steps": [
-      {
-        "type": "action",
-        "description": "Navigate to /index.php?action=login"
-      },
-      {
-        "type": "action",
-        "description": "Fill {{LOGIN_USER}} into the username field"
-      },
-      {
-        "type": "action",
-        "description": "Fill {{LOGIN_PASSWORD}} into the password field"
-      },
-      {
-        "type": "action",
-        "description": "Submit the login form"
-      },
-      {
-        "type": "action",
-        "description": "Navigate to /index.php?action=admin&seccion=menu"
-      },
-      {
-        "type": "action",
-        "description": "Start adding a new product"
-      },
-      {
-        "type": "action",
-        "description": "Fill Producto UI Test Missing Price into the product name field"
-      },
-      {
-        "type": "action",
-        "description": "Submit the product form"
-      },
-      {
-        "type": "assertion",
-        "description": "Verify a required-field validation error is visible"
-      },
-      {
-        "type": "assertion",
-        "description": "Verify the product is not added to the product list"
-      }
-    ],
-    "priority": "Low"
-  },
-  {
-    "id": "TC022",
-    "title": "Evitar crear usuario duplicado mostrando validación",
-    "description": "Verifica que al intentar crear un usuario con un nombre de usuario ya existente se muestra un error de duplicado y no se crea el registro.",
-    "category": "User Management",
-    "steps": [
-      {
-        "type": "action",
-        "description": "Navigate to /index.php?action=login"
-      },
-      {
-        "type": "action",
-        "description": "Fill {{LOGIN_USER}} into the username field"
-      },
-      {
-        "type": "action",
-        "description": "Fill {{LOGIN_PASSWORD}} into the password field"
-      },
-      {
-        "type": "action",
-        "description": "Submit the login form"
-      },
-      {
-        "type": "action",
-        "description": "Click the navigation option to open user management"
-      },
-      {
-        "type": "action",
-        "description": "Start adding a new user"
-      },
-      {
-        "type": "action",
-        "description": "Fill a unique username into the username field"
-      },
-      {
-        "type": "action",
-        "description": "Fill a valid password into the password field"
-      },
-      {
-        "type": "action",
-        "description": "Select a role for the new user"
-      },
-      {
-        "type": "action",
-        "description": "Submit the user form"
-      },
-      {
-        "type": "action",
-        "description": "Start adding a new user"
-      },
-      {
-        "type": "action",
-        "description": "Fill the same username as the existing user into the username field"
-      },
-      {
-        "type": "action",
-        "description": "Fill a valid password into the password field"
-      },
-      {
-        "type": "action",
-        "description": "Select a role for the new user"
-      },
-      {
-        "type": "action",
-        "description": "Submit the user form"
-      },
-      {
-        "type": "assertion",
-        "description": "Verify a duplicate-username validation error is visible"
-      }
-    ],
-    "priority": "Low"
-  },
-  {
-    "id": "TC023",
-    "title": "Mostrar estado vacío al filtrar una mesa sin pedidos activos",
-    "description": "Este caso verifica que al filtrar por una mesa sin órdenes activas se muestre un resultado vacío/mensaje y no se presenten pedidos.",
-    "category": "Waiter Interface",
-    "steps": [
-      {
-        "type": "action",
-        "description": "Navigate to /index.php?action=login"
-      },
-      {
-        "type": "action",
-        "description": "Fill in the email field with {{LOGIN_USER}}"
-      },
-      {
-        "type": "action",
-        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
-      },
-      {
-        "type": "action",
-        "description": "Submit the login form"
-      },
-      {
-        "type": "action",
-        "description": "Click the navigation option to open the waiter interface"
-      },
-      {
-        "type": "action",
-        "description": "Filter active orders by selecting a table that has no active orders"
-      },
-      {
-        "type": "assertion",
-        "description": "Verify an empty results message is displayed for the selected table"
-      }
-    ],
-    "priority": "Low"
-  },
-  {
-    "id": "TC024",
-    "title": "Mostrar estado vacío al filtrar por tipo sin coincidencias",
-    "description": "Este caso verifica que al aplicar un filtro por tipo sin pedidos coincidentes, la interfaz de cocina muestre un estado vacío/mensaje de no coincidencias.",
-    "category": "Kitchen Interface",
-    "steps": [
-      {
-        "type": "action",
-        "description": "Navigate to /index.php?action=login"
-      },
-      {
-        "type": "action",
-        "description": "Fill in the email field with {{LOGIN_USER}}"
-      },
-      {
-        "type": "action",
-        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
-      },
-      {
-        "type": "action",
-        "description": "Submit the login form"
-      },
-      {
-        "type": "action",
-        "description": "Click the navigation option to open the kitchen interface"
-      },
-      {
-        "type": "action",
-        "description": "Filter incoming orders by selecting an order type that has no matching orders"
-      },
-      {
-        "type": "assertion",
-        "description": "Verify a no matching orders message is displayed"
-      }
-    ],
-    "priority": "Low"
+    "auth_required": true,
+    "role": "admin"
   }
 ]

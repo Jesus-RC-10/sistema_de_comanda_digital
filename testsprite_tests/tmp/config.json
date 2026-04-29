@@ -1,6 +1,17 @@
 {
-  "status": "commited",
-  "type": "frontend",
+  "status": "init",
   "scope": "codebase",
-  "localEndpoint": "http://localhost:8081"
+  "type": "frontend",
+  "localEndpoint": "http://localhost:8081/",
+  "serverPort": 39995,
+  "executionArgs": {
+    "projectName": "sistema_de_comanda_digital",
+    "projectPath": "/opt/lampp/htdocs/proyecto/sistema_de_comanda_digital",
+    "testIds": [],
+    "additionalInstruction": "Usa las credenciales de prueba: admin/123456, mesero1/123456, cocina1/123456, caja/123456",
+    "serverMode": "development",
+    "envs": {
+      "API_KEY": "sk-user-oPstUMwYZ7t8m1q8LhcHPGw2OdrbFxMjk8wrjVf8A80LKHqMHh5ZYh2dT41ie96T_LyIHusHV6pdy35ULiwYDkgBLe0GaeMQJphhhGCtC2hF7ml0h02bfINv22P_7pAMVRU"
+    }
+  }
 }

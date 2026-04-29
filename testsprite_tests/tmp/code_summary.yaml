@@ -1,257 +1,200 @@
 version: "2"
-type: backend
+type: frontend
 tech_stack:
-  - PHP 8.2
-  - MySQL 8.0
-  - Apache
-  - Docker
-  - HTML5/CSS3/JavaScript
-  - MVC Architecture
-
+  - PHP
+  - JavaScript
+  - CSS
+  - MySQL
+  - bcrypt
 routes:
-  - path: /index.php?action=login
+  - path: /
+    file: index.php
+    auth_required: false
+    description: Redirects to login or default route (mesa)
+  - path: /login
     file: views/auth/login.php
     auth_required: false
-    description: User login page
-  - path: /index.php?action=admin&seccion=dashboard
-    file: views/admin/dashboard.php
-    auth_required: true
-    description: Admin dashboard
-  - path: /index.php?action=admin&seccion=usuarios
-    file: views/admin/usuarios.php
-    auth_required: true
-    description: User management
-  - path: /index.php?action=admin&seccion=menu
-    file: views/admin/menu.php
-    auth_required: true
-    description: Menu management
-  - path: /index.php?action=admin&seccion=inventario
-    file: views/admin/inventario.php
-    auth_required: true
-    description: Inventory management
-  - path: /index.php?action=admin&seccion=mesas
-    file: views/admin/mesas.php
-    auth_required: true
-    description: Table management
-  - path: /index.php?action=admin&seccion=reportes
-    file: views/admin/reportes.php
-    auth_required: true
-    description: Reports
-  - path: /index.php?url=mesa
+    description: User login page with form (username, password)
+  - path: /mesa
+    file: views/mesas/mesas.php
+    auth_required: false
+    description: Customer table selection and menu browsing
+  - path: /menu
     file: views/menu/menu.php
     auth_required: false
-    description: Customer menu/ordering page
-  - path: /index.php?url=mesero
+    description: Food menu display with add-to-cart functionality
+  - path: /mesero
     file: views/mesero/mesero.php
     auth_required: true
-    description: Waiter panel
-  - path: /index.php?url=cocina
+    description: Waiter dashboard - view and manage active orders
+  - path: /cocina
     file: views/cocina/cocina.php
     auth_required: true
-    description: Kitchen display
-  - path: /index.php?url=caja
+    description: Kitchen display - view pending and in-progress orders
+  - path: /caja
     file: views/caja/caja.php
     auth_required: true
-    description: Cashier/payment panel
-
+    description: Cashier terminal - process payments and close orders
+  - path: /admin
+    file: views/admin/dashboard.php
+    auth_required: true
+    description: Admin dashboard - manage users, menu, tables, reports
 features:
   - name: User Login
-    description: Login with username and password credentials, with role-based redirection
+    description: Login with username and password, role-based redirection
     files:
+      - views/auth/login.php
       - controllers/AuthController.php
       - models/User.php
-      - views/auth/login.php
-    entry_route: /index.php?action=login
+    entry_route: /login
     user_interactions:
-      - Enter username in input field
-      - Enter password in input field
+      - Fill username input field
+      - Fill password input field
       - Click Login button to submit
       - See error message on invalid credentials
-      - Get redirected based on role (admin, mesero, cocina, caja)
+      - Redirected to role-specific dashboard on success
     api_calls:
       - method: POST
-        endpoint: /index.php?action=login
+        endpoint: /?action=login
     auth_required: false
-
-  - name: User Logout
-    description: End user session and redirect to login page
+  - name: Customer Table Selection
+    description: Customers select a table number to start browsing the menu
     files:
-      - controllers/AuthController.php
-    entry_route: /index.php?action=logout
-    user_interactions:
-      - Click logout button
-      - Get redirected to login page
-    auth_required: true
-
-  - name: Admin Dashboard
-    description: View key metrics and navigate to admin sections
-    files:
-      - controllers/AdminController.php
-      - views/admin/dashboard.php
-    entry_route: /index.php?action=admin&seccion=dashboard
-    user_interactions:
-      - View sales metrics
-      - View recent orders
-      - Navigate to different admin sections
-    auth_required: true
-
-  - name: User Management
-    description: CRUD operations for system users
-    files:
-      - controllers/AdminController.php
-      - models/User.php
-      - views/admin/usuarios.php
-    entry_route: /index.php?action=admin&seccion=usuarios
-    user_interactions:
-      - View list of users
-      - Create new user
-      - Edit existing user
-      - Activate/deactivate user
-    api_calls:
-      - method: POST
-        endpoint: /index.php?action=admin&seccion=usuarios
-    auth_required: true
-
-  - name: Menu Management
-    description: CRUD operations for menu items and categories
-    files:
-      - controllers/MenuController.php
-      - models/Producto.php
-      - views/admin/menu.php
-    entry_route: /index.php?action=admin&seccion=menu
-    user_interactions:
-      - View menu items
-      - Add new product
-      - Edit product details
-      - Activate/deactivate product
-    api_calls:
-      - method: POST
-        endpoint: /index.php?action=admin&seccion=menu
-    auth_required: true
-
-  - name: Inventory Management
-    description: Manage ingredients stock and alerts
-    files:
-      - controllers/AdminController.php
-      - models/Inventario.php
-      - views/admin/inventario.php
-    entry_route: /index.php?action=admin&seccion=inventario
-    user_interactions:
-      - View ingredient stock levels
-      - Update ingredient quantities
-      - Set minimum stock thresholds
-      - View low stock alerts
-    api_calls:
-      - method: POST
-        endpoint: /index.php?action=admin&seccion=inventario
-    auth_required: true
-
-  - name: Table Management
-    description: Manage restaurant tables
-    files:
+      - views/mesas/mesas.php
       - controllers/MesaController.php
-      - models/Mesa.php
-      - views/admin/mesas.php
-    entry_route: /index.php?action=admin&seccion=mesas
+    entry_route: /mesa
     user_interactions:
-      - View table status
-      - Add new table
-      - Edit table details
-      - Activate/deactivate table
-    api_calls:
-      - method: POST
-        endpoint: /index.php?action=admin&seccion=mesas
-    auth_required: true
-
-  - name: Customer Ordering (Mesa)
-    description: Browse menu and place orders from table
-    files:
-      - controllers/OrderController.php
-      - views/menu/menu.php
-    entry_route: /index.php?url=mesa
-    user_interactions:
-      - Browse menu by category
-      - Select products
-      - Add items to cart
-      - Review cart
-      - Confirm order
-      - View digital ticket
-    api_calls:
-      - method: POST
-        endpoint: /index.php?url=pedido
+      - Click on an available table to select it
+      - Redirect to menu with mesa=X parameter
+    api_calls: []
     auth_required: false
-
-  - name: Waiter Panel
-    description: View and manage orders for waiters
+  - name: Customer Menu Browsing & Ordering
+    description: Browse food menu by categories, add items to cart, confirm order
     files:
-      - controllers/MeseroController.php
+      - views/menu/menu.php
+      - assets/js/main.js
+      - assets/js/carrito.js
+      - controllers/MenuController.php
+    entry_route: /menu
+    user_interactions:
+      - View menu items grouped by categories
+      - Click "Agregar al carrito" to add items
+      - View cart with items and total
+      - Adjust quantities in cart
+      - Click "Confirmar Pedido" to place order
+      - Receive order confirmation
+    api_calls:
+      - method: POST
+        endpoint: /menu/confirmar
+    auth_required: false
+  - name: Waiter Order Management
+    description: Mesero views active orders, updates item status (Pendiente → Preparando → Listo → Entregado), closes completed orders
+    files:
       - views/mesero/mesero.php
-    entry_route: /index.php?url=mesero
+      - controllers/MeseroController.php
+      - assets/js/mesero.js
+    entry_route: /mesero
     user_interactions:
-      - View active orders
-      - Check order status
-      - Assist tables
+      - View all active orders with item details
+      - Select status for each order item via dropdown
+      - Click "Cerrar Pedido" to complete an order
+      - Receive notifications when tables request assistance
+      - Auto-refresh every 5 seconds
+    api_calls:
+      - method: GET
+        endpoint: /mesero/obtenerPedidosActualizados
+      - method: POST
+        endpoint: /mesero/actualizarDetalle
+      - method: POST
+        endpoint: /mesero/cerrarPedido
     auth_required: true
-
-  - name: Kitchen Display
-    description: View and update order preparation status
+  - name: Kitchen Order Display
+    description: Cocina views pending orders, marks items as preparing and ready
     files:
-      - controllers/CocinaController.php
       - views/cocina/cocina.php
-    entry_route: /index.php?url=cocina
+      - controllers/CocinaController.php
+      - assets/js/cocina.js
+    entry_route: /cocina
     user_interactions:
-      - View incoming orders in real-time
-      - Update order status (pending, preparing, ready)
-      - Filter by dish type
+      - View pending orders in cards layout
+      - Click to mark items as "En preparación"
+      - Click to mark items as "Listo"
+      - Auto-refresh for new orders
     api_calls:
+      - method: GET
+        endpoint: /cocina/obtenerPedidosPendientes
       - method: POST
-        endpoint: /index.php?url=cocina/actualizar
+        endpoint: /cocina/actualizarEstado
     auth_required: true
-
-  - name: Cashier Panel
-    description: Process payments and manage sales
+  - name: Cashier Payment Processing
+    description: Caja views pending payments, processes cash payments, generates tickets
     files:
-      - controllers/CajaController.php
-      - models/Venta.php
       - views/caja/caja.php
-    entry_route: /index.php?url=caja
+      - controllers/CajaController.php
+    entry_route: /caja
     user_interactions:
-      - View pending payments
-      - View paid sales history
-      - Process payment
-      - Calculate change
-      - Cancel pending order
+      - View pending orders with totals
+      - Enter cash amount received
+      - Click to process payment and close order
+      - View payment history and daily totals
     api_calls:
       - method: POST
-        endpoint: /index.php?url=caja/pagar
+        endpoint: /caja/procesarPago
+      - method: GET
+        endpoint: /caja/obtenerPendientes
     auth_required: true
-
-  - name: Reports
-    description: Generate and view sales reports
+  - name: Admin Dashboard & User Management
+    description: Admin manages users (create, edit, deactivate), manages menu items, tables, views reports
     files:
-      - controllers/ReportController.php
+      - views/admin/dashboard.php
+      - views/admin/usuarios.php
+      - views/admin/menu.php
+      - views/admin/mesas.php
       - views/admin/reportes.php
-      - generar_pdf.php
-    entry_route: /index.php?action=admin&seccion=reportes
+      - views/admin/inventario.php
+      - controllers/AdminController.php
+      - public/css/js/admin.js
+    entry_route: /admin
     user_interactions:
-      - Select report type (daily, weekly, monthly)
-      - View sales summary
-      - Generate PDF report
+      - View system overview dashboard
+      - Create/edit/delete users with role assignment
+      - Add/edit/delete menu items with categories and prices
+      - Manage tables (add, edit status, delete)
+      - View sales reports with filters
+      - Manage inventory items
+    api_calls:
+      - method: POST
+        endpoint: /admin/guardarUsuario
+      - method: GET
+        endpoint: /admin/obtenerUsuarios
+      - method: POST
+        endpoint: /admin/guardarProducto
+      - method: POST
+        endpoint: /admin/guardarMesa
+      - method: GET
+        endpoint: /admin/obtenerReportes
     auth_required: true
-
+  - name: Table Assistance Request
+    description: Customers can request waiter assistance from their table
+    files:
+      - assets/js/help-buttons.js
+      - assets/js/mesero-ayuda.js
+      - assets/js/NotificationManager.js
+    entry_route: /mesa
+    user_interactions:
+      - Click assistance button on table page
+      - Select type of assistance needed
+      - Waiter receives popup notification
+      - Waiter acknowledges and attends table
+    api_calls: []
+    auth_required: false
 known_limitations:
-  - issue: CSRF protection not fully implemented on all forms
-    location: Multiple view files
-    impact: Potential security vulnerability for form submissions
-  - issue: Product customization (add/remove ingredients) only partially implemented
-    location: views/menu/menu.php
-    impact: Customers cannot fully customize dishes as specified
-  - issue: Help button for calling waiter not fully implemented
-    location: views/menu/menu.php
-    impact: Customers cannot request assistance from tablet
-  - issue: Inventory auto-deduction on order confirmation pending
-    location: models/Pedido.php
-    impact: Stock levels may not reflect actual consumption
-  - issue: Real-time notifications require page refresh
-    location: Multiple files
-    impact: Not truly real-time, uses polling instead of websockets
+  - issue: Cart data stored only in localStorage, lost on browser clear
+    location: assets/js/carrito.js
+    impact: Customer orders are lost if localStorage is cleared before confirmation
+  - issue: No real-time websockets, uses polling every 5 seconds
+    location: assets/js/mesero.js, assets/js/cocina.js
+    impact: Up to 5 second delay in order updates for kitchen and waiters
+  - issue: Login page uses legacy action-based routing (?action=login)
+    location: index.php, views/auth/login.php
+    impact: Inconsistent routing with the rest of the app which uses ?url= based routing
