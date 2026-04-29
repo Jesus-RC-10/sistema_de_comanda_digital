@@ -244,7 +244,7 @@ El sistema soporta variables de entorno para configuración flexible:
 define('DB_HOST', getenv('DB_HOST') ?: 'localhost');
 define('DB_USER', getenv('DB_USER') ?: 'root');
 define('DB_PASS', getenv('DB_PASS') !== false ? getenv('DB_PASS') : '');
-define('DB_NAME', 'sistema_de_comanda_digital_v1');
+define('DB_NAME', 'sistema_comanda_digital_v1');
 ```
 
 #### 3.4.2 Configuración Docker

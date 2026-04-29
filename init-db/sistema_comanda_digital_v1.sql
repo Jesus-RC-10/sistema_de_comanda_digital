@@ -330,9 +330,9 @@ CREATE TABLE `ventas` (
 --
 
 INSERT INTO `ventas` (`id`, `pedido_id`, `total`, `metodo_pago`, `estado`, `fecha_pago`, `fecha_creacion`, `usuario_id`) VALUES
-(1, 7, 86.00, '', 'pendiente', NULL, '2026-04-23 22:28:11', NULL),
-(2, 10, 42.00, '', 'pendiente', NULL, '2026-04-23 22:35:43', NULL),
-(3, 11, 70.00, '', 'pendiente', NULL, '2026-04-23 22:37:08', NULL);
+(1, 7, 86.00, 'efectivo', 'pendiente', NULL, '2026-04-23 22:28:11', NULL),
+(2, 10, 42.00, 'efectivo', 'pendiente', NULL, '2026-04-23 22:35:43', NULL),
+(3, 11, 70.00, 'efectivo', 'pendiente', NULL, '2026-04-23 22:37:08', NULL);
 
 --
 -- Índices para tablas volcadas

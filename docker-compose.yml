@@ -2,14 +2,14 @@ services:
   web:
     build: .
     ports:
-      - "8081:80" # Tu app estará disponible en http://localhost:8081 en la compu de tus invitados
+      - "8081:80"
     volumes:
-      - .:/var/www/html/ # Sincroniza el código para que al editar un archivo se refleje de inmediato
+      - .:/var/www/html/
     environment:
-      - DB_HOST=db
-      - DB_USER=root
-      - DB_PASS=root
-      - DB_NAME=sistema_comanda_digital_v1
+      DB_HOST: db
+      DB_USER: root
+      DB_PASS: root
+      DB_NAME: sistema_comanda_digital_v1
     depends_on:
       - db
 
@@ -17,13 +17,13 @@ services:
     image: mysql:8.0
     restart: always
     ports:
-      - "3307:3306" # Puerto de MySQL en el host (3307 para evitar chocar con XAMPP)
+      - "3307:3306"
     environment:
-      - MYSQL_ROOT_PASSWORD=root
-      - MYSQL_DATABASE=sistema_comanda_digital_v1
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: sistema_comanda_digital_v1
     volumes:
       - db_data:/var/lib/mysql
-      - ./init-db:/docker-entrypoint-initdb.d # La primera vez que se levanta, lee aquí y crea tu BD original
+      - ./init-db:/docker-entrypoint-initdb.d
     command: --default-authentication-plugin=mysql_native_password
 
 volumes:
