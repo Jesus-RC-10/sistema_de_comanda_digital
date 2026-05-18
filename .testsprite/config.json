@@ -1,0 +1,7 @@
+{
+  "localPort": 8081,
+  "pathname": "",
+  "type": "frontend",
+  "projectPath": "/opt/lampp/htdocs/proyecto/sistema_de_comanda_digital",
+  "testScope": "codebase"
+}

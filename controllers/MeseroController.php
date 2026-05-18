@@ -1,5 +1,5 @@
 <?php
-require_once 'models/PedidoModel.php';
+require_once __DIR__ . '/../models/PedidoModel.php';
 
 class MeseroController {
     public function index() {
@@ -11,7 +11,7 @@ class MeseroController {
             'assets_url' => BASE_URL . "public/css/"
         ];
 
-        require_once 'views/mesero/mesero.php';
+        require_once __DIR__ . '/../views/mesero/mesero.php';
     }
 
     // Nuevo método para obtener pedidos actualizados (AJAX)

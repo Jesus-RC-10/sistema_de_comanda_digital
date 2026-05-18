@@ -1,5 +1,5 @@
 <?php
-require_once 'models/OrderModel.php';
+require_once __DIR__ . '/../models/OrderModel.php';
 
 class OrderController {
     private $orderModel;
@@ -34,7 +34,7 @@ class OrderController {
             $total = $pedido['total'];
             
             // Crear venta pendiente
-            require_once 'models/VentaModel.php';
+            require_once __DIR__ . '/../models/VentaModel.php';
             $ventaModel = new VentaModel();
             if (!$ventaModel->crearVentaPendiente($pedidoId, $total)) {
                 throw new Exception("Error al crear la venta pendiente.");

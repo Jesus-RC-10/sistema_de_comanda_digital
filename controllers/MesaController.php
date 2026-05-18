@@ -1,5 +1,5 @@
 <?php
-require_once 'models/MesaModel.php';
+require_once __DIR__ . '/../models/MesaModel.php';
 
 class MesaController {
     public function index() {
@@ -12,7 +12,7 @@ class MesaController {
             'assets_url' => ASSETS_URL
         ];
 
-        require_once 'views/mesas/mesas.php';
+        require_once __DIR__ . '/../views/mesas/mesas.php';
     }
 }
 ?>

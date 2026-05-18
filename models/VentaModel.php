@@ -1,19 +1,18 @@
 <?php
-require_once 'config/db.php';
+require_once __DIR__ . '/../config/database.php';
 
 class VentaModel {
     private $conn;
 
     public function __construct() {
-        $db = new Database();
-        $this->conn = $db->getConnection();
+        $this->conn = Database::getConnection();
     }
 
     /**
      * Crear una venta pendiente para un pedido
      */
     public function crearVentaPendiente($pedido_id, $total) {
-        $sql = "INSERT INTO ventas (pedido_id, total, metodo_pago, estado) VALUES (?, ?, 'pendiente', 'pendiente')";
+        $sql = "INSERT INTO ventas (pedido_id, total, metodo_pago, estado) VALUES (?, ?, 'efectivo', 'pendiente')";
         $stmt = $this->conn->prepare($sql);
         return $stmt->execute([$pedido_id, $total]);
     }

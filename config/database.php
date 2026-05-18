@@ -7,13 +7,15 @@ class Database {
     
     public static function getConnection() {
         if (self::$connection === null) {
-            self::$connection = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
-            
-            if (self::$connection->connect_error) {
-                die("Error de conexión: " . self::$connection->connect_error);
+            try {
+                $dsn = "mysql:host=" . DB_HOST . ";dbname=" . DB_NAME . ";charset=utf8mb4";
+                self::$connection = new PDO($dsn, DB_USER, DB_PASS);
+                self::$connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                // Configurar zona horaria para timestamps
+                self::$connection->exec("SET time_zone = '-05:00'");
+            } catch(PDOException $e) {
+                die("Error de conexión: " . $e->getMessage());
             }
-            
-            self::$connection->set_charset("utf8mb4");
         }
         
         return self::$connection;

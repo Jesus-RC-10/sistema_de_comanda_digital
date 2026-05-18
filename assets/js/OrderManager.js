@@ -51,13 +51,29 @@ class OrderManager {
         }
     }
 
-    generateTicket() {
+    async generateTicket() {
         const cart = this.cartManager.getCart();
         const total = this.cartManager.getTotal();
         const mesaNumero = this.cartManager.getMesaNumero();
-        const now = new Date();
-        const fecha = now.toLocaleDateString();
-        const hora = now.toLocaleTimeString();
+        
+        // Obtener la fecha y hora del servidor
+        let fecha = '';
+        let hora = '';
+        
+        try {
+            const response = await fetch('index.php?action=menu/getServerDateTime');
+            const data = await response.json();
+            if (data.success) {
+                fecha = data.fecha;
+                hora = data.hora;
+            }
+        } catch (error) {
+            console.error('Error al obtener fecha del servidor:', error);
+            // Fallback a fecha local si falla
+            const now = new Date();
+            fecha = now.toLocaleDateString();
+            hora = now.toLocaleTimeString();
+        }
 
         return `
 TAQUERÍA EL INFORMÁTICO

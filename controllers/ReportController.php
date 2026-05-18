@@ -67,8 +67,10 @@ class ReportController {
         
         // Ventas totales del día
         $sql_ventas = "SELECT COALESCE(SUM(total), 0) as total FROM ventas WHERE DATE(fecha_pago) = CURDATE() AND estado = 'pagado'";
-        $result = $db->query($sql_ventas);
-        $ventas_hoy = $result->fetch_assoc()['total'];
+        $stmt = $db->prepare($sql_ventas);
+        $stmt->execute();
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        $ventas_hoy = $row['total'];
         
         $html .= '<p><strong>Total de ventas hoy: $' . number_format($ventas_hoy, 2) . '</strong></p>';
         
@@ -85,9 +87,11 @@ class ReportController {
         GROUP BY p.id, p.nombre
         ORDER BY total_vendido DESC";
         
-        $result = $db->query($sql_productos);
+        $stmt = $db->prepare($sql_productos);
+        $stmt->execute();
+        $productos = $stmt->fetchAll(PDO::FETCH_ASSOC);
         
-        if ($result->num_rows > 0) {
+        if (count($productos) > 0) {
             $html .= '<table>
                 <tr>
                     <th>Producto</th>
@@ -95,7 +99,7 @@ class ReportController {
                     <th>Total</th>
                 </tr>';
             
-            while($row = $result->fetch_assoc()) {
+            foreach ($productos as $row) {
                 $html .= '<tr>
                     <td>' . $row['producto'] . '</td>
                     <td>' . $row['total_vendido'] . ' und</td>
@@ -121,17 +125,18 @@ class ReportController {
             COUNT(*) as total_pedidos,
             SUM(ped.total) as total_ventas
         FROM pedidos ped
-        WHERE MONTH(ped.fecha_creacion) = ? AND YEAR(ped.fecha_creacion) = ?
+        WHERE MONTH(ped.fecha_creacion) = :mes AND YEAR(ped.fecha_creacion) = :anio
         AND ped.estado = 'entregado'
         GROUP BY DATE(ped.fecha_creacion)
         ORDER BY fecha DESC";
         
         $stmt = $db->prepare($sql_mensual);
-        $stmt->bind_param("ii", $mes, $anio);
+        $stmt->bindValue(':mes', $mes, PDO::PARAM_INT);
+        $stmt->bindValue(':anio', $anio, PDO::PARAM_INT);
         $stmt->execute();
-        $result = $stmt->get_result();
+        $registros = $stmt->fetchAll(PDO::FETCH_ASSOC);
         
-        if ($result->num_rows > 0) {
+        if (count($registros) > 0) {
             $html .= '<table>
                 <tr>
                     <th>Fecha</th>
@@ -142,7 +147,7 @@ class ReportController {
             $total_ventas = 0;
             $total_pedidos = 0;
             
-            while($row = $result->fetch_assoc()) {
+            foreach ($registros as $row) {
                 $html .= '<tr>
                     <td>' . date('d/m/Y', strtotime($row['fecha'])) . '</td>
                     <td>' . $row['total_pedidos'] . '</td>
@@ -182,9 +187,11 @@ class ReportController {
         ORDER BY ped.fecha_creacion DESC
         LIMIT 100";
         
-        $result = $db->query($sql_historial);
+        $stmt = $db->prepare($sql_historial);
+        $stmt->execute();
+        $pedidos = $stmt->fetchAll(PDO::FETCH_ASSOC);
         
-        if ($result->num_rows > 0) {
+        if (count($pedidos) > 0) {
             $html .= '<table>
                 <tr>
                     <th>ID</th>
@@ -195,7 +202,7 @@ class ReportController {
                     <th>Fecha</th>
                 </tr>';
             
-            while($row = $result->fetch_assoc()) {
+            foreach ($pedidos as $row) {
                 $html .= '<tr>
                     <td>' . $row['id'] . '</td>
                     <td>' . $row['numero_mesa'] . '</td>

@@ -1,0 +1,201 @@
+[
+  {
+    "id": "test-001",
+    "title": "Login con credenciales válidas de admin",
+    "description": "Verificar que un administrador puede iniciar sesión con usuario admin y contraseña 123456",
+    "steps": [
+      "Navegar a http://localhost:8081/",
+      "Esperar a que cargue la página de login",
+      "Llenar el campo de usuario con 'admin'",
+      "Llenar el campo de contraseña con '123456'",
+      "Hacer clic en el botón de Login",
+      "Verificar que aparece el dashboard de administración"
+    ],
+    "auth_required": false,
+    "role": "admin"
+  },
+  {
+    "id": "test-002",
+    "title": "Login con credenciales válidas de mesero",
+    "description": "Verificar que un mesero puede iniciar sesión con usuario mesero1 y contraseña 123456",
+    "steps": [
+      "Navegar a http://localhost:8081/",
+      "Esperar a que cargue la página de login",
+      "Llenar el campo de usuario con 'mesero1'",
+      "Llenar el campo de contraseña con '123456'",
+      "Hacer clic en el botón de Login",
+      "Verificar que aparece el panel de mesero"
+    ],
+    "auth_required": false,
+    "role": "mesero"
+  },
+  {
+    "id": "test-003",
+    "title": "Login con credenciales válidas de cocina",
+    "description": "Verificar que personal de cocina puede iniciar sesión con usuario cocina1 y contraseña 123456",
+    "steps": [
+      "Navegar a http://localhost:8081/",
+      "Esperar a que cargue la página de login",
+      "Llenar el campo de usuario con 'cocina1'",
+      "Llenar el campo de contraseña con '123456'",
+      "Hacer clic en el botón de Login",
+      "Verificar que aparece la pantalla de cocina"
+    ],
+    "auth_required": false,
+    "role": "cocina"
+  },
+  {
+    "id": "test-004",
+    "title": "Login con credenciales válidas de caja",
+    "description": "Verificar que personal de caja puede iniciar sesión con usuario caja y contraseña 123456",
+    "steps": [
+      "Navegar a http://localhost:8081/",
+      "Esperar a que cargue la página de login",
+      "Llenar el campo de usuario con 'caja'",
+      "Llenar el campo de contraseña con '123456'",
+      "Hacer clic en el botón de Login",
+      "Verificar que aparece el panel de caja"
+    ],
+    "auth_required": false,
+    "role": "caja"
+  },
+  {
+    "id": "test-005",
+    "title": "Login con credenciales inválidas muestra error",
+    "description": "Verificar que el sistema muestra un mensaje de error al ingresar credenciales incorrectas",
+    "steps": [
+      "Navegar a http://localhost:8081/",
+      "Esperar a que cargue la página de login",
+      "Llenar el campo de usuario con 'invalido'",
+      "Llenar el campo de contraseña con 'incorrecta'",
+      "Hacer clic en el botón de Login",
+      "Verificar que aparece un mensaje de error indicando credenciales inválidas"
+    ],
+    "auth_required": false
+  },
+  {
+    "id": "test-006",
+    "title": "Navegación del cliente - selección de mesa",
+    "description": "Verificar que un cliente puede ver las mesas disponibles y seleccionar una",
+    "steps": [
+      "Navegar a http://localhost:8081/?url=mesa",
+      "Verificar que se muestran las mesas disponibles",
+      "Hacer clic en una mesa disponible",
+      "Verificar que redirige al menú con el parámetro de mesa"
+    ],
+    "auth_required": false
+  },
+  {
+    "id": "test-007",
+    "title": "Navegación del menú de cliente",
+    "description": "Verificar que el menú muestra productos organizados por categorías con botones de agregar al carrito",
+    "steps": [
+      "Navegar a http://localhost:8081/?url=menu&mesa=1",
+      "Verificar que se muestran productos agrupados por categorías",
+      "Verificar que cada producto tiene un botón de agregar al carrito",
+      "Hacer clic en un botón de agregar al carrito",
+      "Verificar que el carrito se actualiza con el producto"
+    ],
+    "auth_required": false
+  },
+  {
+    "id": "test-008",
+    "title": "Dashboard de admin muestra métricas",
+    "description": "Verificar que el panel de administración muestra estadísticas después del login",
+    "steps": [
+      "Navegar a http://localhost:8081/",
+      "Iniciar sesión con usuario 'admin' y contraseña '123456'",
+      "Verificar que el dashboard muestra métricas o información del sistema",
+      "Verificar que existe navegación hacia las secciones de admin"
+    ],
+    "auth_required": true,
+    "role": "admin"
+  },
+  {
+    "id": "test-009",
+    "title": "Panel de mesero muestra pedidos activos",
+    "description": "Verificar que el mesero puede ver los pedidos activos después de iniciar sesión",
+    "steps": [
+      "Navegar a http://localhost:8081/",
+      "Iniciar sesión con usuario 'mesero1' y contraseña '123456'",
+      "Verificar que se muestra una lista de pedidos o un mensaje de sin pedidos",
+      "Verificar que la interfaz tiene controles para gestionar pedidos"
+    ],
+    "auth_required": true,
+    "role": "mesero"
+  },
+  {
+    "id": "test-010",
+    "title": "Pantalla de cocina muestra pedidos pendientes",
+    "description": "Verificar que la cocina puede ver los pedidos pendientes después de iniciar sesión",
+    "steps": [
+      "Navegar a http://localhost:8081/",
+      "Iniciar sesión con usuario 'cocina1' y contraseña '123456'",
+      "Verificar que se muestra una lista de pedidos pendientes o mensaje de sin pedidos",
+      "Verificar que la interfaz permite actualizar estados de pedidos"
+    ],
+    "auth_required": true,
+    "role": "cocina"
+  },
+  {
+    "id": "test-011",
+    "title": "Panel de caja muestra ventas pendientes",
+    "description": "Verificar que caja puede ver las ventas pendientes de pago después de iniciar sesión",
+    "steps": [
+      "Navegar a http://localhost:8081/",
+      "Iniciar sesión con usuario 'caja' y contraseña '123456'",
+      "Verificar que se muestran ventas pendientes o mensaje de sin ventas",
+      "Verificar que la interfaz tiene opciones para procesar pagos"
+    ],
+    "auth_required": true,
+    "role": "caja"
+  },
+  {
+    "id": "test-012",
+    "title": "Logout redirige a página de login",
+    "description": "Verificar que al cerrar sesión el usuario es redirigido a la página de login",
+    "steps": [
+      "Navegar a http://localhost:8081/",
+      "Iniciar sesión con usuario 'admin' y contraseña '123456'",
+      "Navegar a la URL de logout: http://localhost:8081/?action=logout",
+      "Verificar que se redirige a la página de login"
+    ],
+    "auth_required": true,
+    "role": "admin"
+  },
+  {
+    "id": "test-013",
+    "title": "Formulario de login tiene campos requeridos",
+    "description": "Verificar que el formulario de login tiene los campos de usuario y contraseña y el botón de envío",
+    "steps": [
+      "Navegar a http://localhost:8081/",
+      "Verificar que existe un campo de entrada para usuario",
+      "Verificar que existe un campo de entrada para contraseña",
+      "Verificar que existe un botón de Login/Iniciar Sesión"
+    ],
+    "auth_required": false
+  },
+  {
+    "id": "test-014",
+    "title": "Acceso sin autenticación redirige a login",
+    "description": "Verificar que intentar acceder a rutas protegidas sin login redirige al formulario de login",
+    "steps": [
+      "Navegar a http://localhost:8081/?url=admin sin haber iniciado sesión",
+      "Verificar que el sistema redirige a la página de login o muestra un mensaje de acceso denegado"
+    ],
+    "auth_required": false
+  },
+  {
+    "id": "test-015",
+    "title": "Admin puede acceder a gestión de usuarios",
+    "description": "Verificar que el admin puede navegar a la sección de gestión de usuarios",
+    "steps": [
+      "Navegar a http://localhost:8081/",
+      "Iniciar sesión con usuario 'admin' y contraseña '123456'",
+      "Navegar a http://localhost:8081/?url=admin/usuarios",
+      "Verificar que se muestra la lista de usuarios o una interfaz de gestión"
+    ],
+    "auth_required": true,
+    "role": "admin"
+  }
+]

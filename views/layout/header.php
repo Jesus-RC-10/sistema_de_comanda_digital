@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Panel de Administración - Sistema de Comanda Digital</title>
-    <link rel="stylesheet" href="public/css/admin.css">
-    <script src="public/css/js/admin.js" defer></script>
+    <link rel="stylesheet" href="<?php echo BASE_URL; ?>public/css/admin.css">
+    <script src="<?php echo BASE_URL; ?>public/css/js/admin.js" defer></script>
     <style>
         .content-section {
             display: block;

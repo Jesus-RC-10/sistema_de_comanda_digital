@@ -9,8 +9,10 @@ class Venta {
     
     public function getVentasHoy() {
         $sql = "SELECT COALESCE(SUM(total), 0) as total FROM ventas WHERE DATE(fecha_pago) = CURDATE() AND estado = 'pagado'";
-        $result = $this->db->query($sql);
-        return $result->fetch_assoc()['total'];
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result['total'];
     }
 }
 ?>

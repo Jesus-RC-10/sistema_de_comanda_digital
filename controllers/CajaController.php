@@ -1,5 +1,5 @@
 <?php
-require_once 'models/VentaModel.php';
+require_once __DIR__ . '/../models/VentaModel.php';
 
 class CajaController {
     public function index() {
@@ -24,7 +24,7 @@ class CajaController {
             'assets_url' => ASSETS_URL
         ];
 
-        require_once 'views/caja/caja.php';
+        require_once __DIR__ . '/../views/caja/caja.php';
     }
 
     public function pagar() {
@@ -49,7 +49,7 @@ class CajaController {
 
                 // Marcar pedido como entregado
                 if ($pedido_id) {
-                    require_once 'models/PedidoModel.php';
+                    require_once __DIR__ . '/../models/PedidoModel.php';
                     $pedidoModel = new PedidoModel();
                     $pedidoModel->cerrarPedido($pedido_id);
                 }

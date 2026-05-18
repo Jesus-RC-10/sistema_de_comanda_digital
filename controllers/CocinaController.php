@@ -1,5 +1,5 @@
 <?php
-// require_once 'models/PedidoModel.php'; // Asumo que el autoload se encarga
+// El autoload de index.php se encarga de cargar PedidoModel
 
 class CocinaController {
     public function index() {
@@ -15,7 +15,7 @@ class CocinaController {
             // ASSETS_URL ya está definido en el front controller, no es necesario pasarlo
         ];
 
-        require_once 'views/cocina/cocina.php';
+        require_once __DIR__ . '/../views/cocina/cocina.php';
     }
 
     // Método para obtener pedidos actualizados (AJAX)
