@@ -97,19 +97,19 @@ class AdminController {
         $this->redirect('inventario');
     }
     
-    private function agregarMesa() {
+  private function agregarMesa() {
         $mesaModel = new Mesa();
-        $mesaModel->crear($_POST);
-        
+        $mesaModel->crear($_POST); // Al pasar todo el $_POST, ya viaja el 'mesero_id'
+
         $this->notificationManager->notify('mesa_agregada', [
             'numero_mesa' => $_POST['numero_mesa'],
-            'ubicacion' => $_POST['ubicacion'],
-            'usuario' => $_SESSION['usuario_nombre']
+            'ubicacion'   => $_POST['ubicacion'],
+            'usuario'     => $_SESSION['usuario_nombre'],
+            'mesero_id'   => $_POST['mesero_id']
         ]);
-        
+
         $this->redirect('mesas');
     }
-    
     private function agregarProducto() {
         // Manejar la imagen si se subió
         $imagen = null;
@@ -218,10 +218,19 @@ class AdminController {
     
     private function gestionMesas() {
         $mesaModel = new Mesa();
-        $data = ['mesas' => $mesaModel->getAll()];
+        
+        // INSTANCIAMOS EL MODELO USER PARA OBTENER LOS MESEROS
+        $userModel = new User();
+        $meseros = $userModel->obtenerMeseros();
+        
+        // PASAMOS AMBOS ARREGLOS A LA VISTA
+        $data = [
+            'mesas'   => $mesaModel->getAll(),
+            'meseros' => $meseros // <-- Ahora la vista sí tendrá la lista de meseros
+        ];
+        
         require __DIR__ . '/../views/admin/mesas.php';
     }
-    
     private function gestionMenu() {
         $productoModel = new Producto();
         $db = Database::getConnection();

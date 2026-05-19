@@ -5,12 +5,12 @@ require_once __DIR__ . '/../layout/header.php';
 <div id="mesas" class="content-section">
     <h2>🪑 Gestión de Mesas</h2>
     
-    <!-- Formulario para agregar mesa -->
     <div class="report-section">
         <h3>➕ Agregar Nueva Mesa</h3>
         <form method="POST" action="<?php echo BASE_URL; ?>index.php?action=admin&seccion=mesas" class="form-grid">
             <input type="hidden" name="accion" value="agregar_mesa">
             <input type="hidden" name="seccion_activa" value="mesas">
+            
             <div class="form-group">
                 <label>Número de Mesa:</label>
                 <input type="text" name="numero_mesa" required placeholder="Ej: M07">
@@ -20,13 +20,29 @@ require_once __DIR__ . '/../layout/header.php';
                 <label>Ubicación:</label>
                 <input type="text" name="ubicacion" required placeholder="Ej: Terraza, Interior">
             </div>
+
+            <div class="form-group">
+                <label>Mesero en Turno:</label>
+                <select name="mesero_id" required style="width: 100%; padding: 8px; border-radius: 4px; border: 1px solid #ccc;">
+                    <option value="">-- Seleccione un Mesero --</option>
+                    <?php if (!empty($data['meseros'])): ?>
+                        <?php foreach ($data['meseros'] as $mesero): ?>
+                            <option value="<?php echo $mesero['id']; ?>">
+                                <?php echo htmlspecialchars($mesero['nombre']); ?>
+                            </option>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <option value="" disabled>No hay meseros activos disponibles</option>
+                    <?php endif; ?>
+                </select>
+            </div>
+
             <div class="form-group">
                 <button type="submit" class="btn">Agregar Mesa</button>
             </div>
         </form>
     </div>
 
-    <!-- Lista de mesas existentes -->
     <div class="report-section">
         <h3>📋 Mesas Existentes</h3>
         <div class="table-container">
@@ -37,7 +53,7 @@ require_once __DIR__ . '/../layout/header.php';
                         <th>Número</th>
                         <th>Ubicación</th>
                         <th>Estado</th>
-                        <th>Acciones</th>
+                        <th>Mesero</th> <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -56,6 +72,7 @@ require_once __DIR__ . '/../layout/header.php';
                             <td><strong><?php echo $row['numero_mesa']; ?></strong></td>
                             <td><?php echo $row['ubicacion']; ?></td>
                             <td><?php echo $estado_color; ?></td>
+                            <td><?php echo !empty($row['nombre_mesero']) ? htmlspecialchars($row['nombre_mesero']) : '<span style="color:gray; font-style:italic;">Sin asignar</span>'; ?></td>
                             <td>
                                 <form method="POST" action="<?php echo BASE_URL; ?>index.php?action=admin&seccion=mesas" style="display:inline;">
                                     <input type="hidden" name="accion" value="eliminar_mesa">

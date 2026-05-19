@@ -72,5 +72,12 @@ class User {
         $stmt->bindValue(':id', $id, PDO::PARAM_INT);
         return $stmt->execute();
     }
+    public function obtenerMeseros() {
+        // Filtramos por activos y por el rol exacto de tus meseros
+        $sql = "SELECT id, nombre FROM usuarios WHERE rol = 'mesero' AND activo = 1 ORDER BY nombre";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }
 ?>
