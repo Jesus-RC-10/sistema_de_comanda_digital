@@ -133,22 +133,22 @@ CREATE TABLE `mesas` (
   `numero_mesa` varchar(10) NOT NULL,
   `estado` enum('libre','ocupada','reservada','mantenimiento') DEFAULT 'libre',
   `ubicacion` varchar(100) DEFAULT NULL,
-  `activa` tinyint(1) DEFAULT 1
+  `activa` tinyint(1) DEFAULT 1,
+  `mesero_id` INT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `mesas`
 --
 
-INSERT INTO `mesas` (`id`, `numero_mesa`, `estado`, `ubicacion`, `activa`) VALUES
-(1, 'M01', 'libre', 'Terraza', 1),
-(2, 'M02', 'libre', 'Interior', 1),
-(3, 'M03', 'libre', 'Sala Principal', 1),
-(4, 'M04', 'libre', 'Terraza', 1),
-(5, 'M05', 'libre', 'Sala VIP', 1),
-(6, 'M06', 'libre', 'Interior', 0),
-(10, 'M07', 'libre', 'Terraza', 0);
-
+INSERT INTO `mesas` (`id`, `numero_mesa`, `estado`, `ubicacion`, `activa`, `mesero_id`) VALUES
+(1, 'M01', 'libre', 'Terraza', 1, NULL),
+(2, 'M02', 'libre', 'Interior', 1, NULL),
+(3, 'M03', 'libre', 'Sala Principal', 1, NULL),
+(4, 'M04', 'libre', 'Terraza', 1, NULL),
+(5, 'M05', 'libre', 'Sala VIP', 1, NULL),
+(6, 'M06', 'libre', 'Interior', 0, NULL),
+(10, 'M07', 'libre', 'Terraza', 0, NULL);
 -- --------------------------------------------------------
 
 --
