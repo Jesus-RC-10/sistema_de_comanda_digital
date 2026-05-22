@@ -1,17 +1,18 @@
 {
-  "status": "init",
-  "scope": "codebase",
+  "status": "commited",
   "type": "frontend",
-  "localEndpoint": "http://localhost:8081/",
-  "serverPort": 39995,
+  "scope": "codebase",
+  "localEndpoint": "http://localhost:80/proyectos/pruebas/sistema_de_comanda_digital/",
+  "loginUser": "admin ",
+  "loginPassword": "123456",
   "executionArgs": {
     "projectName": "sistema_de_comanda_digital",
-    "projectPath": "/opt/lampp/htdocs/proyecto/sistema_de_comanda_digital",
+    "projectPath": "c:\\xampp\\htdocs\\proyectos\\pruebas\\sistema_de_comanda_digital",
     "testIds": [],
-    "additionalInstruction": "Usa las credenciales de prueba: admin/123456, mesero1/123456, cocina1/123456, caja/123456",
-    "serverMode": "development",
+    "additionalInstruction": "Usar credenciales: admin/123456, mesero1/123456, cocina1/123456, caja/123456. Ejecutar todas las pruebas frontend basadas en el plan de pruebas del PDF plan_pruebas_comanda_v2.pdf. Probar login multi-rol, dashboard admin, panel mesero, pantalla cocina, panel caja, seleccion mesa cliente, menu con carrito, logout, proteccion de rutas, y bugs conocidos.",
+    "serverMode": "production",
     "envs": {
-      "API_KEY": "sk-user-oPstUMwYZ7t8m1q8LhcHPGw2OdrbFxMjk8wrjVf8A80LKHqMHh5ZYh2dT41ie96T_LyIHusHV6pdy35ULiwYDkgBLe0GaeMQJphhhGCtC2hF7ml0h02bfINv22P_7pAMVRU"
+      "API_KEY": "sk-user-hiwGOlgV0g66tf69NcI0eU93pHAlJkz0al6EFu6u5NYkEO9ASgfZlyYeG0G-pgurmRy9mpJoORYydw1MJKu0Xdi-_cKb9TescVAk5cRPdARnes2oGjSjnhcXlkv9M0WQGs8"
     }
   }
 }

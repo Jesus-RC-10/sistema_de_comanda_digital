@@ -1,201 +1,1486 @@
 [
   {
-    "id": "test-001",
-    "title": "Login con credenciales válidas de admin",
-    "description": "Verificar que un administrador puede iniciar sesión con usuario admin y contraseña 123456",
+    "id": "TC001",
+    "title": "Confirmar una comanda desde el carrito",
+    "description": "Verifies that a client can add items and confirm the order successfully from the menu flow.",
+    "category": "Selección de mesa",
     "steps": [
-      "Navegar a http://localhost:8081/",
-      "Esperar a que cargue la página de login",
-      "Llenar el campo de usuario con 'admin'",
-      "Llenar el campo de contraseña con '123456'",
-      "Hacer clic en el botón de Login",
-      "Verificar que aparece el dashboard de administración"
+      {
+        "type": "action",
+        "description": "Navigate to /mesa"
+      },
+      {
+        "type": "action",
+        "description": "Select a table"
+      },
+      {
+        "type": "action",
+        "description": "Continue to the menu"
+      },
+      {
+        "type": "action",
+        "description": "Add a product to the cart"
+      },
+      {
+        "type": "action",
+        "description": "Confirm the order"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify a confirmation message is shown"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the order is no longer pending in the cart"
+      }
     ],
-    "auth_required": false,
-    "role": "admin"
+    "priority": "High"
   },
   {
-    "id": "test-002",
-    "title": "Login con credenciales válidas de mesero",
-    "description": "Verificar que un mesero puede iniciar sesión con usuario mesero1 y contraseña 123456",
+    "id": "TC002",
+    "title": "Iniciar sesión como administrador y ver su panel",
+    "description": "Verifies that an authenticated administrator lands on the correct dashboard after signing in.",
+    "category": "Acceso por rol",
     "steps": [
-      "Navegar a http://localhost:8081/",
-      "Esperar a que cargue la página de login",
-      "Llenar el campo de usuario con 'mesero1'",
-      "Llenar el campo de contraseña con '123456'",
-      "Hacer clic en el botón de Login",
-      "Verificar que aparece el panel de mesero"
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the username field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the administrator dashboard is displayed"
+      }
     ],
-    "auth_required": false,
-    "role": "mesero"
+    "priority": "High"
   },
   {
-    "id": "test-003",
-    "title": "Login con credenciales válidas de cocina",
-    "description": "Verificar que personal de cocina puede iniciar sesión con usuario cocina1 y contraseña 123456",
+    "id": "TC003",
+    "title": "Empleado entra al dashboard correcto según su rol",
+    "description": "Verifica que un empleado inicie sesión y llegue al panel correspondiente a su rol entre administración, mesero, cocina o caja.",
+    "category": "Login multi-rol y acceso a dashboards",
     "steps": [
-      "Navegar a http://localhost:8081/",
-      "Esperar a que cargue la página de login",
-      "Llenar el campo de usuario con 'cocina1'",
-      "Llenar el campo de contraseña con '123456'",
-      "Hacer clic en el botón de Login",
-      "Verificar que aparece la pantalla de cocina"
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the employee login credentials for the required role"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the user lands on the dashboard for the authenticated role"
+      }
     ],
-    "auth_required": false,
-    "role": "cocina"
+    "priority": "High"
   },
   {
-    "id": "test-004",
-    "title": "Login con credenciales válidas de caja",
-    "description": "Verificar que personal de caja puede iniciar sesión con usuario caja y contraseña 123456",
+    "id": "TC004",
+    "title": "Cobrar una venta pendiente y calcular el cambio",
+    "description": "Verifies that a cashier can pay a pending sale, see the change calculated, and remove the sale from the pending list.",
+    "category": "Panel de caja",
     "steps": [
-      "Navegar a http://localhost:8081/",
-      "Esperar a que cargue la página de login",
-      "Llenar el campo de usuario con 'caja'",
-      "Llenar el campo de contraseña con '123456'",
-      "Hacer clic en el botón de Login",
-      "Verificar que aparece el panel de caja"
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the username field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Navigate to /caja"
+      },
+      {
+        "type": "action",
+        "description": "Select a pending sale"
+      },
+      {
+        "type": "action",
+        "description": "Enter a valid payment amount"
+      },
+      {
+        "type": "action",
+        "description": "Select a payment method"
+      },
+      {
+        "type": "action",
+        "description": "Submit the payment"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the calculated change is shown"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the paid sale is removed from the pending list"
+      }
     ],
-    "auth_required": false,
-    "role": "caja"
+    "priority": "High"
   },
   {
-    "id": "test-005",
-    "title": "Login con credenciales inválidas muestra error",
-    "description": "Verificar que el sistema muestra un mensaje de error al ingresar credenciales incorrectas",
+    "id": "TC005",
+    "title": "Empleado accede a su panel según su rol",
+    "description": "Verifica que un empleado pueda iniciar sesión y llegar al dashboard correcto según su rol.",
+    "category": "Autenticación multi-rol",
     "steps": [
-      "Navegar a http://localhost:8081/",
-      "Esperar a que cargue la página de login",
-      "Llenar el campo de usuario con 'invalido'",
-      "Llenar el campo de contraseña con 'incorrecta'",
-      "Hacer clic en el botón de Login",
-      "Verificar que aparece un mensaje de error indicando credenciales inválidas"
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the username field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the role-specific dashboard is displayed"
+      }
     ],
-    "auth_required": false
+    "priority": "High"
   },
   {
-    "id": "test-006",
-    "title": "Navegación del cliente - selección de mesa",
-    "description": "Verificar que un cliente puede ver las mesas disponibles y seleccionar una",
+    "id": "TC006",
+    "title": "Agregar productos al carrito desde el menú",
+    "description": "Verifies that a client can browse menu categories, add products, and see the cart reflect the added item.",
+    "category": "Selección de mesa",
     "steps": [
-      "Navegar a http://localhost:8081/?url=mesa",
-      "Verificar que se muestran las mesas disponibles",
-      "Hacer clic en una mesa disponible",
-      "Verificar que redirige al menú con el parámetro de mesa"
+      {
+        "type": "action",
+        "description": "Navigate to /mesa"
+      },
+      {
+        "type": "action",
+        "description": "Select a table"
+      },
+      {
+        "type": "action",
+        "description": "Continue to the menu"
+      },
+      {
+        "type": "action",
+        "description": "Browse a menu category"
+      },
+      {
+        "type": "action",
+        "description": "Add a product to the cart"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the cart reflects the added product"
+      }
     ],
-    "auth_required": false
+    "priority": "High"
   },
   {
-    "id": "test-007",
-    "title": "Navegación del menú de cliente",
-    "description": "Verificar que el menú muestra productos organizados por categorías con botones de agregar al carrito",
+    "id": "TC007",
+    "title": "Cajero cobra una venta pendiente y calcula el cambio",
+    "description": "Verifica que el cajero pueda revisar ventas pendientes, registrar un pago, ver el cambio calculado y confirmar que la venta desaparece de la lista.",
+    "category": "Panel de caja para cobrar ventas pendientes y calcular cambio",
     "steps": [
-      "Navegar a http://localhost:8081/?url=menu&mesa=1",
-      "Verificar que se muestran productos agrupados por categorías",
-      "Verificar que cada producto tiene un botón de agregar al carrito",
-      "Hacer clic en un botón de agregar al carrito",
-      "Verificar que el carrito se actualiza con el producto"
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the employee login credentials for the cashier role"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click the link to open the cash register panel"
+      },
+      {
+        "type": "action",
+        "description": "Review pending sales"
+      },
+      {
+        "type": "action",
+        "description": "Register a valid payment for a pending sale"
+      },
+      {
+        "type": "action",
+        "description": "Verify the calculated change"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the paid sale no longer appears in the pending sales list"
+      }
     ],
-    "auth_required": false
+    "priority": "High"
   },
   {
-    "id": "test-008",
-    "title": "Dashboard de admin muestra métricas",
-    "description": "Verificar que el panel de administración muestra estadísticas después del login",
+    "id": "TC008",
+    "title": "Iniciar sesión como mesero y ver su panel",
+    "description": "Verifies that an authenticated waiter lands on the correct dashboard after signing in.",
+    "category": "Acceso por rol",
     "steps": [
-      "Navegar a http://localhost:8081/",
-      "Iniciar sesión con usuario 'admin' y contraseña '123456'",
-      "Verificar que el dashboard muestra métricas o información del sistema",
-      "Verificar que existe navegación hacia las secciones de admin"
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the username field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the waiter dashboard is displayed"
+      }
     ],
-    "auth_required": true,
-    "role": "admin"
+    "priority": "High"
   },
   {
-    "id": "test-009",
-    "title": "Panel de mesero muestra pedidos activos",
-    "description": "Verificar que el mesero puede ver los pedidos activos después de iniciar sesión",
+    "id": "TC009",
+    "title": "Cliente agrega un producto y ve actualizarse el carrito",
+    "description": "Verifica que un cliente pueda agregar un producto al carrito y ver que el indicador del carrito se actualiza.",
+    "category": "Selección de mesa y menú para clientes",
     "steps": [
-      "Navegar a http://localhost:8081/",
-      "Iniciar sesión con usuario 'mesero1' y contraseña '123456'",
-      "Verificar que se muestra una lista de pedidos o un mensaje de sin pedidos",
-      "Verificar que la interfaz tiene controles para gestionar pedidos"
+      {
+        "type": "action",
+        "description": "Navigate to /mesa"
+      },
+      {
+        "type": "action",
+        "description": "Select a table"
+      },
+      {
+        "type": "action",
+        "description": "Click the link to open the menu"
+      },
+      {
+        "type": "action",
+        "description": "Add a product to the cart"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the cart indicator is updated"
+      }
     ],
-    "auth_required": true,
-    "role": "mesero"
+    "priority": "High"
   },
   {
-    "id": "test-010",
-    "title": "Pantalla de cocina muestra pedidos pendientes",
-    "description": "Verificar que la cocina puede ver los pedidos pendientes después de iniciar sesión",
+    "id": "TC010",
+    "title": "Seleccionar mesa y abrir el menú",
+    "description": "Verifies that a client can choose a table and continue to the menu with the selected table recognized.",
+    "category": "Selección de mesa",
     "steps": [
-      "Navegar a http://localhost:8081/",
-      "Iniciar sesión con usuario 'cocina1' y contraseña '123456'",
-      "Verificar que se muestra una lista de pedidos pendientes o mensaje de sin pedidos",
-      "Verificar que la interfaz permite actualizar estados de pedidos"
+      {
+        "type": "action",
+        "description": "Navigate to /mesa"
+      },
+      {
+        "type": "action",
+        "description": "Select a table"
+      },
+      {
+        "type": "action",
+        "description": "Continue to the menu"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the menu is displayed for the selected table"
+      }
     ],
-    "auth_required": true,
-    "role": "cocina"
+    "priority": "High"
   },
   {
-    "id": "test-011",
-    "title": "Panel de caja muestra ventas pendientes",
-    "description": "Verificar que caja puede ver las ventas pendientes de pago después de iniciar sesión",
+    "id": "TC011",
+    "title": "Iniciar sesión como cocinero y ver su pantalla",
+    "description": "Verifies that an authenticated cook lands on the kitchen screen after signing in.",
+    "category": "Acceso por rol",
     "steps": [
-      "Navegar a http://localhost:8081/",
-      "Iniciar sesión con usuario 'caja' y contraseña '123456'",
-      "Verificar que se muestran ventas pendientes o mensaje de sin ventas",
-      "Verificar que la interfaz tiene opciones para procesar pagos"
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the username field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the kitchen screen is displayed"
+      }
     ],
-    "auth_required": true,
-    "role": "caja"
+    "priority": "High"
   },
   {
-    "id": "test-012",
-    "title": "Logout redirige a página de login",
-    "description": "Verificar que al cerrar sesión el usuario es redirigido a la página de login",
+    "id": "TC012",
+    "title": "Cocinero actualiza el estado de un pedido pendiente",
+    "description": "Verifica que el cocinero pueda abrir cocina, revisar pedidos pendientes y cambiar el estado de un detalle para que la actualización se refleje en pantalla.",
+    "category": "Pantalla de cocina con actualización de estados",
     "steps": [
-      "Navegar a http://localhost:8081/",
-      "Iniciar sesión con usuario 'admin' y contraseña '123456'",
-      "Navegar a la URL de logout: http://localhost:8081/?action=logout",
-      "Verificar que se redirige a la página de login"
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the employee login credentials for the kitchen role"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click the link to open the kitchen screen"
+      },
+      {
+        "type": "action",
+        "description": "Review pending orders"
+      },
+      {
+        "type": "action",
+        "description": "Change the status of an order detail"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the updated order detail status is visible in the kitchen screen"
+      }
     ],
-    "auth_required": true,
-    "role": "admin"
+    "priority": "High"
   },
   {
-    "id": "test-013",
-    "title": "Formulario de login tiene campos requeridos",
-    "description": "Verificar que el formulario de login tiene los campos de usuario y contraseña y el botón de envío",
+    "id": "TC013",
+    "title": "Cliente confirma una comanda",
+    "description": "Verifica que un cliente pueda finalizar la selección de productos y confirmar la comanda.",
+    "category": "Selección de mesa y menú para clientes",
     "steps": [
-      "Navegar a http://localhost:8081/",
-      "Verificar que existe un campo de entrada para usuario",
-      "Verificar que existe un campo de entrada para contraseña",
-      "Verificar que existe un botón de Login/Iniciar Sesión"
+      {
+        "type": "action",
+        "description": "Navigate to /mesa"
+      },
+      {
+        "type": "action",
+        "description": "Select a table"
+      },
+      {
+        "type": "action",
+        "description": "Click the link to open the menu"
+      },
+      {
+        "type": "action",
+        "description": "Add a product to the cart"
+      },
+      {
+        "type": "action",
+        "description": "Confirm the order"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify an order confirmation is displayed"
+      }
     ],
-    "auth_required": false
+    "priority": "High"
   },
   {
-    "id": "test-014",
-    "title": "Acceso sin autenticación redirige a login",
-    "description": "Verificar que intentar acceder a rutas protegidas sin login redirige al formulario de login",
+    "id": "TC014",
+    "title": "Iniciar sesión como cajero y ver su panel",
+    "description": "Verifies that an authenticated cashier lands on the cash register panel after signing in.",
+    "category": "Acceso por rol",
     "steps": [
-      "Navegar a http://localhost:8081/?url=admin sin haber iniciado sesión",
-      "Verificar que el sistema redirige a la página de login o muestra un mensaje de acceso denegado"
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the username field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the cash register panel is displayed"
+      }
     ],
-    "auth_required": false
+    "priority": "High"
   },
   {
-    "id": "test-015",
-    "title": "Admin puede acceder a gestión de usuarios",
-    "description": "Verificar que el admin puede navegar a la sección de gestión de usuarios",
+    "id": "TC015",
+    "title": "Cliente selecciona una mesa y ve el menú",
+    "description": "Verifica que un cliente pueda elegir una mesa y llegar al menú agrupado por categorías.",
+    "category": "Selección de mesa y menú para clientes",
     "steps": [
-      "Navegar a http://localhost:8081/",
-      "Iniciar sesión con usuario 'admin' y contraseña '123456'",
-      "Navegar a http://localhost:8081/?url=admin/usuarios",
-      "Verificar que se muestra la lista de usuarios o una interfaz de gestión"
+      {
+        "type": "action",
+        "description": "Navigate to /mesa"
+      },
+      {
+        "type": "action",
+        "description": "View the available tables"
+      },
+      {
+        "type": "action",
+        "description": "Select a table"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the menu grouped by categories is displayed"
+      }
     ],
-    "auth_required": true,
-    "role": "admin"
+    "priority": "High"
+  },
+  {
+    "id": "TC016",
+    "title": "Mostrar acceso denegado al abrir un módulo protegido sin sesión",
+    "description": "Verifies that protected employee modules are not accessible without an authenticated session.",
+    "category": "Acceso por rol",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /admin"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify access is restricted"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the login screen is shown"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC017",
+    "title": "Cliente selecciona mesa y confirma una comanda",
+    "description": "Verifica que un cliente pueda elegir una mesa, agregar productos al carrito y confirmar la comanda desde el flujo de mesa y menú.",
+    "category": "Gestión administrativa de usuarios, mesas y menú",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /mesa"
+      },
+      {
+        "type": "action",
+        "description": "Select a table"
+      },
+      {
+        "type": "action",
+        "description": "Click the link to browse the menu"
+      },
+      {
+        "type": "action",
+        "description": "View products by category"
+      },
+      {
+        "type": "action",
+        "description": "Add a product to the cart"
+      },
+      {
+        "type": "action",
+        "description": "Confirm the order"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the order confirmation is visible and the selected table is associated with the order"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC018",
+    "title": "Actualizar el estado de un detalle en cocina",
+    "description": "Verifies that a cook can change an item status and see the updated preparation state immediately.",
+    "category": "Pantalla de cocina",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the username field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Navigate to /cocina"
+      },
+      {
+        "type": "action",
+        "description": "Open an order detail"
+      },
+      {
+        "type": "action",
+        "description": "Change the item status"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the updated preparation state is shown"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC019",
+    "title": "Cocinero ve refresco automático de pedidos",
+    "description": "Verifica que la pantalla de cocina actualice los pedidos visibles automáticamente después de un cambio de estado.",
+    "category": "Pantalla de cocina con actualización de estados",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the employee login credentials for the kitchen role"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click the link to open the kitchen screen"
+      },
+      {
+        "type": "action",
+        "description": "Review pending orders"
+      },
+      {
+        "type": "action",
+        "description": "Change the status of an order detail"
+      },
+      {
+        "type": "action",
+        "description": "Wait for the automatic refresh to complete"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the refreshed kitchen view shows the updated order state"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC020",
+    "title": "Administrador ve métricas y estado de la base de datos",
+    "description": "Verifica que un usuario administrador pueda abrir el panel administrativo y consultar métricas y el estado de la base de datos.",
+    "category": "Dashboard de administración",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the username field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Navigate to /admin"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify system metrics are displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the database status is displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC021",
+    "title": "Administrador revisa y corrige cantidades de inventario",
+    "description": "Verifica que el administrador pueda revisar ingredientes, filtrar por stock bajo, agregar un ingrediente nuevo y actualizar cantidades desde inventario.",
+    "category": "Gestión de inventario",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the employee login credentials for the administrator role"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click the link to manage inventory"
+      },
+      {
+        "type": "action",
+        "description": "View all ingredients"
+      },
+      {
+        "type": "action",
+        "description": "Filter ingredients below minimum stock"
+      },
+      {
+        "type": "action",
+        "description": "Add a new ingredient with valid details"
+      },
+      {
+        "type": "action",
+        "description": "Update the quantity of the newly created ingredient"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the ingredient list is displayed and the updated quantity is reflected for the new ingredient"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC022",
+    "title": "Cerrar un pedido atendido desde el panel de mesero",
+    "description": "Verifies that a waiter can open an active order and close it from the order details view.",
+    "category": "Panel de mesero",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the username field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Navigate to /mesero"
+      },
+      {
+        "type": "action",
+        "description": "Open an active order"
+      },
+      {
+        "type": "action",
+        "description": "Close the order"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the order is removed from the active orders list"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC023",
+    "title": "Administrador gestiona usuarios de principio a fin",
+    "description": "Verifica que el administrador pueda ver, crear, editar y eliminar usuarios desde su módulo y que los cambios se reflejen en la interfaz.",
+    "category": "Gestión administrativa de usuarios, mesas y menú",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the employee login credentials for the administrator role"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click the link to manage users"
+      },
+      {
+        "type": "action",
+        "description": "Create a new user with valid details"
+      },
+      {
+        "type": "action",
+        "description": "Update the newly created user with changed details"
+      },
+      {
+        "type": "action",
+        "description": "Remove the newly created user"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the user list is displayed and the created user no longer appears"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC024",
+    "title": "Gestionar usuarios desde el panel administrativo",
+    "description": "Verifies that an administrator can open user management and see the users module available.",
+    "category": "Panel de administración",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the username field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Navigate to /admin"
+      },
+      {
+        "type": "action",
+        "description": "Open the user management module"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the users management view is displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC025",
+    "title": "Gestionar menú desde el panel administrativo",
+    "description": "Verifies that an administrator can open menu management and see the products module available.",
+    "category": "Panel de administración",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the username field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Navigate to /admin"
+      },
+      {
+        "type": "action",
+        "description": "Open the menu management module"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the menu management view is displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC026",
+    "title": "Administrador gestiona mesas de principio a fin",
+    "description": "Verifica que el administrador pueda ver, crear, editar y eliminar mesas desde su módulo y que las mesas actualizadas se reflejen correctamente.",
+    "category": "Gestión administrativa de usuarios, mesas y menú",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the employee login credentials for the administrator role"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click the link to manage tables"
+      },
+      {
+        "type": "action",
+        "description": "Create a new table with valid details"
+      },
+      {
+        "type": "action",
+        "description": "Update the newly created table with changed details"
+      },
+      {
+        "type": "action",
+        "description": "Remove the newly created table"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the table list is displayed and the created table no longer appears"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC027",
+    "title": "Administrador abre un módulo desde el panel",
+    "description": "Verifica que un administrador pueda navegar desde el dashboard a un módulo administrativo.",
+    "category": "Dashboard de administración",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the username field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Navigate to /admin"
+      },
+      {
+        "type": "action",
+        "description": "Open an administrative module from the navigation menu"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the selected administrative module is displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC028",
+    "title": "Gestionar mesas desde el panel administrativo",
+    "description": "Verifies that an administrator can open table management and see the tables module available.",
+    "category": "Panel de administración",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the username field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Navigate to /admin"
+      },
+      {
+        "type": "action",
+        "description": "Open the table management module"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the tables management view is displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC029",
+    "title": "Administrador gestiona productos del menú de principio a fin",
+    "description": "Verifica que el administrador pueda revisar productos por categoría, crear, editar y eliminar productos desde el módulo de menú.",
+    "category": "Gestión administrativa de usuarios, mesas y menú",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the employee login credentials for the administrator role"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click the link to manage the menu"
+      },
+      {
+        "type": "action",
+        "description": "View products by category"
+      },
+      {
+        "type": "action",
+        "description": "Create a new product with valid details"
+      },
+      {
+        "type": "action",
+        "description": "Update the newly created product with changed details"
+      },
+      {
+        "type": "action",
+        "description": "Remove the newly created product"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the product list is displayed and the created product no longer appears"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC030",
+    "title": "Filtrar pedidos pendientes por categoría en cocina",
+    "description": "Verifies that the kitchen screen shows pending orders organized by category for preparation.",
+    "category": "Pantalla de cocina",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the username field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Navigate to /cocina"
+      },
+      {
+        "type": "action",
+        "description": "Filter pending orders by category"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the pending orders for the selected category are displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC031",
+    "title": "Gestionar inventario desde el panel administrativo",
+    "description": "Verifies that an administrator can open inventory management and see stock controls available.",
+    "category": "Panel de administración",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the username field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Navigate to /admin"
+      },
+      {
+        "type": "action",
+        "description": "Open the inventory management module"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the inventory management view is displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC032",
+    "title": "Acceso protegido al panel de administración requiere sesión",
+    "description": "Verifica que una persona sin sesión no pueda abrir el panel de administración y sea llevada al acceso de autenticación.",
+    "category": "Login multi-rol y acceso a dashboards",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /admin"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify access to the administration panel is blocked and the authentication screen is shown"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC033",
+    "title": "Acceso protegido al panel de caja requiere sesión",
+    "description": "Verifica que una persona sin sesión no pueda abrir el panel de caja y sea llevada al acceso de autenticación.",
+    "category": "Panel de caja para cobrar ventas pendientes y calcular cambio",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /caja"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify access to the cash register panel is blocked and the authentication screen is shown"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC034",
+    "title": "Ver la actualización automática de cocina",
+    "description": "Verifies that the kitchen view refreshes automatically and shows newly updated order details without manual reload.",
+    "category": "Pantalla de cocina",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the username field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Navigate to /cocina"
+      },
+      {
+        "type": "action",
+        "description": "Wait for the interface to refresh automatically"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the kitchen order list is still displayed after refresh"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify updated order details are shown"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC035",
+    "title": "Administrador accede al panel y navega entre módulos",
+    "description": "Verifica que el administrador entre al dashboard correcto y pueda moverse entre los módulos administrativos desde el panel.",
+    "category": "Gestión administrativa de usuarios, mesas y menú",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the employee login credentials for the administrator role"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click the link to open the administration dashboard"
+      },
+      {
+        "type": "action",
+        "description": "Click the link to manage users"
+      },
+      {
+        "type": "action",
+        "description": "Click the link to manage tables"
+      },
+      {
+        "type": "action",
+        "description": "Click the link to manage the menu"
+      },
+      {
+        "type": "action",
+        "description": "Click the link to manage inventory"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the administrative modules are available from the dashboard"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC036",
+    "title": "Acceso protegido al panel de cocina requiere sesión",
+    "description": "Verifica que una persona sin sesión no pueda abrir la pantalla de cocina y sea llevada al acceso de autenticación.",
+    "category": "Pantalla de cocina con actualización de estados",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /cocina"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify access to the kitchen screen is blocked and the authentication screen is shown"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC037",
+    "title": "Cliente navega el menú por categorías antes de comprar",
+    "description": "Verifica que el cliente pueda abrir el menú, explorar categorías y ver productos disponibles antes de agregar al carrito.",
+    "category": "Gestión administrativa de usuarios, mesas y menú",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /mesa"
+      },
+      {
+        "type": "action",
+        "description": "Select a table"
+      },
+      {
+        "type": "action",
+        "description": "Click the link to browse the menu"
+      },
+      {
+        "type": "action",
+        "description": "View products by category"
+      },
+      {
+        "type": "action",
+        "description": "Select another category"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify products for the selected categories are displayed"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC038",
+    "title": "Visualizar reportes de ventas desde el panel administrativo",
+    "description": "Verifies that an administrator can open the sales reports module and access report filters.",
+    "category": "Panel de administración",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the username field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Navigate to /admin"
+      },
+      {
+        "type": "action",
+        "description": "Open the sales reports module"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the sales reports view is displayed"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC039",
+    "title": "Usuario sin sesión no accede al panel de administración",
+    "description": "Verifica que un visitante sin sesión no pueda abrir el panel administrativo protegido.",
+    "category": "Dashboard de administración",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /admin"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify access to the administrative dashboard is blocked"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC040",
+    "title": "Administrador genera un reporte de ventas filtrado",
+    "description": "Verifica que el administrador pueda aplicar un rango de fechas y generar un reporte de ventas en PDF desde el módulo de reportes.",
+    "category": "Reportes de ventas",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the employee login credentials for the administrator role"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click the link to view sales reports"
+      },
+      {
+        "type": "action",
+        "description": "Filter sales by a valid date range"
+      },
+      {
+        "type": "action",
+        "description": "Generate the sales report as PDF"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the filtered sales results are displayed and a PDF report is generated"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC041",
+    "title": "Login rechaza credenciales inválidas",
+    "description": "Verifica que el formulario de inicio de sesión muestre un error cuando se ingresan credenciales inválidas y no permita entrar al sistema.",
+    "category": "Login multi-rol y acceso a dashboards",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in invalid employee credentials"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify a login error is visible and the user remains on the authentication screen"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC042",
+    "title": "Empleado ve un error al usar credenciales inválidas",
+    "description": "Verifica que el sistema rechace un inicio de sesión con credenciales inválidas y muestre un mensaje de error.",
+    "category": "Autenticación multi-rol",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the username field with invalid-user"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with invalid-password"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify an authentication error message is displayed"
+      }
+    ],
+    "priority": "Low"
+  },
+  {
+    "id": "TC043",
+    "title": "Mostrar validación al ingresar un pago insuficiente",
+    "description": "Verifies that the cash register panel blocks payment submission when the entered amount is lower than the total.",
+    "category": "Panel de caja",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the username field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Navigate to /caja"
+      },
+      {
+        "type": "action",
+        "description": "Select a pending sale"
+      },
+      {
+        "type": "action",
+        "description": "Enter a payment amount lower than the total"
+      },
+      {
+        "type": "action",
+        "description": "Submit the payment"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify a payment validation error is shown"
+      }
+    ],
+    "priority": "Low"
+  },
+  {
+    "id": "TC044",
+    "title": "Cajero ve los datos de venta sin texto técnico visible",
+    "description": "Verifica que el panel de caja muestre la información de cobro sin exponer texto JavaScript visible en la interfaz.",
+    "category": "Panel de caja para cobrar ventas pendientes y calcular cambio",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the employee login credentials for the cashier role"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click the link to open the cash register panel"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the cash register interface is displayed without technical code being visible"
+      }
+    ],
+    "priority": "Low"
   }
 ]
