@@ -114,7 +114,7 @@ async function showOrderConfirmation(ticketText = null, total = null) {
     let hora = '';
     
     try {
-        const response = await fetch('index.php?action=menu/getServerDateTime');
+        const response = await fetch(BASE_URL + 'index.php?url=menu/getServerDateTime');
         const data = await response.json();
         if (data.success) {
             fecha = data.fecha;
@@ -132,7 +132,7 @@ async function showOrderConfirmation(ticketText = null, total = null) {
     orderHTML += '<div class="ticket-header">';
     orderHTML += '<h2>🍽️ TAQUERÍA EL INFORMÁTICO</h2>';
     orderHTML += '<div class="ticket-line"></div>';
-    orderHTML += '<p class="ticket-info"><strong>Mesa:</strong> ' + document.querySelector('h1').textContent.match(/Mesa (\d+)/)[1] + '</p>';
+    orderHTML += '<p class="ticket-info"><strong>Mesa:</strong> ' + (window.MESA_NUMBER || document.querySelector('.header-mesa span')?.textContent || '1') + '</p>';
     orderHTML += '<p class="ticket-info"><strong>Fecha:</strong> ' + fecha + ' | <strong>Hora:</strong> ' + hora + '</p>';
     orderHTML += '<div class="ticket-line"></div>';
     orderHTML += '</div>';
