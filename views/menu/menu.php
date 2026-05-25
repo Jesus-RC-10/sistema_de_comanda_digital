@@ -2,47 +2,133 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Menú - Mesa <?php echo $data['mesa']; ?></title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="<?php echo ASSETS_URL; ?>css/estilos.css?v=3">
   <link rel="stylesheet" href="<?php echo ASSETS_URL; ?>css/help-buttons.css?v=1">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
   <header>
-    <h1>Taquería El Informático - Mesa <?php echo $data['mesa']; ?></h1>
+    <div class="header-top">
+      <div class="header-brand">
+        <i class="fas fa-utensils"></i>
+        <span>Taquería El Informático</span>
+      </div>
+      <div class="header-mesa">
+        <i class="fas fa-chair"></i>
+        <span>Mesa <?php echo str_pad($data['mesa'], 2, '0', STR_PAD_LEFT); ?></span>
+      </div>
+    </div>
+    <div class="search-container">
+      <i class="fas fa-search search-icon"></i>
+      <input type="text" class="search-bar" id="searchInput" placeholder="Buscar en el menú..." autocomplete="off">
+    </div>
   </header>
 
   <main>
     <?php 
     $categorias = [];
+    $categoriaIconos = [
+      'Tacos' => '<i class="fas fa-taco" style="font-weight:900;">🌮</i>',
+      'Bebidas' => '<i class="fas fa-wine-bottle"></i>',
+      'Postres' => '<i class="fas fa-cake"></i>',
+    ];
+    $categoriaDefaultIcon = '<i class="fas fa-utensil-spoon"></i>';
+
     foreach ($data['productos'] as $producto) {
-        $categorias[$producto['categoria']][] = $producto;
+        $cat = $producto['categoria'];
+        if (!isset($categorias[$cat])) {
+            $categorias[$cat] = [];
+        }
+        $categorias[$cat][] = $producto;
     }
+    $catKeys = array_keys($categorias);
     ?>
 
+    <div class="category-tabs">
+      <button class="category-tab active" data-category="all">
+        <i class="fas fa-th-large"></i>
+        Todo
+      </button>
+      <?php foreach ($catKeys as $cat): 
+        $icono = $categoriaIconos[$cat] ?? $categoriaDefaultIcon;
+      ?>
+        <button class="category-tab" data-category="<?php echo htmlspecialchars($cat); ?>">
+          <?php echo $icono; ?>
+          <?php echo htmlspecialchars($cat); ?>
+        </button>
+      <?php endforeach; ?>
+    </div>
+
     <?php foreach ($categorias as $categoria => $productos): ?>
-      <section class="menu-section">
+      <section class="menu-section" data-category="<?php echo htmlspecialchars($categoria); ?>">
         <h2><?php echo htmlspecialchars($categoria); ?></h2>
         <div class="menu-items">
-          <?php foreach ($productos as $p): ?>
-            <div class="menu-item">
-              <h3><?php echo htmlspecialchars($p['nombre']); ?></h3>
-              <p><?php echo htmlspecialchars($p['descripcion']); ?></p>
-              <p class="price">$<?php echo number_format($p['precio'], 2); ?></p>
+          <?php foreach ($productos as $p): 
+            $imagen = $p['imagen'] ?? '';
+            $imgPath = '';
+            $tieneImagen = false;
+            if ($imagen && file_exists(__DIR__ . '/../../public/images/platillos/' . $imagen)) {
+                $imgPath = BASE_URL . 'public/images/platillos/' . $imagen;
+                $tieneImagen = true;
+            }
+            $nombre = htmlspecialchars($p['nombre']);
+            $descripcion = htmlspecialchars($p['descripcion'] ?? '');
+            $precio = number_format($p['precio'], 2);
+            $tiempo = $p['tiempo_preparacion'] ?? 15;
+            $stock = $p['stock'] ?? 0;
+            $sinStock = $stock <= 0;
+          ?>
+            <div class="menu-item <?php echo $sinStock ? 'out-of-stock' : ''; ?>" data-nombre="<?php echo strtolower($nombre); ?>">
+              <div class="item-image">
+                <?php if ($tieneImagen): ?>
+                  <img src="<?php echo $imgPath; ?>" alt="<?php echo $nombre; ?>" loading="lazy">
+                <?php else: ?>
+                  <div class="item-image-placeholder">
+                    <span><?php echo strtoupper(substr($p['nombre'], 0, 2)); ?></span>
+                  </div>
+                <?php endif; ?>
+                <?php if ($sinStock): ?>
+                  <div class="stock-badge out">Sin stock</div>
+                <?php elseif ($stock > 0 && $stock <= 5): ?>
+                  <div class="stock-badge low">Stock: <?php echo $stock; ?></div>
+                <?php endif; ?>
+                <div class="prep-time">
+                  <i class="fas fa-clock"></i> <?php echo $tiempo; ?> min
+                </div>
+              </div>
+              <h3><?php echo $nombre; ?></h3>
+              <?php if ($descripcion): ?>
+                <p class="item-desc"><?php echo $descripcion; ?></p>
+              <?php endif; ?>
+              <p class="price">$<?php echo $precio; ?></p>
               <button class="add-to-cart" 
                       data-id="<?php echo $p['id']; ?>" 
-                      data-nombre="<?php echo htmlspecialchars($p['nombre']); ?>" 
-                      data-precio="<?php echo $p['precio']; ?>">
-                Agregar
+                      data-nombre="<?php echo $nombre; ?>" 
+                      data-precio="<?php echo $p['precio']; ?>"
+                      <?php echo $sinStock ? 'disabled' : ''; ?>>
+                <?php if ($sinStock): ?>
+                  <i class="fas fa-times-circle"></i> No disponible
+                <?php else: ?>
+                  <i class="fas fa-plus-circle"></i> Agregar
+                <?php endif; ?>
               </button>
             </div>
           <?php endforeach; ?>
         </div>
       </section>
     <?php endforeach; ?>
+
+    <?php if (empty($categorias)): ?>
+      <div class="no-items">
+        <i class="fas fa-box-open"></i>
+        <p>No hay productos disponibles en este momento</p>
+      </div>
+    <?php endif; ?>
   </main>
 
-  <!-- Botones flotantes de ayuda y asistencia -->
+  <!-- Botones flotantes -->
   <div class="help-buttons">
     <button class="help-btn" id="helpBtn" title="Ayuda">
       <i class="fas fa-question-circle"></i>
@@ -61,6 +147,8 @@
       </div>
       <div class="help-content">
         <ul>
+          <li><i class="fas fa-search"></i> Usa el buscador para encontrar productos rápido</li>
+          <li><i class="fas fa-folder-open"></i> Filtra por categorías con las pestañas</li>
           <li><i class="fas fa-mouse-pointer"></i> Haz clic en "Agregar" para añadir items a tu pedido</li>
           <li><i class="fas fa-shopping-cart"></i> Usa el carrito para ver y modificar tu pedido</li>
           <li><i class="fas fa-plus-minus"></i> Puedes ajustar cantidades con los botones + y -</li>
@@ -87,14 +175,11 @@
         <span class="close-cart" id="closeCart">&times;</span>
       </div>
       <div class="cart-items" id="cartItemsContainer">
-        <!-- Los items del carrito se insertarán aquí dinámicamente -->
       </div>
       <div class="cart-total">
         <span>Total:</span>
         <span id="cartTotal">$0.00</span>
       </div>
-      
-      <!-- Formulario para enviar pedido a mesero y cocina -->
       <form method="POST" action="<?php echo BASE_URL; ?>index.php?url=menu/confirmar" id="pedidoForm">
         <input type="hidden" name="mesa_id" value="<?php echo $data['mesa']; ?>">
         <input type="hidden" name="items" id="cartData">
@@ -111,7 +196,6 @@
         <span class="close-modal" id="closeOrderModal">&times;</span>
       </div>
       <div class="order-details" id="orderDetails">
-        <!-- Los detalles del pedido se insertarán aquí -->
       </div>
       <div class="modal-buttons">
         <button class="modal-btn" id="downloadTicket">Descargar Ticket</button>
@@ -121,13 +205,61 @@
     </div>
   </div>
 
-  <!-- Variables globales para JavaScript -->
   <script>
-    // Variables globales para URLs
     const BASE_URL = '<?php echo BASE_URL; ?>';
     const MENU_URL = '<?php echo BASE_URL; ?>index.php?url=menu';
     const CAJA_URL = '<?php echo BASE_URL; ?>index.php?url=caja';
     const COCINA_URL = '<?php echo BASE_URL; ?>index.php?url=cocina/actualizarDetalle';
+    const MESA_NUMBER = '<?php echo $data['mesa']; ?>';
+  </script>
+
+  <script>
+    // Tabs de categorías
+    document.querySelectorAll('.category-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.category-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        const category = tab.dataset.category;
+        document.querySelectorAll('.menu-section').forEach(section => {
+          if (category === 'all' || section.dataset.category === category) {
+            section.style.display = '';
+            section.style.opacity = '0';
+            setTimeout(() => { section.style.opacity = '1'; }, 20);
+          } else {
+            section.style.display = 'none';
+          }
+        });
+      });
+    });
+
+    // Búsqueda en tiempo real
+    document.getElementById('searchInput').addEventListener('input', function() {
+      const query = this.value.toLowerCase().trim();
+      document.querySelectorAll('.menu-item').forEach(item => {
+        const nombre = item.dataset.nombre;
+        if (!query || nombre.includes(query)) {
+          item.style.display = '';
+        } else {
+          item.style.display = 'none';
+        }
+      });
+      document.querySelectorAll('.menu-section').forEach(section => {
+        const visibleItems = section.querySelectorAll('.menu-item[style*="display: none"]');
+        const allItems = section.querySelectorAll('.menu-item');
+        if (allItems.length === visibleItems.length && visibleItems.length > 0) {
+          section.style.display = 'none';
+        } else if (query) {
+          section.style.display = '';
+        } else {
+          const activeTab = document.querySelector('.category-tab.active');
+          if (activeTab && activeTab.dataset.category !== 'all') {
+            section.style.display = section.dataset.category === activeTab.dataset.category ? '' : 'none';
+          } else {
+            section.style.display = '';
+          }
+        }
+      });
+    });
   </script>
 
   <script src="<?php echo ASSETS_URL; ?>js/carrito.js?v=3"></script>
