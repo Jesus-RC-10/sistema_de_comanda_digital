@@ -4,11 +4,10 @@ class OrderModel {
     private $pdo;
 
     public function __construct() {
-        // Configuración de la conexión PDO
-        $host = "localhost";
-        $dbname = "sistema_comanda_digital_v1"; // Cambia esto
-        $user = "root";                // Usuario de XAMPP
-        $pass = "";                    // Contraseña (vacía por defecto en XAMPP)
+        $host = DB_HOST;
+        $dbname = DB_NAME;
+        $user = DB_USER;
+        $pass = DB_PASS;
         $charset = "utf8mb4";
 
         $dsn = "mysql:host=$host;dbname=$dbname;charset=$charset";

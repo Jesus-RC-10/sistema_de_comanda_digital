@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Panel de Administración - Sistema de Comanda Digital</title>
     <link rel="stylesheet" href="<?php echo BASE_URL; ?>public/css/admin.css">
+    <script>const BASE_URL = '<?php echo BASE_URL; ?>';</script>
     <script src="<?php echo BASE_URL; ?>public/css/js/admin.js" defer></script>
     <style>
         .content-section {
@@ -37,22 +38,22 @@
         <div class="sidebar">
             <ul class="sidebar-menu">
                 <li class="menu-item" data-section="dashboard">
-                    <a href="index.php?action=admin&seccion=dashboard">📊 Dashboard</a>
+                    <a href="<?php echo BASE_URL; ?>index.php?action=admin&seccion=dashboard">📊 Dashboard</a>
                 </li>
                 <li class="menu-item" data-section="mesas">
-                    <a href="index.php?action=admin&seccion=mesas">🪑 Gestión de Mesas</a>
+                    <a href="<?php echo BASE_URL; ?>index.php?action=admin&seccion=mesas">🪑 Gestión de Mesas</a>
                 </li>
                 <li class="menu-item" data-section="menu">
-                    <a href="index.php?action=admin&seccion=menu">🍽️ Gestión de Menú</a>
+                    <a href="<?php echo BASE_URL; ?>index.php?action=admin&seccion=menu">🍽️ Gestión de Menú</a>
                 </li>
                 <li class="menu-item" data-section="usuarios">
-                    <a href="index.php?action=admin&seccion=usuarios">👥 Gestión de Usuarios</a>
+                    <a href="<?php echo BASE_URL; ?>index.php?action=admin&seccion=usuarios">👥 Gestión de Usuarios</a>
                 </li>
                 <li class="menu-item" data-section="inventario">
-                    <a href="index.php?action=admin&seccion=inventario">📦 Control de Inventario</a>
+                    <a href="<?php echo BASE_URL; ?>index.php?action=admin&seccion=inventario">📦 Control de Inventario</a>
                 </li>
                 <li class="menu-item" data-section="reportes">
-                    <a href="index.php?action=admin&seccion=reportes">📊 Reportes</a>
+                    <a href="<?php echo BASE_URL; ?>index.php?action=admin&seccion=reportes">📊 Reportes</a>
                 </li>
             </ul>
         </div>

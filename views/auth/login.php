@@ -13,7 +13,7 @@
             <p>Panel de Administración</p>
         </div>
         
-        <form id="loginForm" method="POST" action="index.php?action=login">
+        <form id="loginForm" method="POST" action="<?php echo BASE_URL; ?>index.php?action=login">
             <div class="input-group">
                 <label for="username">Usuario</label>
                 <input type="text" id="username" name="username" placeholder="Ingrese su usuario" required>

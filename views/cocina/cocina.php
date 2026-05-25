@@ -46,8 +46,7 @@
 
   <!-- DEFINIR LAS VARIABLES JS PRIMERO -->
   <script>
-    // Define la URL base directamente
-    const BASE_URL = 'http://localhost/comanda1/';
+    const BASE_URL = '<?php echo BASE_URL; ?>';
     const COCINA_URL = BASE_URL + 'cocina/obtenerPedidosActualizados'; 
     const ESTADO_URL = BASE_URL + 'cocina/actualizarDetalle';
   </script>

@@ -17,10 +17,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
 function logout() {
     if (confirm('¿Está seguro que desea cerrar sesión?')) {
-        window.location.href = 'index.php?action=logout';
+        window.location.href = BASE_URL + 'index.php?action=logout';
     }
 }
 
 function descargarPDF(tipo) {
-    window.open('generar_pdf.php?tipo=' + tipo, '_blank');
+    window.open(BASE_URL + 'generar_pdf.php?tipo=' + tipo, '_blank');
 }

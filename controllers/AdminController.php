@@ -332,14 +332,12 @@ class AdminController {
     
     private function checkAuth() {
         if (!isset($_SESSION['usuario_id'])) {
-            header("Location: index.php?action=login");
+            header("Location: " . BASE_URL . "index.php?action=login");
             exit();
         }
         
-        // Solo administradores pueden entrar aquí
         if (isset($_SESSION['usuario_rol']) && $_SESSION['usuario_rol'] !== 'admin') {
-            // Si es mesero, caja o cocina, lo mandamos al index unificado
-            header("Location: index.php?action=login"); 
+            header("Location: " . BASE_URL . "index.php?action=login"); 
             exit();
         }
     }

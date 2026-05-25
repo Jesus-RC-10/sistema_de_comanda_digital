@@ -19,7 +19,7 @@ class AuthController {
                 $rol = strtolower(trim($usuario['rol']));
                 
                 if ($rol == 'admin') {
-                    header("Location: index.php?action=admin&seccion=dashboard");
+                    header("Location: " . BASE_URL . "index.php?action=admin&seccion=dashboard");
                 } else if ($rol == 'mesero') {
                     header("Location: " . BASE_URL . "index.php?url=mesero");
                 } else if ($rol == 'caja') {
@@ -27,8 +27,7 @@ class AuthController {
                 } else if ($rol == 'cocina') {
                     header("Location: " . BASE_URL . "index.php?url=cocina");
                 } else {
-                    // Fallback para roles desconocidos
-                    header("Location: index.php?action=admin&seccion=dashboard");
+                    header("Location: " . BASE_URL . "index.php?action=admin&seccion=dashboard");
                 }
                 exit();
             } else {
@@ -42,7 +41,7 @@ class AuthController {
     
     public function logout() {
         session_destroy();
-        header("Location: index.php?action=login");
+        header("Location: " . BASE_URL . "index.php?action=login");
         exit();
     }
 }
