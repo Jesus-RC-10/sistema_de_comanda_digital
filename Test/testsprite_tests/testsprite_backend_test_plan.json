@@ -1,0 +1,511 @@
+[
+  {
+    "id": "TC-AUTH-01",
+    "title": "Login exitoso con usuario admin",
+    "description": "Verificar que el usuario admin puede iniciar sesión correctamente y es redirigido al dashboard",
+    "category": "Authentication",
+    "priority": "high",
+    "steps": [
+      {"action": "navigate", "url": "/sistema_de_comanda_digital/"},
+      {"action": "fill", "element": "input[name='usuario']", "value": "admin"},
+      {"action": "fill", "element": "input[name='password']", "value": "123456"},
+      {"action": "click", "element": "button[type='submit']"},
+      {"action": "assert", "condition": "url contains admin/dashboard", "expected": "Redirect to admin dashboard"}
+    ]
+  },
+  {
+    "id": "TC-AUTH-02",
+    "title": "Login exitoso con usuario mesero1",
+    "description": "Verificar que el usuario mesero1 puede iniciar sesión y es redirigido a la vista de mesero",
+    "category": "Authentication",
+    "priority": "high",
+    "steps": [
+      {"action": "navigate", "url": "/sistema_de_comanda_digital/"},
+      {"action": "fill", "element": "input[name='usuario']", "value": "mesero1"},
+      {"action": "fill", "element": "input[name='password']", "value": "123456"},
+      {"action": "click", "element": "button[type='submit']"},
+      {"action": "assert", "condition": "url contains mesero", "expected": "Redirect to mesero view"}
+    ]
+  },
+  {
+    "id": "TC-AUTH-03",
+    "title": "Login exitoso con usuario cocina1",
+    "description": "Verificar que el usuario cocina1 puede iniciar sesión y es redirigido a la vista de cocina",
+    "category": "Authentication",
+    "priority": "high",
+    "steps": [
+      {"action": "navigate", "url": "/sistema_de_comanda_digital/"},
+      {"action": "fill", "element": "input[name='usuario']", "value": "cocina1"},
+      {"action": "fill", "element": "input[name='password']", "value": "123456"},
+      {"action": "click", "element": "button[type='submit']"},
+      {"action": "assert", "condition": "url contains cocina", "expected": "Redirect to cocina view"}
+    ]
+  },
+  {
+    "id": "TC-AUTH-04",
+    "title": "Login exitoso con usuario caja",
+    "description": "Verificar que el usuario caja puede iniciar sesión y es redirigido a la vista de caja",
+    "category": "Authentication",
+    "priority": "high",
+    "steps": [
+      {"action": "navigate", "url": "/sistema_de_comanda_digital/"},
+      {"action": "fill", "element": "input[name='usuario']", "value": "caja"},
+      {"action": "fill", "element": "input[name='password']", "value": "123456"},
+      {"action": "click", "element": "button[type='submit']"},
+      {"action": "assert", "condition": "url contains caja", "expected": "Redirect to caja view"}
+    ]
+  },
+  {
+    "id": "TC-AUTH-05",
+    "title": "Login fallido con credenciales incorrectas",
+    "description": "Verificar que el sistema rechaza credenciales incorrectas y muestra mensaje de error",
+    "category": "Authentication",
+    "priority": "high",
+    "steps": [
+      {"action": "navigate", "url": "/sistema_de_comanda_digital/"},
+      {"action": "fill", "element": "input[name='usuario']", "value": "admin"},
+      {"action": "fill", "element": "input[name='password']", "value": "wrongpassword"},
+      {"action": "click", "element": "button[type='submit']"},
+      {"action": "assert", "condition": "page contains error", "expected": "Error message displayed"}
+    ]
+  },
+  {
+    "id": "TC-AUTH-06",
+    "title": "Login fallido con usuario vacío",
+    "description": "Verificar que el sistema valida campo usuario obligatorio",
+    "category": "Authentication",
+    "priority": "medium",
+    "steps": [
+      {"action": "navigate", "url": "/sistema_de_comanda_digital/"},
+      {"action": "fill", "element": "input[name='password']", "value": "123456"},
+      {"action": "click", "element": "button[type='submit']"},
+      {"action": "assert", "condition": "page contains validation error", "expected": "Validation error displayed"}
+    ]
+  },
+  {
+    "id": "TC-AUTH-07",
+    "title": "Logout de usuario",
+    "description": "Verificar que el logout cierra sesión y redirige al login",
+    "category": "Authentication",
+    "priority": "medium",
+    "steps": [
+      {"action": "login", "usuario": "admin", "password": "123456"},
+      {"action": "navigate", "url": "/sistema_de_comanda_digital/index.php?url=auth/logout"},
+      {"action": "assert", "condition": "url contains login", "expected": "Redirect to login page"}
+    ]
+  },
+  {
+    "id": "TC-MESA-01",
+    "title": "Ver lista de mesas disponibles - Admin",
+    "description": "Verificar que el admin puede ver todas las mesas con sus estados",
+    "category": "Table Management",
+    "priority": "medium",
+    "steps": [
+      {"action": "login", "usuario": "admin", "password": "123456"},
+      {"action": "navigate", "url": "/sistema_de_comanda_digital/index.php?url=admin/mesas"},
+      {"action": "assert", "condition": "page contains table elements", "expected": "Tables are displayed"}
+    ]
+  },
+  {
+    "id": "TC-MESA-02",
+    "title": "Cambiar estado de mesa a ocupada",
+    "description": "Verificar que se puede cambiar el estado de una mesa de libre a ocupada",
+    "category": "Table Management",
+    "priority": "high",
+    "steps": [
+      {"action": "login", "usuario": "admin", "password": "123456"},
+      {"action": "navigate", "url": "/sistema_de_comanda_digital/index.php?url=admin/mesas"},
+      {"action": "click", "element": "button[data-action='cambiar-estado'][data-estado='ocupada']"},
+      {"action": "assert", "condition": "status changed to ocupada", "expected": "Table status updated"}
+    ]
+  },
+  {
+    "id": "TC-MESA-03",
+    "title": "Cambiar estado de mesa a libre",
+    "description": "Verificar que se puede cambiar el estado de una mesa de ocupada a libre",
+    "category": "Table Management",
+    "priority": "high",
+    "steps": [
+      {"action": "login", "usuario": "admin", "password": "123456"},
+      {"action": "navigate", "url": "/sistema_de_comanda_digital/index.php?url=admin/mesas"},
+      {"action": "click", "element": "button[data-action='cambiar-estado'][data-estado='libre']"},
+      {"action": "assert", "condition": "status changed to libre", "expected": "Table status updated"}
+    ]
+  },
+  {
+    "id": "TC-MENU-01",
+    "title": "Ver menú digital con productos - Mesero",
+    "description": "Verificar que el mesero puede ver el menú con categorías y productos",
+    "category": "Menu Management",
+    "priority": "medium",
+    "steps": [
+      {"action": "login", "usuario": "mesero1", "password": "123456"},
+      {"action": "navigate", "url": "/sistema_de_comanda_digital/index.php?url=menu"},
+      {"action": "assert", "condition": "page contains product items", "expected": "Menu products are displayed"}
+    ]
+  },
+  {
+    "id": "TC-MENU-02",
+    "title": "Ver categorías del menú",
+    "description": "Verificar que el menú muestra productos organizados por categorías",
+    "category": "Menu Management",
+    "priority": "medium",
+    "steps": [
+      {"action": "login", "usuario": "mesero1", "password": "123456"},
+      {"action": "navigate", "url": "/sistema_de_comanda_digital/index.php?url=menu"},
+      {"action": "assert", "condition": "page contains category sections", "expected": "Categories are displayed"}
+    ]
+  },
+  {
+    "id": "TC-MENU-03",
+    "title": "Ver precios de productos",
+    "description": "Verificar que cada producto muestra su precio correctamente",
+    "category": "Menu Management",
+    "priority": "medium",
+    "steps": [
+      {"action": "login", "usuario": "mesero1", "password": "123456"},
+      {"action": "navigate", "url": "/sistema_de_comanda_digital/index.php?url=menu"},
+      {"action": "assert", "condition": "products have prices", "expected": "Prices are displayed"}
+    ]
+  },
+  {
+    "id": "TC-ORDER-01",
+    "title": "Crear nuevo pedido desde mesero",
+    "description": "Verificar que el mesero puede crear un pedido con múltiples productos",
+    "category": "Order Management",
+    "priority": "high",
+    "steps": [
+      {"action": "login", "usuario": "mesero1", "password": "123456"},
+      {"action": "navigate", "url": "/sistema_de_comanda_digital/index.php?url=mesero"},
+      {"action": "select", "element": "select[name='mesa']", "value": "1"},
+      {"action": "click", "element": "button[data-product='taco']"},
+      {"action": "click", "element": "button[type='submit']"},
+      {"action": "assert", "condition": "success message displayed", "expected": "Order created successfully"}
+    ]
+  },
+  {
+    "id": "TC-ORDER-02",
+    "title": "Agregar múltiples productos al pedido",
+    "description": "Verificar que se pueden agregar varios productos al mismo pedido",
+    "category": "Order Management",
+    "priority": "high",
+    "steps": [
+      {"action": "login", "usuario": "mesero1", "password": "123456"},
+      {"action": "navigate", "url": "/sistema_de_comanda_digital/index.php?url=mesero"},
+      {"action": "select", "element": "select[name='mesa']", "value": "1"},
+      {"action": "click", "element": "button[data-product='taco']"},
+      {"action": "click", "element": "button[data-product='jamaica']"},
+      {"action": "click", "element": "button[type='submit']"},
+      {"action": "assert", "condition": "order contains multiple items", "expected": "Order with multiple products created"}
+    ]
+  },
+  {
+    "id": "TC-ORDER-03",
+    "title": "Ver total del pedido calculado",
+    "description": "Verificar que el sistema calcula correctamente el total del pedido",
+    "category": "Order Management",
+    "priority": "high",
+    "steps": [
+      {"action": "login", "usuario": "mesero1", "password": "123456"},
+      {"action": "navigate", "url": "/sistema_de_comanda_digital/index.php?url=mesero"},
+      {"action": "select", "element": "select[name='mesa']", "value": "1"},
+      {"action": "click", "element": "button[data-product='taco']"},
+      {"action": "assert", "condition": "cart shows total", "expected": "Total amount is displayed"}
+    ]
+  },
+  {
+    "id": "TC-ORDER-04",
+    "title": "Ver pedidos en carrito antes de enviar",
+    "description": "Verificar que el carrito muestra los productos seleccionados antes de crear el pedido",
+    "category": "Order Management",
+    "priority": "medium",
+    "steps": [
+      {"action": "login", "usuario": "mesero1", "password": "123456"},
+      {"action": "navigate", "url": "/sistema_de_comanda_digital/index.php?url=mesero"},
+      {"action": "click", "element": "button[data-product='taco']"},
+      {"action": "assert", "condition": "cart contains product", "expected": "Product visible in cart"}
+    ]
+  },
+  {
+    "id": "TC-COCINA-01",
+    "title": "Ver pedidos pendientes en cocina",
+    "description": "Verificar que cocina puede ver los pedidos con estado pendiente",
+    "category": "Kitchen Interface",
+    "priority": "high",
+    "steps": [
+      {"action": "login", "usuario": "cocina1", "password": "123456"},
+      {"action": "navigate", "url": "/sistema_de_comanda_digital/index.php?url=cocina"},
+      {"action": "assert", "condition": "page contains pending orders", "expected": "Pending orders are displayed"}
+    ]
+  },
+  {
+    "id": "TC-COCINA-02",
+    "title": "Actualizar estado a en_preparacion",
+    "description": "Verificar que cocina puede cambiar estado de pendiente a en_preparacion",
+    "category": "Kitchen Interface",
+    "priority": "high",
+    "steps": [
+      {"action": "login", "usuario": "cocina1", "password": "123456"},
+      {"action": "navigate", "url": "/sistema_de_comanda_digital/index.php?url=cocina"},
+      {"action": "click", "element": "button[data-action='en-preparacion']"},
+      {"action": "assert", "condition": "status changed to en_preparacion", "expected": "Order status updated"}
+    ]
+  },
+  {
+    "id": "TC-COCINA-03",
+    "title": "Actualizar estado a listo",
+    "description": "Verificar que cocina puede cambiar estado de en_preparacion a listo",
+    "category": "Kitchen Interface",
+    "priority": "high",
+    "steps": [
+      {"action": "login", "usuario": "cocina1", "password": "123456"},
+      {"action": "navigate", "url": "/sistema_de_comanda_digital/index.php?url=cocina"},
+      {"action": "click", "element": "button[data-action='listo']"},
+      {"action": "assert", "condition": "status changed to listo", "expected": "Order status updated"}
+    ]
+  },
+  {
+    "id": "TC-COCINA-04",
+    "title": "Actualizar estado a entregado",
+    "description": "Verificar que cocina puede cambiar estado de listo a entregado",
+    "category": "Kitchen Interface",
+    "priority": "high",
+    "steps": [
+      {"action": "login", "usuario": "cocina1", "password": "123456"},
+      {"action": "navigate", "url": "/sistema_de_comanda_digital/index.php?url=cocina"},
+      {"action": "click", "element": "button[data-action='entregado']"},
+      {"action": "assert", "condition": "status changed to entregado", "expected": "Order status updated"}
+    ]
+  },
+  {
+    "id": "TC-CAJA-01",
+    "title": "Ver ventas pendientes en caja",
+    "description": "Verificar que caja puede ver las ventas con estado pendiente de pago",
+    "category": "Cashier Interface",
+    "priority": "high",
+    "steps": [
+      {"action": "login", "usuario": "caja", "password": "123456"},
+      {"action": "navigate", "url": "/sistema_de_comanda_digital/index.php?url=caja"},
+      {"action": "assert", "condition": "page contains pending sales", "expected": "Pending sales are displayed"}
+    ]
+  },
+  {
+    "id": "TC-CAJA-02",
+    "title": "Procesar pago en efectivo",
+    "description": "Verificar que caja puede procesar un pago en efectivo",
+    "category": "Cashier Interface",
+    "priority": "high",
+    "steps": [
+      {"action": "login", "usuario": "caja", "password": "123456"},
+      {"action": "navigate", "url": "/sistema_de_comanda_digital/index.php?url=caja"},
+      {"action": "fill", "element": "input[name='monto_pagado']", "value": "100"},
+      {"action": "select", "element": "select[name='metodo_pago']", "value": "efectivo"},
+      {"action": "click", "element": "button[type='submit']"},
+      {"action": "assert", "condition": "success message displayed", "expected": "Payment processed successfully"}
+    ]
+  },
+  {
+    "id": "TC-CAJA-03",
+    "title": "Calcular cambio automáticamente",
+    "description": "Verificar que el sistema calcula correctamente el cambio al pagar",
+    "category": "Cashier Interface",
+    "priority": "high",
+    "steps": [
+      {"action": "login", "usuario": "caja", "password": "123456"},
+      {"action": "navigate", "url": "/sistema_de_comanda_digital/index.php?url=caja"},
+      {"action": "fill", "element": "input[name='monto_pagado']", "value": "200"},
+      {"action": "click", "element": "button[type='submit']"},
+      {"action": "assert", "condition": "cambio displayed", "expected": "Change amount is calculated and displayed"}
+    ]
+  },
+  {
+    "id": "TC-CAJA-04",
+    "title": "Rechazar pago insuficiente",
+    "description": "Verificar que el sistema rechaza pago cuando monto es insuficiente",
+    "category": "Cashier Interface",
+    "priority": "high",
+    "steps": [
+      {"action": "login", "usuario": "caja", "password": "123456"},
+      {"action": "navigate", "url": "/sistema_de_comanda_digital/index.php?url=caja"},
+      {"action": "fill", "element": "input[name='monto_pagado']", "value": "5"},
+      {"action": "click", "element": "button[type='submit']"},
+      {"action": "assert", "condition": "error message displayed", "expected": "Insufficient payment error"}
+    ]
+  },
+  {
+    "id": "TC-CAJA-05",
+    "title": "Cancelar venta pendiente",
+    "description": "Verificar que se puede cancelar una venta pendiente",
+    "category": "Cashier Interface",
+    "priority": "medium",
+    "steps": [
+      {"action": "login", "usuario": "caja", "password": "123456"},
+      {"action": "navigate", "url": "/sistema_de_comanda_digital/index.php?url=caja"},
+      {"action": "click", "element": "button[data-action='cancelar']"},
+      {"action": "assert", "condition": "sale cancelled", "expected": "Sale status changed to cancelled"}
+    ]
+  },
+  {
+    "id": "TC-ADMIN-01",
+    "title": "Ver dashboard de administrador",
+    "description": "Verificar que el admin puede ver las métricas del sistema en el dashboard",
+    "category": "Admin Dashboard",
+    "priority": "medium",
+    "steps": [
+      {"action": "login", "usuario": "admin", "password": "123456"},
+      {"action": "navigate", "url": "/sistema_de_comanda_digital/index.php?url=admin/dashboard"},
+      {"action": "assert", "condition": "page contains metrics", "expected": "Dashboard metrics are displayed"}
+    ]
+  },
+  {
+    "id": "TC-ADMIN-02",
+    "title": "Ver ventas del día en dashboard",
+    "description": "Verificar que el dashboard muestra las ventas del día",
+    "category": "Admin Dashboard",
+    "priority": "medium",
+    "steps": [
+      {"action": "login", "usuario": "admin", "password": "123456"},
+      {"action": "navigate", "url": "/sistema_de_comanda_digital/index.php?url=admin/dashboard"},
+      {"action": "assert", "condition": "page contains today sales", "expected": "Today's sales are displayed"}
+    ]
+  },
+  {
+    "id": "TC-ADMIN-03",
+    "title": "Ver pedidos activos en dashboard",
+    "description": "Verificar que el dashboard muestra los pedidos activos",
+    "category": "Admin Dashboard",
+    "priority": "medium",
+    "steps": [
+      {"action": "login", "usuario": "admin", "password": "123456"},
+      {"action": "navigate", "url": "/sistema_de_comanda_digital/index.php?url=admin/dashboard"},
+      {"action": "assert", "condition": "page contains active orders", "expected": "Active orders are displayed"}
+    ]
+  },
+  {
+    "id": "TC-ADMIN-04",
+    "title": "Ver mesas ocupadas en dashboard",
+    "description": "Verificar que el dashboard muestra las mesas ocupadas",
+    "category": "Admin Dashboard",
+    "priority": "medium",
+    "steps": [
+      {"action": "login", "usuario": "admin", "password": "123456"},
+      {"action": "navigate", "url": "/sistema_de_comanda_digital/index.php?url=admin/dashboard"},
+      {"action": "assert", "condition": "page contains occupied tables", "expected": "Occupied tables are displayed"}
+    ]
+  },
+  {
+    "id": "TC-INV-01",
+    "title": "Ver inventario de ingredientes",
+    "description": "Verificar que el admin puede ver el inventario de ingredientes",
+    "category": "Inventory Management",
+    "priority": "medium",
+    "steps": [
+      {"action": "login", "usuario": "admin", "password": "123456"},
+      {"action": "navigate", "url": "/sistema_de_comanda_digital/index.php?url=admin/inventario"},
+      {"action": "assert", "condition": "page contains inventory items", "expected": "Inventory items are displayed"}
+    ]
+  },
+  {
+    "id": "TC-INV-02",
+    "title": "Actualizar cantidad de ingrediente",
+    "description": "Verificar que el admin puede actualizar la cantidad de un ingrediente",
+    "category": "Inventory Management",
+    "priority": "medium",
+    "steps": [
+      {"action": "login", "usuario": "admin", "password": "123456"},
+      {"action": "navigate", "url": "/sistema_de_comanda_digital/index.php?url=admin/inventario"},
+      {"action": "fill", "element": "input[name='cantidad']", "value": "100"},
+      {"action": "click", "element": "button[type='submit']"},
+      {"action": "assert", "condition": "inventory updated", "expected": "Inventory quantity updated"}
+    ]
+  },
+  {
+    "id": "TC-INV-03",
+    "title": "Ver alertas de stock bajo",
+    "description": "Verificar que el sistema muestra alertas cuando el stock está bajo",
+    "category": "Inventory Management",
+    "priority": "medium",
+    "steps": [
+      {"action": "login", "usuario": "admin", "password": "123456"},
+      {"action": "navigate", "url": "/sistema_de_comanda_digital/index.php?url=admin/inventario"},
+      {"action": "assert", "condition": "page contains low stock alerts", "expected": "Low stock alerts are displayed"}
+    ]
+  },
+  {
+    "id": "TC-REP-01",
+    "title": "Generar reporte de ventas en PDF",
+    "description": "Verificar que el admin puede generar un reporte de ventas en PDF",
+    "category": "Report Generation",
+    "priority": "medium",
+    "steps": [
+      {"action": "login", "usuario": "admin", "password": "123456"},
+      {"action": "navigate", "url": "/sistema_de_comanda_digital/index.php?url=admin/reportes"},
+      {"action": "click", "element": "button[data-action='generar-pdf']"},
+      {"action": "assert", "condition": "pdf downloaded", "expected": "PDF report is generated"}
+    ]
+  },
+  {
+    "id": "TC-REP-02",
+    "title": "Ver reporte de ventas por fecha",
+    "description": "Verificar que se pueden filtrar reportes por fecha",
+    "category": "Report Generation",
+    "priority": "low",
+    "steps": [
+      {"action": "login", "usuario": "admin", "password": "123456"},
+      {"action": "navigate", "url": "/sistema_de_comanda_digital/index.php?url=admin/reportes"},
+      {"action": "fill", "element": "input[name='fecha_inicio']", "value": "2026-04-01"},
+      {"action": "fill", "element": "input[name='fecha_fin']", "value": "2026-04-28"},
+      {"action": "click", "element": "button[type='submit']"},
+      {"action": "assert", "condition": "filtered results displayed", "expected": "Sales filtered by date"}
+    ]
+  },
+  {
+    "id": "TC-SEARCH-01",
+    "title": "Buscar pedido por ID",
+    "description": "Verificar que se puede buscar un pedido por su ID",
+    "category": "Search Functionality",
+    "priority": "low",
+    "steps": [
+      {"action": "login", "usuario": "admin", "password": "123456"},
+      {"action": "navigate", "url": "/sistema_de_comanda_digital/index.php?url=admin/dashboard"},
+      {"action": "fill", "element": "input[name='search']", "value": "1"},
+      {"action": "click", "element": "button[type='submit']"},
+      {"action": "assert", "condition": "order found", "expected": "Order with ID 1 is displayed"}
+    ]
+  },
+  {
+    "id": "TC-SESSION-01",
+    "title": "Acceso denegado sin sesión",
+    "description": "Verificar que no se puede acceder a páginas protegidas sin sesión",
+    "category": "Session Management",
+    "priority": "high",
+    "steps": [
+      {"action": "navigate", "url": "/sistema_de_comanda_digital/index.php?url=admin/dashboard"},
+      {"action": "assert", "condition": "redirected to login", "expected": "Redirected to login page"}
+    ]
+  },
+  {
+    "id": "TC-ROLE-01",
+    "title": "Mesero no puede acceder a admin",
+    "description": "Verificar que un usuario mesero no puede acceder a vistas de admin",
+    "category": "Role-Based Access",
+    "priority": "high",
+    "steps": [
+      {"action": "login", "usuario": "mesero1", "password": "123456"},
+      {"action": "navigate", "url": "/sistema_de_comanda_digital/index.php?url=admin/dashboard"},
+      {"action": "assert", "condition": "access denied or redirected", "expected": "Access denied or redirected"}
+    ]
+  },
+  {
+    "id": "TC-ROLE-02",
+    "title": "Cocina no puede acceder a caja",
+    "description": "Verificar que un usuario cocina no puede acceder a vistas de caja",
+    "category": "Role-Based Access",
+    "priority": "high",
+    "steps": [
+      {"action": "login", "usuario": "cocina1", "password": "123456"},
+      {"action": "navigate", "url": "/sistema_de_comanda_digital/index.php?url=caja"},
+      {"action": "assert", "condition": "access denied or redirected", "expected": "Access denied or redirected"}
+    ]
+  }
+]
