@@ -80,7 +80,7 @@
             $stock = $p['stock'] ?? 0;
             $sinStock = $stock <= 0;
           ?>
-            <div class="menu-item <?php echo $sinStock ? 'out-of-stock' : ''; ?>" data-nombre="<?php echo strtolower($nombre); ?>">
+            <div class="menu-item <?php echo $sinStock ? 'out-of-stock' : ''; ?>" data-nombre="<?php echo mb_strtolower($nombre, 'UTF-8'); ?>">
               <div class="item-image">
                 <?php if ($tieneImagen): ?>
                   <img src="<?php echo $imgPath; ?>" alt="<?php echo $nombre; ?>" loading="lazy">
@@ -232,34 +232,45 @@
       });
     });
 
+    // Normalizar texto (quitar acentos, pasar a minúsculas)
+    function normalizeText(text) {
+      return text.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+    }
+
     // Búsqueda en tiempo real
-    document.getElementById('searchInput').addEventListener('input', function() {
-      const query = this.value.toLowerCase().trim();
-      document.querySelectorAll('.menu-item').forEach(item => {
-        const nombre = item.dataset.nombre;
-        if (!query || nombre.includes(query)) {
-          item.style.display = '';
-        } else {
-          item.style.display = 'none';
-        }
-      });
-      document.querySelectorAll('.menu-section').forEach(section => {
-        const visibleItems = section.querySelectorAll('.menu-item[style*="display: none"]');
-        const allItems = section.querySelectorAll('.menu-item');
-        if (allItems.length === visibleItems.length && visibleItems.length > 0) {
-          section.style.display = 'none';
-        } else if (query) {
-          section.style.display = '';
-        } else {
-          const activeTab = document.querySelector('.category-tab.active');
-          if (activeTab && activeTab.dataset.category !== 'all') {
-            section.style.display = section.dataset.category === activeTab.dataset.category ? '' : 'none';
+    const searchInput = document.getElementById('searchInput');
+    if (searchInput) {
+      searchInput.addEventListener('input', function() {
+        const query = normalizeText(this.value);
+        const activeTab = document.querySelector('.category-tab.active');
+        const activeCategory = activeTab ? activeTab.dataset.category : 'all';
+
+        document.querySelectorAll('.menu-item').forEach(item => {
+          const nombre = normalizeText(item.dataset.nombre || '');
+          const match = !query || nombre.includes(query);
+          if (match) {
+            item.style.display = '';
           } else {
-            section.style.display = '';
+            item.style.display = 'none';
           }
-        }
+        });
+
+        document.querySelectorAll('.menu-section').forEach(section => {
+          const hiddenItems = section.querySelectorAll('.menu-item[style*="display: none"]');
+          const allItems = section.querySelectorAll('.menu-item');
+          const allHidden = allItems.length > 0 && allItems.length === hiddenItems.length;
+          const categoryMatch = activeCategory === 'all' || section.dataset.category === activeCategory;
+
+          if (allHidden) {
+            section.style.display = 'none';
+          } else if (query) {
+            section.style.display = categoryMatch ? '' : 'none';
+          } else {
+            section.style.display = categoryMatch ? '' : 'none';
+          }
+        });
       });
-    });
+    }
   </script>
 
   <script src="<?php echo ASSETS_URL; ?>js/carrito.js?v=3"></script>

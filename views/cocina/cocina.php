@@ -2,37 +2,63 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Área de Cocina</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="<?php echo ASSETS_URL; ?>css/estilos.css?v=3">
+  <link rel="stylesheet" href="<?php echo BASE_URL; ?>public/css/cocina.css?v=3">
 </head>
 <body>
   <header>
-    <h1>Pedidos en Cocina - Tacos y Postres</h1>
+    <div class="header-top">
+      <div class="header-brand">
+        <i class="fas fa-utensils"></i>
+        <span>Taquería El Informático</span>
+      </div>
+      <div class="header-page-title">
+        <i class="fas fa-kitchen-set"></i>
+        <span>Área de Cocina</span>
+        <span class="last-update" id="lastUpdate"></span>
+      </div>
+    </div>
   </header>
+
   <main id="pedidosContainer">
     <?php if (empty($data['pedidos'])): ?>
-      <p>No hay pedidos activos de tacos o postres</p>
+      <div class="no-items">
+        <i class="fas fa-check-circle"></i>
+        <p>No hay pedidos activos de tacos o postres</p>
+      </div>
     <?php else: ?>
-      <?php foreach ($data['pedidos'] as $pedido): ?>
+      <?php foreach ($data['pedidos'] as $pedido):
+        $mid = $pedido['mesa_id'] ?? '?';
+      ?>
         <div class="pedido" data-pedido-id="<?php echo $pedido['id']; ?>">
           <div class="pedido-header">
             <div class="pedido-info">
-              <h3>Mesa <?php echo $pedido['mesa_id']; ?> - Pedido #<?php echo $pedido['id']; ?></h3>
-              <p>Hora: <?php echo date('H:i:s', strtotime($pedido['fecha_creacion'])); ?></p>
-              <p>Estado: <?php echo strtoupper($pedido['estado']); ?></p>
+              <div class="pedido-title-row">
+                <span class="mesa-badge"><i class="fas fa-chair"></i> Mesa <?php echo $mid; ?></span>
+                <span class="pedido-num">#<?php echo $pedido['id']; ?></span>
+              </div>
+              <div class="pedido-meta">
+                <span class="meta-time"><i class="fas fa-clock"></i> <span class="order-time" data-time="<?php echo $pedido['fecha_creacion']; ?>"><?php echo date('H:i', strtotime($pedido['fecha_creacion'])); ?></span></span>
+                <span class="estado-pedido estado-<?php echo $pedido['estado']; ?>"><?php echo strtoupper($pedido['estado']); ?></span>
+              </div>
             </div>
           </div>
-          
+
           <ul class="detalles-lista">
             <?php foreach ($pedido['detalles'] as $detalle): ?>
               <li class="detalle-item">
                 <div class="detalle-info">
                   <span class="detalle-nombre"><?php echo htmlspecialchars($detalle['nombre']); ?></span>
                   <span class="detalle-cantidad">x<?php echo $detalle['cantidad']; ?></span>
-                  <span class="detalle-precio">$<?php echo number_format($detalle['subtotal'], 2); ?></span>
                 </div>
                 <div class="detalle-controls">
-                  <span class="detalle-estado estado-<?php echo $detalle['estado']; ?>">
+                  <span class="detalle-estado estado-<?php echo $detalle['estado']; ?>"
+                        data-detalle-id="<?php echo $detalle['id']; ?>"
+                        data-current-state="<?php echo $detalle['estado']; ?>"
+                        onclick="cambiarEstado(this)">
                     <?php echo strtoupper($detalle['estado']); ?>
                   </span>
                 </div>
@@ -44,14 +70,12 @@
     <?php endif; ?>
   </main>
 
-  <!-- DEFINIR LAS VARIABLES JS PRIMERO -->
   <script>
     const BASE_URL = '<?php echo BASE_URL; ?>';
-    const COCINA_URL = BASE_URL + 'cocina/obtenerPedidosActualizados'; 
+    const COCINA_URL = BASE_URL + 'cocina/obtenerPedidosActualizados';
     const ESTADO_URL = BASE_URL + 'cocina/actualizarDetalle';
   </script>
 
-  <!-- LUEGO cargar el JS -->
   <script src="<?php echo ASSETS_URL; ?>js/cocina.js"></script>
 </body>
 </html>

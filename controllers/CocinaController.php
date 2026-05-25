@@ -1,5 +1,5 @@
 <?php
-// El autoload de index.php se encarga de cargar PedidoModel
+require_once __DIR__ . '/../models/PedidoModel.php';
 
 class CocinaController {
     public function index() {
@@ -36,7 +36,7 @@ class CocinaController {
         exit; 
     }
 
-    // Función para filtrar solo tacos y postres
+    // Función para filtrar solo tacos y postres (excluye cancelados)
     private function filtrarTacosYPostres($pedidos) {
         $pedidosFiltrados = [];
 
@@ -44,6 +44,11 @@ class CocinaController {
             $detallesFiltrados = [];
 
             foreach ($pedido['detalles'] as $detalle) {
+                // Saltar detalles cancelados
+                if (isset($detalle['estado']) && $detalle['estado'] === 'cancelado') {
+                    continue;
+                }
+
                 $nombre = strtolower($detalle['nombre']);
                 
                 // Filtrar solo tacos y postres
