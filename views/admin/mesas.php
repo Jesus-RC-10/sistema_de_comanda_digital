@@ -23,7 +23,7 @@ require_once __DIR__ . '/../layout/header.php';
 
             <div class="form-group">
                 <label>Mesero en Turno:</label>
-                <select name="mesero_id" required style="width: 100%; padding: 8px; border-radius: 4px; border: 1px solid #ccc;">
+                <select name="mesero_id" required>
                     <option value="">-- Seleccione un Mesero --</option>
                     <?php if (!empty($data['meseros'])): ?>
                         <?php foreach ($data['meseros'] as $mesero): ?>

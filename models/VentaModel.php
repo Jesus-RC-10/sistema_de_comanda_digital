@@ -21,12 +21,121 @@ class VentaModel {
      * Pagar una venta
      */
     public function pagarVenta($venta_id, $metodo_pago, $monto_pagado, $usuario_id) {
+        // Obtener el pedido_id asociado
+        $sqlGetPedido = "SELECT pedido_id FROM ventas WHERE id = ?";
+        $stmtGetPedido = $this->conn->prepare($sqlGetPedido);
+        $stmtGetPedido->execute([$venta_id]);
+        $pedido_id = $stmtGetPedido->fetchColumn();
+
         $sql = "UPDATE ventas SET metodo_pago = ?, estado = 'pagado', fecha_pago = NOW(), usuario_id = ? WHERE id = ?";
         $stmt = $this->conn->prepare($sql);
-        $stmt->execute([$metodo_pago, $usuario_id, $venta_id]);
+        $result = $stmt->execute([$metodo_pago, $usuario_id, $venta_id]);
 
-        // También marcar el pedido como entregado o algo, pero por ahora solo la venta
-        return $stmt->rowCount() > 0;
+        if ($result && $pedido_id) {
+            // Descontar inventario automáticamente
+            $this->descontarInventarioPorPedido($pedido_id);
+        }
+
+        return $result;
+    }
+
+    /**
+     * Descontar ingredientes de inventario según las recetas de los productos en el pedido
+     */
+    public function descontarInventarioPorPedido($pedido_id) {
+        try {
+            // 1. Obtener detalles del pedido (producto_id, cantidad y notas de personalización)
+            $sqlDetalles = "SELECT producto_id, cantidad, notas FROM pedido_detalles WHERE pedido_id = ?";
+            $stmtDetalles = $this->conn->prepare($sqlDetalles);
+            $stmtDetalles->execute([$pedido_id]);
+            $detalles = $stmtDetalles->fetchAll(PDO::FETCH_ASSOC);
+
+            require_once __DIR__ . '/../observers/NotificationManager.php';
+            require_once __DIR__ . '/../observers/StockObserver.php';
+            $notificationManager = new NotificationManager();
+            $notificationManager->attach(new StockObserver());
+
+            foreach ($detalles as $detalle) {
+                $producto_id = $detalle['producto_id'];
+                $cantidad_pedido = intval($detalle['cantidad']);
+                $notas = $detalle['notas'] ?? '';
+
+                // Analizar personalizaciones de ingredientes en las notas
+                // Ejemplos: "Sin cebolla", "Sin Cebolla", "Sin Tomate"
+                $excluidos = [];
+                if (!empty($notas)) {
+                    // Convertir a minúsculas y normalizar para buscar coincidencias
+                    $notasLower = mb_strtolower($notas, 'UTF-8');
+                    // Separar notas por comas
+                    $partesNotas = explode(',', $notasLower);
+                    foreach ($partesNotas as $parte) {
+                        $parte = trim($parte);
+                        if (strpos($parte, 'sin ') === 0) {
+                            $ingredienteExcluido = trim(substr($parte, 4));
+                            $excluidos[] = $ingredienteExcluido;
+                        }
+                    }
+                }
+
+                // 2. Obtener receta para este producto
+                $sqlReceta = "SELECT rp.ingrediente_id, rp.cantidad as cantidad_receta, i.nombre as ingrediente_nombre, i.cantidad_actual, i.cantidad_minima, i.unidad_medida
+                              FROM recetas_producto rp
+                              JOIN ingredientes i ON rp.ingrediente_id = i.id
+                              WHERE rp.producto_id = ? AND i.activo = 1";
+                $stmtReceta = $this->conn->prepare($sqlReceta);
+                $stmtReceta->execute([$producto_id]);
+                $receta = $stmtReceta->fetchAll(PDO::FETCH_ASSOC);
+
+                foreach ($receta as $ing) {
+                    $ingrediente_id = $ing['ingrediente_id'];
+                    $nombre_ingrediente = mb_strtolower($ing['ingrediente_nombre'], 'UTF-8');
+                    $cantidad_actual = floatval($ing['cantidad_actual']);
+                    $cantidad_minima = floatval($ing['cantidad_minima']);
+                    
+                    // Verificar si este ingrediente fue excluido en las notas
+                    $fueExcluido = false;
+                    foreach ($excluidos as $excl) {
+                        if (strpos($nombre_ingrediente, $excl) !== false || strpos($excl, $nombre_ingrediente) !== false) {
+                            $fueExcluido = true;
+                            break;
+                        }
+                    }
+
+                    if ($fueExcluido) {
+                        // Si está excluido ("Sin cebolla"), no descontamos este ingrediente!
+                        continue;
+                    }
+
+                    // Calcular descuento total = cantidad en receta * cantidad de platos pedidos
+                    $descuento = floatval($ing['cantidad_receta']) * $cantidad_pedido;
+                    $nueva_cantidad = $cantidad_actual - $descuento;
+                    if ($nueva_cantidad < 0) {
+                        $nueva_cantidad = 0; // Evitar stock negativo físico
+                    }
+
+                    // 3. Actualizar la cantidad del ingrediente
+                    $sqlUpdateIng = "UPDATE ingredientes SET cantidad_actual = ? WHERE id = ?";
+                    $stmtUpdateIng = $this->conn->prepare($sqlUpdateIng);
+                    $stmtUpdateIng->execute([$nueva_cantidad, $ingrediente_id]);
+
+                    // 4. Si el ingrediente cae por debajo del mínimo, disparar la alerta de stock bajo
+                    if ($nueva_cantidad <= $cantidad_minima) {
+                        $ingredienteActualizado = [
+                            'id' => $ingrediente_id,
+                            'nombre' => $ing['ingrediente_nombre'],
+                            'cantidad_actual' => $nueva_cantidad,
+                            'cantidad_minima' => $cantidad_minima,
+                            'unidad_medida' => $ing['unidad_medida']
+                        ];
+                        $notificationManager->notify('stock_bajo', $ingredienteActualizado);
+                    }
+                }
+            }
+            return true;
+        } catch (Exception $e) {
+            error_log("Error al descontar inventario del pedido $pedido_id: " . $e->getMessage());
+            return false;
+        }
     }
 
     /**

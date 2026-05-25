@@ -1,12 +1,14 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;900&display=swap');
+
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Outfit', sans-serif;
 }
 
 body {
-    background: linear-gradient(135deg, #960e0e, #490909);
+    background: linear-gradient(135deg, #0A0907 0%, #1D0E0E 100%);
     height: 100vh;
     display: flex;
     justify-content: center;
@@ -14,13 +16,14 @@ body {
 }
 
 .login-container {
-    background-color: rgba(255, 255, 255, 0);
-    backdrop-filter: blur(10px);
-    border-radius: 10px;
-    padding: 30px;
-    width: 400px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-    border: 1px solid rgba(255, 255, 255, 0.18);
+    background-color: rgba(22, 19, 16, 0.75);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border-radius: 20px;
+    padding: 40px;
+    width: 420px;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .logo {
@@ -30,12 +33,13 @@ body {
 
 .logo h1 {
     color: #fff;
-    font-size: 28px;
+    font-size: 26px;
+    font-weight: 900;
     margin-bottom: 5px;
 }
 
 .logo p {
-    color: #ccc;
+    color: #aaa;
     font-size: 14px;
 }
 
@@ -54,42 +58,48 @@ body {
     width: 100%;
     padding: 12px 15px;
     border: none;
-    border-radius: 5px;
-    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    background-color: rgba(255, 255, 255, 0.05);
     color: #fff;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    transition: border-color 0.3s;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s;
 }
 
 .input-group input:focus {
     outline: none;
-    border-color: #552e2e;
+    border-color: #D32F2F;
+    background-color: rgba(255, 255, 255, 0.08);
+    box-shadow: 0 0 10px rgba(211, 47, 47, 0.25);
 }
 
 .btn {
     width: 100%;
     padding: 12px;
-    background-color: #7129ce;
+    background: linear-gradient(135deg, #D32F2F 0%, #FFA000 100%);
     color: white;
     border: none;
-    border-radius: 5px;
+    border-radius: 8px;
     cursor: pointer;
     font-weight: bold;
-    transition: background-color 0.3s;
+    transition: all 0.3s;
     position: relative;
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 10px;
+    box-shadow: 0 5px 15px rgba(211, 47, 47, 0.3);
 }
 
 .btn:hover:not(:disabled) {
-    background-color: #2980b9;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(211, 47, 47, 0.45);
 }
 
 .btn:disabled {
-    background-color: #95a5a6;
+    background: rgba(255, 255, 255, 0.08);
+    color: #666;
     cursor: not-allowed;
+    box-shadow: none;
 }
 
 .spinner {

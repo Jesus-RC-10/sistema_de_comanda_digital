@@ -4,24 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Panel de Administración - Sistema de Comanda Digital</title>
-    <link rel="stylesheet" href="<?php echo BASE_URL; ?>public/css/admin.css">
+    <link rel="stylesheet" href="<?php echo BASE_URL; ?>public/css/admin.css?v=6">
     <script>const BASE_URL = '<?php echo BASE_URL; ?>';</script>
-    <script src="<?php echo BASE_URL; ?>public/css/js/admin.js" defer></script>
-    <style>
-        .content-section {
-            display: block;
-        }
-        .sidebar-menu .menu-item a {
-            text-decoration: none;
-            color: inherit;
-            display: block;
-            padding: 8px 12px;
-        }
-        .sidebar-menu .menu-item.active {
-            background-color: #e0f0ff;
-            font-weight: bold;
-        }
-    </style>
+    <script src="<?php echo BASE_URL; ?>public/js/admin.js" defer></script>
 </head>
 <body>
     <div class="header">

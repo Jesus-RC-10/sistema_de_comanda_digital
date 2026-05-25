@@ -43,11 +43,16 @@ class CocinaController {
         exit; 
     }
 
-    // Función para filtrar solo tacos y postres (excluye cancelados)
+    // Función para filtrar solo tacos y postres (excluye cancelados y pendientes de pago)
     private function filtrarTacosYPostres($pedidos) {
         $pedidosFiltrados = [];
 
         foreach ($pedidos as $pedido) {
+            // Solo cocina ve pedidos pagados (es decir, en estado confirmado o en_preparacion)
+            if ($pedido['estado'] === 'pendiente') {
+                continue;
+            }
+
             $detallesFiltrados = [];
 
             foreach ($pedido['detalles'] as $detalle) {

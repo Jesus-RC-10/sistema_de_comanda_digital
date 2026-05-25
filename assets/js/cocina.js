@@ -1,9 +1,7 @@
-// assets/js/cocina.js
-
 const ESTADOS_MAP = {
-    'pendiente': 'en_proceso',
-    'en_proceso': 'terminado',
-    'terminado': 'terminado'
+    'pendiente': 'en_preparacion',
+    'en_preparacion': 'listo',
+    'listo': 'listo'
 };
 
 function actualizarPedidos() {
@@ -66,11 +64,13 @@ function actualizarVistaPedidos(pedidos) {
         (pedido.detalles || []).forEach(detalle => {
             const est = (detalle.estado || '').toLowerCase();
             const estDisplay = est.toUpperCase().replace('_', ' ');
+            const notesHTML = detalle.notas ? `<div class="detalle-notas" style="color: #FFA000; font-size: 0.85rem; font-weight: bold; margin-top: 3px;"><i class="fas fa-info-circle"></i> ${detalle.notas}</div>` : '';
 
             html += `
                 <li class="detalle-item">
                     <div class="detalle-info">
-                        <span class="detalle-nombre">${detalle.nombre || ''}</span>
+                        <span class="detalle-nombre" style="font-weight:600;">${detalle.nombre || ''}</span>
+                        ${notesHTML}
                         <span class="detalle-cantidad">x${detalle.cantidad || 0}</span>
                     </div>
                     <div class="detalle-controls">

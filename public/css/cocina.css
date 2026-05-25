@@ -48,19 +48,22 @@
 
 /* --- TARJETA DE PEDIDO --- */
 .pedido {
-  background: #fff;
+  background: rgba(22, 19, 16, 0.7);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   border-radius: 16px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.07);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
   overflow: hidden;
   transition: all 0.3s ease;
-  border: 1px solid #eee;
+  border: 1px solid rgba(255, 255, 255, 0.08);
   position: relative;
   animation: cardIn 0.4s ease both;
 }
 
 .pedido:hover {
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.7);
   transform: translateY(-3px);
+  border-color: rgba(255, 255, 255, 0.12);
 }
 
 .pedido::before {
@@ -81,7 +84,7 @@
 /* --- HEADER DE LA TARJETA --- */
 .pedido-header {
   padding: 1.2rem 1.5rem;
-  border-bottom: 1px solid #f0f0f0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .pedido-title-row {
@@ -102,7 +105,7 @@
   padding: 6px 16px;
   border-radius: 20px;
   letter-spacing: 0.5px;
-  box-shadow: 0 3px 10px rgba(139, 0, 0, 0.25);
+  box-shadow: 0 3px 10px rgba(211, 47, 47, 0.3);
 }
 
 .mesa-badge i {
@@ -112,7 +115,7 @@
 .pedido-num {
   font-size: 1rem;
   font-weight: 700;
-  color: #888;
+  color: #777;
 }
 
 .pedido-meta {
@@ -130,7 +133,7 @@
 
 .order-time {
   font-weight: 600;
-  color: #666;
+  color: #aaa;
 }
 
 .estado-pedido {
@@ -144,25 +147,29 @@
 }
 
 .estado-pedido.estado-pendiente {
-  background: #FFF3E0;
-  color: #E65100;
+  background: rgba(255, 160, 0, 0.15);
+  color: #FFB74D;
+  border: 1px solid rgba(255, 160, 0, 0.3);
 }
 
 .estado-pedido.estado-en_preparacion,
 .estado-pedido.estado-en_proceso {
-  background: #FFF8E1;
-  color: #F57F17;
+  background: rgba(255, 160, 0, 0.2);
+  color: #FFD54F;
+  border: 1px solid rgba(255, 160, 0, 0.35);
 }
 
 .estado-pedido.estado-listo,
 .estado-pedido.estado-terminado {
-  background: #E8F5E9;
-  color: #2E7D32;
+  background: rgba(67, 160, 71, 0.2);
+  color: #A5D6A7;
+  border: 1px solid rgba(67, 160, 71, 0.4);
 }
 
 .estado-pedido.estado-entregado {
-  background: #E3F2FD;
-  color: #1565C0;
+  background: rgba(255, 255, 255, 0.06);
+  color: #888;
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 /* --- LISTA DE DETALLES --- */
@@ -177,7 +184,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 0.9rem 1.5rem;
-  border-bottom: 1px solid #f5f5f5;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
   transition: background 0.2s ease;
 }
 
@@ -186,20 +193,19 @@
 }
 
 .detalle-item:hover {
-  background: rgba(139, 0, 0, 0.03);
+  background: rgba(255, 255, 255, 0.03);
 }
 
 .detalle-info {
   display: flex;
-  align-items: center;
-  gap: 10px;
+  flex-direction: column;
   flex: 1;
   min-width: 0;
 }
 
 .detalle-nombre {
   font-weight: 600;
-  color: #333;
+  color: #F5F5F0;
   font-size: 0.95rem;
   white-space: nowrap;
   overflow: hidden;
@@ -216,6 +222,8 @@
   font-size: 0.8rem;
   min-width: 28px;
   text-align: center;
+  margin-top: 3px;
+  align-self: flex-start;
 }
 
 .detalle-controls {

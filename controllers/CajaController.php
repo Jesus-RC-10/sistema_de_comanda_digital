@@ -54,11 +54,11 @@ class CajaController {
                 $cambio = $monto_pagado - $total;
                 $ventaModel->pagarVenta($venta_id, $metodo_pago, $monto_pagado, $usuario_id);
 
-                // Marcar pedido como entregado
+                // Confirmar pedido para cocina
                 if ($pedido_id) {
                     require_once __DIR__ . '/../models/PedidoModel.php';
                     $pedidoModel = new PedidoModel();
-                    $pedidoModel->cerrarPedido($pedido_id);
+                    $pedidoModel->confirmarPedido($pedido_id);
                 }
 
                 $mensaje = "Pago registrado. Monto pagado: $" . number_format($monto_pagado, 2) .

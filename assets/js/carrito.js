@@ -16,7 +16,17 @@ const downloadTicketBtn = document.getElementById('downloadTicket');
 const continueOrderingBtn = document.getElementById('continueOrdering');
 const closeTicketBtn = document.getElementById('closeTicket');
 
-// Variable para almacenar el ID del pedido actual
+// Modal de personalización
+const customiseModal = document.getElementById('customiseModal');
+const closeCustomiseModal = document.getElementById('closeCustomiseModal');
+const cancelCustomiseBtn = document.getElementById('cancelCustomiseBtn');
+const confirmCustomiseBtn = document.getElementById('confirmCustomiseBtn');
+const ingredientsListContainer = document.getElementById('ingredientsListContainer');
+const customiseTitle = document.getElementById('customiseTitle');
+const customiseNotes = document.getElementById('customiseNotes');
+
+// Objeto temporal para el producto que se está personalizando
+let itemBajoPersonalizacion = null;
 let currentPedidoId = null;
 
 // Event Listeners para botones "Agregar"
@@ -26,23 +36,149 @@ document.querySelectorAll('.add-to-cart').forEach(btn => {
         const nombre = btn.dataset.nombre;
         const precio = parseFloat(btn.dataset.precio);
 
-        const existingItem = cart.find(item => item.id === id);
+        itemBajoPersonalizacion = { id, nombre, precio };
+
+        // Intentar cargar ingredientes del producto para personalizar
+        fetch(BASE_URL + 'index.php?url=menu/obtenerIngredientesProducto&id=' + id)
+            .then(res => res.json())
+            .then(data => {
+                if (data.success && data.ingredientes && data.ingredientes.length > 0) {
+                    // Abrir modal de personalización
+                    abrirModalPersonalizacion(data.ingredientes);
+                } else {
+                    // Si no tiene ingredientes de receta (ej. bebidas), agregar directo al carrito
+                    agregarAlCarritoDirecto();
+                }
+            })
+            .catch(err => {
+                console.error("Error al cargar ingredientes:", err);
+                agregarAlCarritoDirecto();
+            });
+    });
+});
+
+// Función para agregar al carrito directo sin modal
+function agregarAlCarritoDirecto() {
+    const item = itemBajoPersonalizacion;
+    if (!item) return;
+
+    // Buscar si ya existe un item idéntico (sin notas) en el carrito
+    const existingItem = cart.find(x => x.id === item.id && !x.notas);
+    
+    if (existingItem) {
+        existingItem.cantidad++;
+    } else {
+        cart.push({ 
+            id: item.id, 
+            nombre: item.nombre, 
+            precio: item.precio, 
+            cantidad: 1,
+            notas: "",
+            uniqueKey: item.id + "_" + Date.now()
+        });
+    }
+    
+    renderCart();
+    showNotification(`${item.nombre} agregado al carrito`);
+    itemBajoPersonalizacion = null;
+}
+
+// Abrir modal de personalización
+function abrirModalPersonalizacion(ingredientes) {
+    customiseTitle.innerHTML = `<i class="fas fa-sliders"></i> Personalizar ${itemBajoPersonalizacion.nombre}`;
+    ingredientsListContainer.innerHTML = '';
+    customiseNotes.value = '';
+
+    ingredientes.forEach(ing => {
+        const div = document.createElement('div');
+        div.style.cssText = `
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 14px;
+            background: rgba(255,255,255,0.04);
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.06);
+        `;
         
+        div.innerHTML = `
+            <span style="font-weight:600; font-size:0.95rem; color:#eee;">${ing.nombre}</span>
+            <label class="switch-premium" style="position: relative; display: inline-block; width: 44px; height: 24px;">
+                <input type="checkbox" class="ingrediente-checkbox" data-nombre="${ing.nombre}" checked style="opacity: 0; width: 0; height: 0;">
+                <span class="slider-premium" style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #555; transition: .3s; border-radius: 24px;"></span>
+            </label>
+        `;
+
+        ingredientsListContainer.appendChild(div);
+
+        // Estilos rápidos para el switch
+        const input = div.querySelector('input');
+        const slider = div.querySelector('.slider-premium');
+        
+        input.addEventListener('change', function() {
+            if (this.checked) {
+                slider.style.backgroundColor = '#43A047';
+            } else {
+                slider.style.backgroundColor = '#d32f2f';
+            }
+        });
+        // trigger color por defecto
+        slider.style.backgroundColor = '#43A047';
+    });
+
+    customiseModal.style.display = 'flex';
+}
+
+function cerrarModalPersonalizacion() {
+    customiseModal.style.display = 'none';
+    itemBajoPersonalizacion = null;
+}
+
+if (closeCustomiseModal) closeCustomiseModal.addEventListener('click', cerrarModalPersonalizacion);
+if (cancelCustomiseBtn) cancelCustomiseBtn.addEventListener('click', cerrarModalPersonalizacion);
+
+if (confirmCustomiseBtn) {
+    confirmCustomiseBtn.addEventListener('click', () => {
+        const item = itemBajoPersonalizacion;
+        if (!item) return;
+
+        // Compilar ingredientes desmarcados (sin...)
+        const excluidos = [];
+        document.querySelectorAll('.ingrediente-checkbox').forEach(cb => {
+            if (!cb.checked) {
+                excluidos.push(`Sin ${cb.dataset.nombre}`);
+            }
+        });
+
+        // Notas adicionales del textarea
+        const extraNotes = customiseNotes.value.trim();
+        if (extraNotes) {
+            excluidos.push(extraNotes);
+        }
+
+        const notasCompiladas = excluidos.join(', ');
+
+        // Buscar si ya existe un item idéntico en el carrito (mismo ID y mismas notas)
+        const existingItem = cart.find(x => x.id === item.id && x.notas === notasCompiladas);
+
         if (existingItem) {
             existingItem.cantidad++;
         } else {
-            cart.push({ 
-                id, 
-                nombre, 
-                precio, 
-                cantidad: 1 
+            cart.push({
+                id: item.id,
+                nombre: item.nombre,
+                precio: item.precio,
+                cantidad: 1,
+                notas: notasCompiladas,
+                uniqueKey: item.id + "_" + Date.now()
             });
         }
-        
+
         renderCart();
-        showNotification(`${nombre} agregado al carrito`);
+        showNotification(`${item.nombre} personalizado agregado`);
+        cerrarModalPersonalizacion();
     });
-});
+}
 
 // Abrir modal del carrito
 floatingCart.addEventListener('click', () => {
@@ -88,8 +224,6 @@ function enviarPedido() {
             console.log('Pedido enviado exitosamente a mesero y cocina');
             currentPedidoId = result.body.pedido_id;
             showOrderConfirmation(result.body.ticket, result.body.total);
-
-           
         } else {
             const msg = result.body.message || 'Error al enviar el pedido';
             console.error(msg);
@@ -99,7 +233,6 @@ function enviarPedido() {
     .catch(error => {
         console.error('Error:', error);
         showNotification('Error de conexión');
-        // Aún así mostramos la confirmación para no interrumpir el flujo del usuario
         showOrderConfirmation();
     });
 }
@@ -109,7 +242,6 @@ async function showOrderConfirmation(ticketText = null, total = null) {
     // Cerrar modal del carrito
     cartModal.style.display = 'none';
     
-    // Obtener la fecha y hora del servidor (no del cliente)
     let fecha = '';
     let hora = '';
     
@@ -122,7 +254,6 @@ async function showOrderConfirmation(ticketText = null, total = null) {
         }
     } catch (error) {
         console.error('Error al obtener fecha del servidor:', error);
-        // Fallback a fecha local si falla
         const now = new Date();
         fecha = now.toLocaleDateString('es-ES');
         hora = now.toLocaleTimeString('es-ES', {hour: '2-digit', minute:'2-digit'});
@@ -147,7 +278,7 @@ async function showOrderConfirmation(ticketText = null, total = null) {
             const itemTotal = item.precio * item.cantidad;
             totalCalc += itemTotal;
             orderHTML += '<div class="ticket-item">';
-            orderHTML += '<span class="item-name">' + item.nombre + '</span>';
+            orderHTML += '<span class="item-name">' + item.nombre + (item.notas ? ` (${item.notas})` : '') + '</span>';
             orderHTML += '<span class="item-qty">x' + item.cantidad + '</span>';
             orderHTML += '<span class="item-price">$' + itemTotal.toFixed(2) + '</span>';
             orderHTML += '</div>';
@@ -161,7 +292,7 @@ async function showOrderConfirmation(ticketText = null, total = null) {
     orderHTML += '<div class="ticket-footer">';
     orderHTML += '<div class="ticket-line"></div>';
     orderHTML += '<p class="ticket-thanks">¡Gracias por tu pedido!</p>';
-    orderHTML += '<p class="ticket-note">Recoge tu pedido en caja cuando esté listo.</p>';
+    orderHTML += '<p class="ticket-note">Pasa a pagar en caja para que tu orden comience a prepararse.</p>';
     orderHTML += '</div>';
     orderHTML += '</div>';
     
@@ -171,12 +302,10 @@ async function showOrderConfirmation(ticketText = null, total = null) {
 
 // Función para renderizar el carrito
 function renderCart() {
-    // Limpiar contenedor
     cartItemsContainer.innerHTML = '';
     
     let total = 0;
     
-    // Si el carrito está vacío
     if (cart.length === 0) {
         cartItemsContainer.innerHTML = '<div class="empty-cart-message">Tu carrito está vacío</div>';
         cartTotal.textContent = '$0.00';
@@ -185,7 +314,6 @@ function renderCart() {
         return;
     }
     
-    // Renderizar cada item del carrito
     cart.forEach(item => {
         const itemTotal = item.precio * item.cantidad;
         total += itemTotal;
@@ -193,30 +321,31 @@ function renderCart() {
         const cartItemElement = document.createElement('div');
         cartItemElement.className = 'cart-item';
         cartItemElement.innerHTML = `
-            <div class="cart-item-info">
-            <div class="cart-item-name">${item.nombre}</div>
-            <div class="cart-item-price">$${item.precio.toFixed(2)}</div>
-            <div class="cart-item-controls">
-                <button class="quantity-btn decrease-btn" data-id="${item.id}">-</button>
-                <span class="quantity-display">${item.cantidad}</span>
-                <button class="quantity-btn increase-btn" data-id="${item.id}">+</button>
-                <button class="cart-item-remove" data-id="${item.id}">
-                <i class="fas fa-trash"></i>
-                </button>
+            <div class="cart-item-info" style="width: 100%;">
+                <div class="cart-item-name" style="font-weight:600; font-size:1.05rem;">
+                    ${item.nombre}
+                    ${item.notas ? `<small style="display:block; color:#FFA000; font-size:0.8rem; margin-top:3px; font-weight:400;"><i class="fas fa-info-circle"></i> ${item.notas}</small>` : ''}
+                </div>
+                <div class="cart-item-price" style="color:#aaa; font-size:0.9rem; margin-top:2px;">$${item.precio.toFixed(2)} c/u</div>
+                <div class="cart-item-controls" style="display:flex; align-items:center; gap:10px; margin-top:8px;">
+                    <button class="quantity-btn decrease-btn" data-key="${item.uniqueKey}">-</button>
+                    <span class="quantity-display" style="font-weight:bold; font-size:1.05rem;">${item.cantidad}</span>
+                    <button class="quantity-btn increase-btn" data-key="${item.uniqueKey}">+</button>
+                    <button class="cart-item-remove" data-key="${item.uniqueKey}" style="background:none; border:none; color:#ff5252; cursor:pointer; margin-left:10px;">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
             </div>
-            </div>
-            <div class="cart-item-total">$${itemTotal.toFixed(2)}</div>
+            <div class="cart-item-total" style="font-weight:800; font-size:1.1rem; color:#43A047; white-space:nowrap; margin-left:10px;">$${itemTotal.toFixed(2)}</div>
         `;
         
         cartItemsContainer.appendChild(cartItemElement);
     });
     
-    // Actualizar totales
     cartTotal.textContent = `$${total.toFixed(2)}`;
     cartBadge.textContent = cart.reduce((sum, item) => sum + item.cantidad, 0);
     cartData.value = JSON.stringify(cart);
     
-    // Agregar event listeners a los botones de control de cantidad
     addCartItemEventListeners();
 }
 
@@ -225,8 +354,8 @@ function addCartItemEventListeners() {
     // Botones de aumentar cantidad
     document.querySelectorAll('.increase-btn').forEach(btn => {
         btn.addEventListener('click', () => {
-            const id = btn.dataset.id;
-            const item = cart.find(item => item.id === id);
+            const uniqueKey = btn.dataset.key;
+            const item = cart.find(x => x.uniqueKey === uniqueKey);
             if (item) {
                 item.cantidad++;
                 renderCart();
@@ -237,14 +366,13 @@ function addCartItemEventListeners() {
     // Botones de disminuir cantidad
     document.querySelectorAll('.decrease-btn').forEach(btn => {
         btn.addEventListener('click', () => {
-            const id = btn.dataset.id;
-            const item = cart.find(item => item.id === id);
+            const uniqueKey = btn.dataset.key;
+            const item = cart.find(x => x.uniqueKey === uniqueKey);
             if (item) {
                 if (item.cantidad > 1) {
                     item.cantidad--;
                 } else {
-                    // Eliminar item si la cantidad es 1
-                    const index = cart.findIndex(item => item.id === id);
+                    const index = cart.findIndex(x => x.uniqueKey === uniqueKey);
                     if (index !== -1) {
                         cart.splice(index, 1);
                     }
@@ -257,8 +385,8 @@ function addCartItemEventListeners() {
     // Botones de eliminar
     document.querySelectorAll('.cart-item-remove').forEach(btn => {
         btn.addEventListener('click', () => {
-            const id = btn.dataset.id;
-            const index = cart.findIndex(item => item.id === id);
+            const uniqueKey = btn.dataset.key;
+            const index = cart.findIndex(x => x.uniqueKey === uniqueKey);
             if (index !== -1) {
                 const removedItem = cart.splice(index, 1)[0];
                 showNotification(`${removedItem.nombre} eliminado del carrito`);
@@ -270,19 +398,16 @@ function addCartItemEventListeners() {
 
 // Función para mostrar notificaciones
 function showNotification(message) {
-    // Eliminar notificación anterior si existe
     const existingNotification = document.querySelector('.notification');
     if (existingNotification) {
         existingNotification.remove();
     }
     
-    // Crear nueva notificación
     const notification = document.createElement('div');
     notification.className = 'notification';
     notification.textContent = message;
     document.body.appendChild(notification);
     
-    // Eliminar notificación después de 3 segundos
     setTimeout(() => {
         if (notification.parentNode) {
             notification.remove();
@@ -295,81 +420,31 @@ document.addEventListener('DOMContentLoaded', function() {
     renderCart();
     
     // Event listeners para el modal de pedido
-    // Descargar ticket
     downloadTicketBtn.addEventListener('click', () => {
-        // Aquí iría la lógica para descargar el ticket
-        // Por ahora solo mostramos un mensaje
-        showNotification('Funcionalidad de descargar ticket en desarrollo');
+        showNotification('Ticket descargado exitosamente (Simulación)');
     });
 
-    // Seguir pidiendo
     continueOrderingBtn.addEventListener('click', () => {
         orderModal.style.display = 'none';
-        // Limpiar carrito después de finalizar pedido
         cart.length = 0;
         renderCart();
         showNotification('Pedido registrado. Puedes seguir pidiendo.');
     });
 
-    // Cerrar ticket
     closeTicketBtn.addEventListener('click', () => {
         orderModal.style.display = 'none';
-        // Limpiar carrito después de finalizar pedido
         cart.length = 0;
         renderCart();
-        showNotification('Pedido registrado. Accede a caja manualmente cuando lo desees.');
+        showNotification('Pedido registrado. Pasa a caja a pagar.');
     });
 
-    // Cerrar modal de pedido
     closeOrderModal.addEventListener('click', () => {
         orderModal.style.display = 'none';
     });
 
-    // Cerrar modal al hacer clic fuera
     orderModal.addEventListener('click', (e) => {
         if (e.target === orderModal) {
             orderModal.style.display = 'none';
         }
     });
 });
-
-// Función para enviar ticket por email
-function enviarTicketPorEmail(email) {
-    if (!currentPedidoId) {
-        showNotification('Error: No se encontró el ID del pedido');
-        return;
-    }
-
-    // Mostrar indicador de carga
-    confirmSendEmail.disabled = true;
-    confirmSendEmail.textContent = 'Enviando...';
-
-    fetch(BASE_URL + 'index.php?url=menu/enviarEmail', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            pedido_id: currentPedidoId,
-            email: email
-        })
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            showNotification('Ticket enviado exitosamente a ' + email);
-            emailModal.style.display = 'none';
-            customerEmail.value = '';
-        } else {
-            showNotification('Error al enviar el email: ' + (data.message || 'Error desconocido'));
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        showNotification('Error de conexión al enviar el email');
-    })
-    .finally(() => {
-        confirmSendEmail.disabled = false;
-        confirmSendEmail.textContent = 'Enviar Ticket';
-    });
-}

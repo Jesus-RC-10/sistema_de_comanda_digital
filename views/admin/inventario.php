@@ -14,11 +14,11 @@ require_once __DIR__ . '/../layout/header.php';
             
             <div class="form-group" style="margin: 0;">
                 <label>Nombre:</label>
-                <input type="text" name="nombre" required placeholder="Ej: Tortillas" style="padding: 6px;">
+                <input type="text" name="nombre" required placeholder="Ej: Tortillas">
             </div>
             <div class="form-group" style="margin: 0;">
                 <label>Categoría:</label>
-                <select name="categoria" required style="padding: 6px;">
+                <select name="categoria" required>
                     <option value="vegetales">Vegetales</option>
                     <option value="carnes">Carnes</option>
                     <option value="lacteos">Lácteos</option>
@@ -30,7 +30,7 @@ require_once __DIR__ . '/../layout/header.php';
             </div>
             <div class="form-group" style="margin: 0;">
                 <label>Unidad:</label>
-                <select name="unidad_medida" required style="padding: 6px;">
+                <select name="unidad_medida" required>
                     <option value="kg">Kilogramos (kg)</option>
                     <option value="gr">Gramos (gr)</option>
                     <option value="lt">Litros (lt)</option>
@@ -41,11 +41,11 @@ require_once __DIR__ . '/../layout/header.php';
             </div>
             <div class="form-group" style="margin: 0;">
                 <label>Stock Inicial:</label>
-                <input type="number" name="cantidad_actual" step="0.01" required value="0" style="padding: 6px; width: 80px;">
+                <input type="number" name="cantidad_actual" step="0.01" required value="0">
             </div>
             <div class="form-group" style="margin: 0;">
                 <label>Minimo Alerta:</label>
-                <input type="number" name="cantidad_minima" step="0.01" required value="10" style="padding: 6px; width: 80px;">
+                <input type="number" name="cantidad_minima" step="0.01" required value="10">
             </div>
             <button type="submit" class="btn">Guardar Insumo</button>
         </form>
@@ -111,7 +111,7 @@ require_once __DIR__ . '/../layout/header.php';
                     <?php if (!empty($data['alertas_stock'])): ?>
                         <?php foreach ($data['alertas_stock'] as $row): ?>
                             <?php $diferencia = $row['cantidad_minima'] - $row['cantidad_actual']; ?>
-                            <tr style="background-color: #ffe6e6;">
+                            <tr class="stock-bajo">
                                 <td><strong><?php echo $row['nombre']; ?></strong></td>
                                 <td><?php echo $row['cantidad_actual']; ?> <?php echo $row['unidad_medida']; ?></td>
                                 <td><?php echo $row['cantidad_minima']; ?> <?php echo $row['unidad_medida']; ?></td>

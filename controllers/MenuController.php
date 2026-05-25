@@ -139,18 +139,22 @@ class MenuController {
                     exit();
                 }
                 
-                // Aquí puedes:
-                // 1. Guardar en la base de datos
-                // 2. Enviar notificación push
-                // 3. Integrar con sistema de meseros
+                // Guardar en la base de datos (alertas_sistema)
+                $db = Database::getConnection();
                 
-                // Por ahora, solo log y respuesta exitosa
-                error_log("Asistencia solicitada para mesa: " . $mesa_id);
+                // Obtener el número de mesa real
+                $stmtM = $db->prepare("SELECT numero_mesa FROM mesas WHERE id = ?");
+                $stmtM->execute([$mesa_id]);
+                $numero_mesa = $stmtM->fetchColumn() ?: "Mesa " . $mesa_id;
+
+                $sqlAlerta = "INSERT INTO alertas_sistema (tipo, mensaje, nivel, leida) VALUES ('ayuda_mesa', ?, 'medio', 0)";
+                $stmtAlerta = $db->prepare($sqlAlerta);
+                $stmtAlerta->execute(["La mesa " . $numero_mesa . " solicita asistencia urgente."]);
                 
                 header('Content-Type: application/json');
                 echo json_encode([
                     'success' => true,
-                    'message' => 'Asistencia registrada para mesa ' . $mesa_id,
+                    'message' => 'Asistencia registrada para mesa ' . $numero_mesa,
                     'timestamp' => date('Y-m-d H:i:s')
                 ]);
                 exit();
@@ -162,6 +166,26 @@ class MenuController {
         echo json_encode([
             'success' => false,
             'message' => 'Error al solicitar asistencia'
+        ]);
+        exit();
+    }
+
+    public function obtenerIngredientesProducto() {
+        $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
+        
+        $db = Database::getConnection();
+        $sql = "SELECT rp.ingrediente_id, i.nombre, rp.cantidad, i.unidad_medida 
+                FROM recetas_producto rp
+                JOIN ingredientes i ON rp.ingrediente_id = i.id
+                WHERE rp.producto_id = ? AND i.activo = 1";
+        $stmt = $db->prepare($sql);
+        $stmt->execute([$id]);
+        $ingredientes = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        
+        header('Content-Type: application/json');
+        echo json_encode([
+            'success' => true,
+            'ingredientes' => $ingredientes
         ]);
         exit();
     }

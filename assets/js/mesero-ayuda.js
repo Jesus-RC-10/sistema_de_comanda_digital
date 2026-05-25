@@ -6,18 +6,22 @@ document.addEventListener('DOMContentLoaded', function() {
     const cerrarAyuda = document.getElementById('cerrarAyuda');
     const listaMesas = document.getElementById('listaMesas');
 
-    // Array para mantener notificaciones no leídas
     let notificacionesPendientes = [];
 
-    // Inicializar sistema de notificaciones
+    // Cambiar estilos del botón de ayuda para que se vea premium
+    if (botonAyuda) {
+        botonAyuda.style.position = 'relative';
+    }
+
     inicializarNotificaciones();
 
     // Mostrar popup de ayuda
-    botonAyuda.addEventListener('click', function() {
-        ayudaPopup.style.display = 'block';
-        cargarNotificaciones();
-        marcarNotificacionesLeidas();
-    });
+    if (botonAyuda) {
+        botonAyuda.addEventListener('click', function() {
+            ayudaPopup.style.display = 'block';
+            cargarNotificaciones();
+        });
+    }
 
     // Cerrar popup de ayuda
     if (cerrarAyuda) {
@@ -28,193 +32,199 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Cerrar popup al hacer clic fuera
     document.addEventListener('click', function(e) {
-        if (ayudaPopup.style.display === 'block' && 
+        if (ayudaPopup && ayudaPopup.style.display === 'block' && 
             !ayudaPopup.contains(e.target) && 
             e.target !== botonAyuda) {
             ayudaPopup.style.display = 'none';
         }
     });
 
-    // Inicializar sistema de notificaciones
+    // Inicializar sistema de notificaciones en base de datos
     function inicializarNotificaciones() {
-        // Cargar notificaciones existentes
-        cargarNotificacionesDelStorage();
-        
-        // Escuchar nuevas notificaciones
-        window.addEventListener('nuevaNotificacion', function(e) {
-            const notificacion = e.detail;
-            mostrarNotificacionEmergente(notificacion);
-            agregarNotificacionPendiente(notificacion);
-        });
-
-        // Verificar nuevas notificaciones cada 5 segundos
+        verificarNuevasNotificaciones();
         setInterval(verificarNuevasNotificaciones, 5000);
-
-        // Actualizar badge del botón
-        actualizarBadgeNotificaciones();
     }
 
-    // Mostrar notificación emergente
+    // Sintetizar un tono digital de campana premium usando Web Audio API
+    function playChimeSound() {
+        try {
+            const ctx = new (window.AudioContext || window.webkitAudioContext)();
+            if (ctx.state === 'suspended') {
+                // El navegador bloquea audio sin interacción, lo ignoramos o reanudamos
+                ctx.resume();
+            }
+            const osc1 = ctx.createOscillator();
+            const osc2 = ctx.createOscillator();
+            const gain = ctx.createGain();
+            
+            osc1.connect(gain);
+            osc2.connect(gain);
+            gain.connect(ctx.destination);
+            
+            osc1.type = 'sine';
+            osc1.frequency.setValueAtTime(659.25, ctx.currentTime); // E5
+            osc1.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.15); // A5
+
+            osc2.type = 'triangle';
+            osc2.frequency.setValueAtTime(440, ctx.currentTime); // A4
+            osc2.frequency.exponentialRampToValueAtTime(554.37, ctx.currentTime + 0.15); // C#5
+            
+            gain.gain.setValueAtTime(0.08, ctx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.5);
+            
+            osc1.start(ctx.currentTime);
+            osc2.start(ctx.currentTime);
+            osc1.stop(ctx.currentTime + 0.55);
+            osc2.stop(ctx.currentTime + 0.55);
+        } catch (e) {
+            console.warn("Audio Context bloqueado o no soportado por el navegador:", e);
+        }
+    }
+
+    // Mostrar notificación emergente flotante en pantalla
     function mostrarNotificacionEmergente(notificacion) {
-        // Crear elemento de notificación emergente
         const notificacionElem = document.createElement('div');
         notificacionElem.className = 'notificacion-emergente';
         notificacionElem.innerHTML = `
             <div class="notificacion-contenido">
                 <div class="notificacion-icono">🔔</div>
                 <div class="notificacion-texto">
-                    <strong>${notificacion.mensaje}</strong>
-                    <span class="notificacion-tiempo">Ahora</span>
+                    <strong>MESA SOLICITA AYUDA</strong>
+                    <p style="margin: 3px 0 0 0; font-size: 0.85rem; color:#ffd54f;">${notificacion.mensaje}</p>
                 </div>
                 <button class="cerrar-notificacion">×</button>
             </div>
         `;
 
-        // Estilos para la notificación emergente
         notificacionElem.style.cssText = `
             position: fixed;
-            top: 20px;
+            bottom: 20px;
             right: 20px;
             background: #8B0000;
             color: white;
             padding: 15px;
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-            z-index: 1001;
-            min-width: 300px;
-            animation: slideInRight 0.3s ease;
-            border-left: 4px solid #FFD700;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            z-index: 2000;
+            min-width: 320px;
+            animation: slideInRight 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            border-left: 5px solid #FFD700;
+            font-family: inherit;
         `;
 
-        // Agregar al documento
         document.body.appendChild(notificacionElem);
+        
+        // Sonar timbre de aviso
+        playChimeSound();
 
-        // Cerrar notificación después de 5 segundos
+        // Eliminar sola en 6 segundos
         setTimeout(() => {
             if (notificacionElem.parentNode) {
-                notificacionElem.style.animation = 'slideOutRight 0.3s ease';
-                setTimeout(() => {
-                    if (notificacionElem.parentNode) {
-                        notificacionElem.remove();
-                    }
-                }, 300);
+                notificacionElem.style.animation = 'slideOutRight 0.3s ease forwards';
+                setTimeout(() => notificacionElem.remove(), 300);
             }
-        }, 5000);
+        }, 6000);
 
-        // Cerrar manualmente
         const cerrarBtn = notificacionElem.querySelector('.cerrar-notificacion');
         cerrarBtn.addEventListener('click', function() {
-            notificacionElem.style.animation = 'slideOutRight 0.3s ease';
-            setTimeout(() => {
-                if (notificacionElem.parentNode) {
-                    notificacionElem.remove();
-                }
-            }, 300);
+            notificacionElem.remove();
         });
     }
 
-    // Agregar notificación a la lista de pendientes
-    function agregarNotificacionPendiente(notificacion) {
-        notificacionesPendientes.push(notificacion);
-        actualizarBadgeNotificaciones();
-        
-        // Si el popup está abierto, actualizar la lista
-        if (ayudaPopup.style.display === 'block') {
-            cargarNotificaciones();
-        }
-    }
-
-    // Cargar notificaciones del localStorage
-    function cargarNotificacionesDelStorage() {
-        const notificaciones = JSON.parse(localStorage.getItem('notificaciones_mesero') || '[]');
-        notificacionesPendientes = notificaciones.filter(n => !n.leida);
-        actualizarBadgeNotificaciones();
-    }
-
-    // Verificar nuevas notificaciones
+    // Consultar alertas de asistencia activas al servidor
     function verificarNuevasNotificaciones() {
-        const notificaciones = JSON.parse(localStorage.getItem('notificaciones_mesero') || '[]');
-        const nuevasNotificaciones = notificaciones.filter(n => !n.leida);
-        
-        // Encontrar notificaciones nuevas
-        nuevasNotificaciones.forEach(notificacion => {
-            const existe = notificacionesPendientes.some(n => n.timestamp === notificacion.timestamp);
-            if (!existe) {
-                mostrarNotificacionEmergente(notificacion);
-                notificacionesPendientes.push(notificacion);
-            }
-        });
-        
-        actualizarBadgeNotificaciones();
+        fetch(BASE_URL + 'index.php?url=mesero/obtenerAlertasAyuda')
+            .then(res => res.json())
+            .then(data => {
+                if (data.success && data.alertas) {
+                    const nuevas = data.alertas;
+                    
+                    // Buscar si hay alguna alerta nueva que no teníamos registrada en memoria
+                    nuevas.forEach(notif => {
+                        const yaExiste = notificacionesPendientes.some(n => n.id === notif.id);
+                        if (!yaExiste) {
+                            mostrarNotificacionEmergente(notif);
+                        }
+                    });
+                    
+                    notificacionesPendientes = nuevas;
+                    actualizarBadgeNotificaciones();
+                    
+                    if (ayudaPopup && ayudaPopup.style.display === 'block') {
+                        renderListaPopup();
+                    }
+                }
+            })
+            .catch(err => console.error("Error al consultar asistencia de mesas:", err));
     }
 
-    // Cargar notificaciones en el popup
+    // Cargar y pintar alertas en el popup modal
     function cargarNotificaciones() {
-        const notificaciones = JSON.parse(localStorage.getItem('notificaciones_mesero') || '[]');
-        
-        // Filtrar notificaciones de las últimas 24 horas
-        const ahora = new Date();
-        const notificacionesRecientes = notificaciones.filter(notif => {
-            const tiempoNotificacion = new Date(notif.timestamp);
-            const diferenciaHoras = (ahora - tiempoNotificacion) / (1000 * 60 * 60);
-            return diferenciaHoras <= 24; // Solo últimas 24 horas
-        });
-
-        if (notificacionesRecientes.length > 0) {
-            mostrarNotificacionesEnPopup(notificacionesRecientes);
-        } else {
-            mostrarSinNotificaciones();
-        }
+        renderListaPopup();
     }
 
-    // Mostrar notificaciones en el popup
-    function mostrarNotificacionesEnPopup(notificaciones) {
-        const ahora = new Date();
+    function renderListaPopup() {
+        if (notificacionesPendientes.length === 0) {
+            listaMesas.innerHTML = `
+                <div class="mesa-item" style="text-align:center; padding: 20px; color:#aaa; font-style:italic;">
+                    <i class="fas fa-check-circle" style="color:#43A047; font-size:1.5rem; margin-bottom:8px; display:block;"></i>
+                    No hay mesas solicitando ayuda
+                </div>
+            `;
+            return;
+        }
+
         let html = '';
-        
-        notificaciones.forEach(notif => {
-            const tiempo = new Date(notif.timestamp);
-            const diferenciaMinutos = Math.floor((ahora - tiempo) / (1000 * 60));
-            const esNueva = !notif.leida;
-            
+        notificacionesPendientes.forEach(notif => {
             html += `
-                <div class="mesa-item ${esNueva ? 'nueva' : ''}">
-                    <strong>${notif.mensaje}</strong>
-                    <span style="font-size: 12px; opacity: 0.8; display: block; margin-top: 5px;">
-                        Hace ${diferenciaMinutos} minutos
-                        ${esNueva ? ' • <span style="color:#FFD700">NUEVO</span>' : ''}
-                    </span>
+                <div class="mesa-item nueva" style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,0.06); padding: 12px 0;">
+                    <div>
+                        <strong style="color: #fff; font-size:0.95rem;">${notif.mensaje}</strong>
+                        <span style="font-size: 11px; color: #888; display: block; margin-top: 3px;">
+                            <i class="fas fa-clock"></i> ${new Date(notif.fecha_creacion).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+                        </span>
+                    </div>
+                    <button class="btn-atender-ayuda" data-id="${notif.id}" style="background:#43A047; color:white; border:none; padding:6px 12px; border-radius:8px; font-weight:bold; font-size:0.8rem; cursor:pointer; font-family:inherit;">
+                        Atender
+                    </button>
                 </div>
             `;
         });
-        
+
         listaMesas.innerHTML = html;
+
+        // Asignar eventos de click a botones Atender
+        document.querySelectorAll('.btn-atender-ayuda').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const alertaId = this.dataset.id;
+                this.textContent = '...';
+                this.disabled = true;
+
+                const formData = new FormData();
+                formData.append('alerta_id', alertaId);
+
+                fetch(BASE_URL + 'index.php?url=mesero/atenderAlerta', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        // Recargar notificaciones inmediatamente
+                        verificarNuevasNotificaciones();
+                    }
+                })
+                .catch(err => console.error("Error al atender alerta:", err));
+            });
+        });
     }
 
-    // Mostrar mensaje cuando no hay notificaciones
-    function mostrarSinNotificaciones() {
-        listaMesas.innerHTML = '<div class="mesa-item">No hay solicitudes de asistencia</div>';
-    }
-
-    // Marcar notificaciones como leídas
-    function marcarNotificacionesLeidas() {
-        const notificaciones = JSON.parse(localStorage.getItem('notificaciones_mesero') || '[]');
-        const notificacionesActualizadas = notificaciones.map(notif => ({
-            ...notif,
-            leida: true
-        }));
-        
-        localStorage.setItem('notificaciones_mesero', JSON.stringify(notificacionesActualizadas));
-        notificacionesPendientes = [];
-        actualizarBadgeNotificaciones();
-    }
-
-    // Actualizar badge de notificaciones
+    // Actualizar el número rojo de alertas en el botón de ayuda
     function actualizarBadgeNotificaciones() {
         const count = notificacionesPendientes.length;
         let badge = document.querySelector('.notificacion-badge');
         
-        if (!badge && count > 0) {
+        if (!badge && count > 0 && botonAyuda) {
             badge = document.createElement('span');
             badge.className = 'notificacion-badge';
             botonAyuda.appendChild(badge);
@@ -223,95 +233,12 @@ document.addEventListener('DOMContentLoaded', function() {
         if (badge) {
             if (count > 0) {
                 badge.textContent = count > 9 ? '9+' : count;
-                badge.style.display = 'block';
+                badge.style.display = 'flex';
             } else {
                 badge.style.display = 'none';
             }
         }
     }
-
-    // Actualizar cada 30 segundos si el popup está abierto
-    setInterval(() => {
-        if (ayudaPopup.style.display === 'block') {
-            cargarNotificaciones();
-        }
-    }, 30000);
 });
 
-// Animaciones CSS para notificaciones
-const notificacionStyles = document.createElement('style');
-notificacionStyles.textContent = `
-    @keyframes slideInRight {
-        from { transform: translateX(100%); opacity: 0; }
-        to { transform: translateX(0); opacity: 1; }
-    }
-    
-    @keyframes slideOutRight {
-        from { transform: translateX(0); opacity: 1; }
-        to { transform: translateX(100%); opacity: 0; }
-    }
-    
-    .notificacion-badge {
-        position: absolute;
-        top: -5px;
-        right: -5px;
-        background: #FFD700;
-        color: #000;
-        border-radius: 50%;
-        width: 20px;
-        height: 20px;
-        font-size: 12px;
-        font-weight: bold;
-        display: none;
-        align-items: center;
-        justify-content: center;
-    }
-    
-    .notificacion-contenido {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
-    
-    .notificacion-icono {
-        font-size: 20px;
-    }
-    
-    .notificacion-texto {
-        flex: 1;
-    }
-    
-    .notificacion-tiempo {
-        font-size: 12px;
-        opacity: 0.8;
-        display: block;
-        margin-top: 5px;
-    }
-    
-    .cerrar-notificacion {
-        background: none;
-        border: none;
-        color: white;
-        font-size: 18px;
-        cursor: pointer;
-        padding: 0;
-        width: 25px;
-        height: 25px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-    
-    .cerrar-notificacion:hover {
-        background: rgba(255,255,255,0.2);
-    }
-    
-    .mesa-item.nueva {
-        background: rgba(255,215,0,0.1);
-        border-left: 3px solid #FFD700;
-        padding-left: 10px;
-        margin-left: -10px;
-    }
-`;
-document.head.appendChild(notificacionStyles);
+// Styles for notifications are loaded from mesero-ayuda.css

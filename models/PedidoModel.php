@@ -26,15 +26,17 @@ class PedidoModel {
                 $subtotal = $item['precio'] * $item['cantidad'];
                 $total += $subtotal;
 
-                $sqlDetalle = "INSERT INTO pedido_detalles (pedido_id, producto_id, cantidad, precio_unitario, subtotal, estado) 
-                               VALUES (?, ?, ?, ?, ?, 'pendiente')";
+                $notas = !empty($item['notas']) ? $item['notas'] : null;
+                $sqlDetalle = "INSERT INTO pedido_detalles (pedido_id, producto_id, cantidad, precio_unitario, subtotal, notas, estado) 
+                               VALUES (?, ?, ?, ?, ?, ?, 'pendiente')";
                 $stmtDetalle = $this->conn->prepare($sqlDetalle);
                 $stmtDetalle->execute([
                     $pedido_id,
                     $item['id'],
                     $item['cantidad'],
                     $item['precio'],
-                    $subtotal
+                    $subtotal,
+                    $notas
                 ]);
             }
 
@@ -89,7 +91,47 @@ class PedidoModel {
     public function actualizarEstadoDetalle($detalle_id, $nuevoEstado) {
         $sql = "UPDATE pedido_detalles SET estado = ? WHERE id = ?";
         $stmt = $this->conn->prepare($sql);
-        return $stmt->execute([$nuevoEstado, $detalle_id]);
+        $result = $stmt->execute([$nuevoEstado, $detalle_id]);
+        
+        if ($result) {
+            // Obtener el pedido_id asociado a este detalle
+            $sqlPedido = "SELECT pedido_id FROM pedido_detalles WHERE id = ?";
+            $stmtPedido = $this->conn->prepare($sqlPedido);
+            $stmtPedido->execute([$detalle_id]);
+            $pedido_id = $stmtPedido->fetchColumn();
+            
+            if ($pedido_id) {
+                // Verificar si todos los detalles de este pedido están listos/entregados/cancelados
+                // Es decir, contar cuántos detalles quedan en 'pendiente' o 'en_preparacion'
+                $sqlCheck = "SELECT COUNT(*) FROM pedido_detalles 
+                             WHERE pedido_id = ? AND estado IN ('pendiente', 'en_preparacion')";
+                $stmtCheck = $this->conn->prepare($sqlCheck);
+                $stmtCheck->execute([$pedido_id]);
+                $detallesActivos = $stmtCheck->fetchColumn();
+                
+                if ($detallesActivos == 0) {
+                    // Todos los detalles están listos, por lo tanto el pedido está listo
+                    $sqlUpdate = "UPDATE pedidos SET estado = 'listo' WHERE id = ?";
+                    $stmtUpdate = $this->conn->prepare($sqlUpdate);
+                    $stmtUpdate->execute([$pedido_id]);
+                } else {
+                    // Si hay detalles pendientes o en preparación, y el pedido estaba en 'pendiente' o 'listo',
+                    // lo marcamos como 'en_preparacion'
+                    $sqlGetPedido = "SELECT estado FROM pedidos WHERE id = ?";
+                    $stmtGetPedido = $this->conn->prepare($sqlGetPedido);
+                    $stmtGetPedido->execute([$pedido_id]);
+                    $estadoPedido = $stmtGetPedido->fetchColumn();
+                    
+                    if ($estadoPedido !== 'en_preparacion' && $estadoPedido !== 'cancelado' && $estadoPedido !== 'entregado') {
+                        $sqlUpdate = "UPDATE pedidos SET estado = 'en_preparacion' WHERE id = ?";
+                        $stmtUpdate = $this->conn->prepare($sqlUpdate);
+                        $stmtUpdate->execute([$pedido_id]);
+                    }
+                }
+            }
+        }
+        
+        return $result;
     }
 
     /**
@@ -103,10 +145,19 @@ class PedidoModel {
     }
 
     /**
-     * Cerrar un pedido (marcar como entregado y eliminar detalles si se desea)
+     * Cerrar un pedido (marcar como entregado)
      */
     public function cerrarPedido($pedido_id) {
         $sql = "UPDATE pedidos SET estado = 'entregado' WHERE id = ?";
+        $stmt = $this->conn->prepare($sql);
+        return $stmt->execute([$pedido_id]);
+    }
+
+    /**
+     * Confirmar un pedido (marcar como confirmado para cocina al pagarse en caja)
+     */
+    public function confirmarPedido($pedido_id) {
+        $sql = "UPDATE pedidos SET estado = 'confirmado' WHERE id = ?";
         $stmt = $this->conn->prepare($sql);
         return $stmt->execute([$pedido_id]);
     }

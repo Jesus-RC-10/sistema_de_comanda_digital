@@ -3,21 +3,21 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Área de Cocina</title>
+  <title>Ãrea de Cocina</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="stylesheet" href="<?php echo ASSETS_URL; ?>css/estilos.css?v=3">
-  <link rel="stylesheet" href="<?php echo BASE_URL; ?>public/css/cocina.css?v=3">
+  <link rel="stylesheet" href="<?php echo ASSETS_URL; ?>css/estilos.css?v=6">
+  <link rel="stylesheet" href="<?php echo BASE_URL; ?>public/css/cocina.css?v=5">
 </head>
 <body>
   <header>
     <div class="header-top">
       <div class="header-brand">
         <i class="fas fa-utensils"></i>
-        <span>Taquería El Informático</span>
+        <span>TaquerÃ­a El InformÃ¡tico</span>
       </div>
       <div class="header-page-title">
         <i class="fas fa-kitchen-set"></i>
-        <span>Área de Cocina</span>
+        <span>Ãrea de Cocina</span>
         <span class="last-update" id="lastUpdate"></span>
       </div>
     </div>
@@ -51,7 +51,10 @@
             <?php foreach ($pedido['detalles'] as $detalle): ?>
               <li class="detalle-item">
                 <div class="detalle-info">
-                  <span class="detalle-nombre"><?php echo htmlspecialchars($detalle['nombre']); ?></span>
+                  <span class="detalle-nombre" style="font-weight:600;"><?php echo htmlspecialchars($detalle['nombre']); ?></span>
+                  <?php if (!empty($detalle['notas'])): ?>
+                    <div class="detalle-notas" style="color: #FFA000; font-size: 0.85rem; font-weight: bold; margin-top: 3px;"><i class="fas fa-info-circle"></i> <?php echo htmlspecialchars($detalle['notas']); ?></div>
+                  <?php endif; ?>
                   <span class="detalle-cantidad">x<?php echo $detalle['cantidad']; ?></span>
                 </div>
                 <div class="detalle-controls">
@@ -59,7 +62,7 @@
                         data-detalle-id="<?php echo $detalle['id']; ?>"
                         data-current-state="<?php echo $detalle['estado']; ?>"
                         onclick="cambiarEstado(this)">
-                    <?php echo strtoupper($detalle['estado']); ?>
+                    <?php echo strtoupper(str_replace('_', ' ', $detalle['estado'])); ?>
                   </span>
                 </div>
               </li>
@@ -79,3 +82,4 @@
   <script src="<?php echo ASSETS_URL; ?>js/cocina.js"></script>
 </body>
 </html>
+
