@@ -110,18 +110,47 @@ class AdminController {
 
         $this->redirect('mesas');
     }
+    private function validarImagen($file) {
+        $allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
+        $maxSize = 2 * 1024 * 1024; // 2MB
+        
+        if ($file['error'] !== UPLOAD_ERR_OK) return false;
+        if ($file['size'] > $maxSize) return false;
+        
+        if (function_exists('finfo_open')) {
+            $finfo = finfo_open(FILEINFO_MIME_TYPE);
+            $mime = finfo_file($finfo, $file['tmp_name']);
+            finfo_close($finfo);
+            if (!in_array($mime, $allowedTypes)) return false;
+        } else {
+            $imageSize = getimagesize($file['tmp_name']);
+            if ($imageSize === false || !in_array($imageSize['mime'], $allowedTypes)) {
+                return false;
+            }
+        }
+        
+        $extension = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+        if (!in_array($extension, ['jpg', 'jpeg', 'png', 'webp'])) return false;
+        
+        return true;
+    }
+
     private function agregarProducto() {
         // Manejar la imagen si se subió
         $imagen = null;
         if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] === UPLOAD_ERR_OK) {
-            $uploadDir = __DIR__ . '/../public/images/platillos/';
-            if (!is_dir($uploadDir)) {
-                mkdir($uploadDir, 0755, true);
-            }
-            $filename = time() . '_' . basename($_FILES['imagen']['name']);
-            $targetPath = $uploadDir . $filename;
-            if (move_uploaded_file($_FILES['imagen']['tmp_name'], $targetPath)) {
-                $imagen = $filename;
+            if ($this->validarImagen($_FILES['imagen'])) {
+                $uploadDir = __DIR__ . '/../public/images/platillos/';
+                if (!is_dir($uploadDir)) {
+                    mkdir($uploadDir, 0755, true);
+                }
+                $filename = time() . '_' . basename($_FILES['imagen']['name']);
+                $targetPath = $uploadDir . $filename;
+                if (move_uploaded_file($_FILES['imagen']['tmp_name'], $targetPath)) {
+                    $imagen = $filename;
+                }
+            } else {
+                error_log("Subida de imagen rechazada por validación.");
             }
         }
 

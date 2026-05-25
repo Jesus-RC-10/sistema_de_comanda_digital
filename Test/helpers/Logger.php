@@ -27,7 +27,7 @@ class Logger
             'message' => $message,
             'context' => $context,
             'ip' => $_SERVER['REMOTE_ADDR'] ?? 'CLI',
-            'user_id' => $_SESSION['user_id'] ?? null
+            'user_id' => $_SESSION['usuario_id'] ?? null
         ];
 
         $json = json_encode($entry, JSON_UNESCAPED_UNICODE) . PHP_EOL;

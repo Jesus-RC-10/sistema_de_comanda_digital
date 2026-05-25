@@ -28,10 +28,7 @@ class OrderController {
             $pedidoId = $this->orderModel->saveOrder($data['mesa'], $data['items']);
             
             // Obtener el total del pedido desde la base de datos
-            $stmt = $this->orderModel->pdo->prepare("SELECT total FROM pedidos WHERE id = ?");
-            $stmt->execute([$pedidoId]);
-            $pedido = $stmt->fetch(PDO::FETCH_ASSOC);
-            $total = $pedido['total'];
+            $total = $this->orderModel->getOrderTotal($pedidoId);
             
             // Crear venta pendiente
             require_once __DIR__ . '/../models/VentaModel.php';

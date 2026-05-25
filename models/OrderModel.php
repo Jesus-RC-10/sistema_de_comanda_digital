@@ -59,6 +59,26 @@ class OrderModel {
         }
     }
 
+    // Obtener todos los pedidos pendientes con sus detalles
+    public function getPendingOrders() {
+        $stmt = $this->pdo->prepare("SELECT * FROM pedidos WHERE estado = 'pendiente' ORDER BY id DESC");
+        $stmt->execute();
+        $pedidos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        foreach ($pedidos as &$pedido) {
+            $stmtDetalle = $this->pdo->prepare("
+                SELECT pd.*, p.nombre 
+                FROM pedido_detalles pd 
+                JOIN productos p ON pd.producto_id = p.id 
+                WHERE pd.pedido_id = ?
+            ");
+            $stmtDetalle->execute([$pedido['id']]);
+            $pedido['detalles'] = $stmtDetalle->fetchAll(PDO::FETCH_ASSOC);
+        }
+
+        return $pedidos;
+    }
+
     // Obtener total de un pedido por ID
     public function getOrderTotal($pedidoId) {
         $stmt = $this->pdo->prepare("SELECT total FROM pedidos WHERE id = ?");
@@ -69,7 +89,7 @@ class OrderModel {
 
     // Marcar pedido como completado
     public function completeOrder($pedidoId) {
-        $stmt = $this->pdo->prepare("UPDATE pedidos SET estado = 'completado' WHERE id = ?");
+        $stmt = $this->pdo->prepare("UPDATE pedidos SET estado = 'entregado' WHERE id = ?");
         $stmt->execute([$pedidoId]);
         return $stmt->rowCount();
     }

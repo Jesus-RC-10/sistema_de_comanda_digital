@@ -43,7 +43,14 @@ class MenuController {
 
             $pedidoModel = new PedidoModel();
             $ventaModel = new VentaModel();
-            $usuario_id = 2; // temporal, luego se usará login de mesero/cliente
+            
+            // Obtener el mesero asignado a la mesa desde la base de datos
+            $db = Database::getConnection();
+            $stmtMesa = $db->prepare("SELECT mesero_id FROM mesas WHERE id = ?");
+            $stmtMesa->execute([$mesa_id]);
+            $mesaRow = $stmtMesa->fetch(PDO::FETCH_ASSOC);
+            $usuario_id = !empty($mesaRow['mesero_id']) ? intval($mesaRow['mesero_id']) : ($_SESSION['usuario_id'] ?? 2);
+            
             try {
                 $pedido_id = $pedidoModel->crearPedido($mesa_id, $usuario_id, $items);
 

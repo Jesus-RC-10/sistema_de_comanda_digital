@@ -16,7 +16,7 @@ class User {
         $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
         
         if ($usuario) {
-            if (password_verify($password, $usuario['password_hash']) || $password === '123456') {
+            if (password_verify($password, $usuario['password_hash'])) {
                 return $usuario;
             }
         }

@@ -2,6 +2,13 @@
 require_once __DIR__ . '/../models/PedidoModel.php';
 
 class CocinaController {
+    public function __construct() {
+        if (!isset($_SESSION['usuario_id']) || !in_array($_SESSION['usuario_rol'], ['cocina', 'admin'])) {
+            header('Location: ' . BASE_URL . 'index.php?action=login');
+            exit();
+        }
+    }
+
     public function index() {
         $pedidoModel = new PedidoModel();
         // Traemos pedidos con sus detalles

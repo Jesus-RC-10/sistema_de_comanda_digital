@@ -2,6 +2,13 @@
 require_once __DIR__ . '/../models/PedidoModel.php';
 
 class MeseroController {
+    public function __construct() {
+        if (!isset($_SESSION['usuario_id']) || !in_array($_SESSION['usuario_rol'], ['mesero', 'admin'])) {
+            header('Location: ' . BASE_URL . 'index.php?action=login');
+            exit();
+        }
+    }
+
     public function index() {
         $pedidoModel = new PedidoModel();
         $pedidos = $pedidoModel->obtenerPedidosActivosConDetalles();

@@ -2,6 +2,13 @@
 require_once __DIR__ . '/../models/VentaModel.php';
 
 class CajaController {
+    public function __construct() {
+        if (!isset($_SESSION['usuario_id']) || !in_array($_SESSION['usuario_rol'], ['caja', 'admin'])) {
+            header('Location: ' . BASE_URL . 'index.php?action=login');
+            exit();
+        }
+    }
+
     public function index() {
         $ventaModel = new VentaModel();
         $ventasPendientes = $ventaModel->obtenerVentasPendientes();
@@ -32,7 +39,7 @@ class CajaController {
             $venta_id = $_POST['venta_id'];
             $monto_pagado = floatval($_POST['monto_pagado']);
             $metodo_pago = $_POST['metodo_pago'] ?? 'efectivo';
-            $usuario_id = 1; // temporal
+            $usuario_id = $_SESSION['usuario_id'] ?? 1;
 
             $ventaModel = new VentaModel();
 

@@ -266,12 +266,14 @@ INSERT INTO `productos` (`id`, `nombre`, `descripcion`, `precio`, `categoria_id`
 -- Estructura de tabla para la tabla `recetas_producto`
 --
 
-CREATE TABLE `recetas_producto` (
-  `id` int(11) NOT NULL,
-  `producto_id` int(11) NOT NULL,
-  `ingrediente_id` int(11) NOT NULL,
-  `cantidad` decimal(10,3) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+CREATE TABLE recetas_producto (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    producto_id INT NOT NULL,
+    ingrediente_id INT NOT NULL,
+    cantidad DECIMAL(10,3) NOT NULL,
+    FOREIGN KEY (producto_id) REFERENCES productos(id) ON DELETE CASCADE,
+    FOREIGN KEY (ingrediente_id) REFERENCES ingredientes(id) ON DELETE CASCADE
+);
 
 --
 -- Volcado de datos para la tabla `recetas_producto`
@@ -534,3 +536,6 @@ COMMIT;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+
+--agregar imagenes.
+--ALTER TABLE productos ADD COLUMN imagen VARCHAR(255) DEFAULT NULL;
