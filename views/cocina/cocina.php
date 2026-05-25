@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ãrea de Cocina</title>
+  <title>Área de Cocina</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="<?php echo ASSETS_URL; ?>css/estilos.css?v=6">
   <link rel="stylesheet" href="<?php echo BASE_URL; ?>public/css/cocina.css?v=5">
@@ -13,11 +13,11 @@
     <div class="header-top">
       <div class="header-brand">
         <i class="fas fa-utensils"></i>
-        <span>TaquerÃ­a El InformÃ¡tico</span>
+        <span>Taquería El Informático</span>
       </div>
       <div class="header-page-title">
         <i class="fas fa-kitchen-set"></i>
-        <span>Ãrea de Cocina</span>
+        <span>Área de Cocina</span>
         <span class="last-update" id="lastUpdate"></span>
       </div>
     </div>
@@ -75,8 +75,8 @@
 
   <script>
     const BASE_URL = '<?php echo BASE_URL; ?>';
-    const COCINA_URL = BASE_URL + 'cocina/obtenerPedidosActualizados';
-    const ESTADO_URL = BASE_URL + 'cocina/actualizarDetalle';
+    const COCINA_URL = BASE_URL + 'index.php?url=cocina/obtenerPedidosActualizados';
+    const ESTADO_URL = BASE_URL + 'index.php?url=cocina/actualizarDetalle';
   </script>
 
   <script src="<?php echo ASSETS_URL; ?>js/cocina.js"></script>

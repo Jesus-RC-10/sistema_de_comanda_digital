@@ -10,7 +10,7 @@
   <link rel="stylesheet" href="<?php echo BASE_URL; ?>public/css/mesas.css?v=5">
   
   <style>
-    /* Estilos Premium Autocontenidos - TaquerÃ­a Mexicana Modern Dark */
+    /* Estilos Premium Autocontenidos - Taquería Mexicana Modern Dark */
     :root {
       --bg-dark: #0A0907;
       --panel-bg: rgba(22, 19, 16, 0.7);
@@ -406,9 +406,9 @@
     <div class="header-content">
       <div class="brand">
         <i class="fas fa-fire"></i>
-        <span>TaquerÃ­a El InformÃ¡tico</span>
+        <span>Taquería El Informático</span>
       </div>
-      <h1 class="header-title">SelecciÃ³n de Mesa</h1>
+      <h1 class="header-title">Selección de Mesa</h1>
     </div>
   </header>
 
@@ -477,11 +477,11 @@
     <i class="fas fa-user-shield"></i>
   </div>
 
-  <!-- Modal de AsignaciÃ³n de Mesero -->
+  <!-- Modal de Asignación de Mesero -->
   <div id="meseroOverlay" class="modal-mesero-overlay" style="display: none;">
     <div class="modal-mesero-content">
       <h2><i class="fas fa-bell-concierge"></i> Inicializar Mesa</h2>
-      <p id="modalMesaTexto">Selecciona el mesero que atenderÃ¡ la mesa durante este turno.</p>
+      <p id="modalMesaTexto">Selecciona el mesero que atenderá la mesa durante este turno.</p>
       
       <form id="meseroForm" onsubmit="confirmarAsignacion(event)">
         <input type="hidden" id="modalMesaId">
@@ -498,7 +498,7 @@
         </div>
         <div class="modal-mesero-actions">
           <button type="button" class="btn-mesero-cancelar" onclick="cerrarMeseroModal()">Cancelar</button>
-          <button type="submit" class="btn-mesero-confirmar">Asignar e Ir al MenÃº</button>
+          <button type="submit" class="btn-mesero-confirmar">Asignar e Ir al Menú</button>
         </div>
       </form>
     </div>
@@ -509,7 +509,7 @@
     
     function procesarClickMesa(idMesa, numeroMesa, estado, meseroId) {
       if (estado !== 'libre') {
-        showGlobalNotification("Esta mesa estÃ¡ ocupada preparando o consumiendo alimentos.", "error");
+        showGlobalNotification("Esta mesa está ocupada preparando o consumiendo alimentos.", "error");
         return;
       }
       
@@ -517,7 +517,7 @@
       if (!meseroId) {
         abrirModalMesero(idMesa, numeroMesa, null);
       } else {
-        // Si ya estÃ¡ asignada, vamos directo al menÃº de esa mesa
+        // Si ya está asignada, vamos directo al menú de esa mesa
         window.location.href = BASE_URL + "index.php?url=menu&mesa=" + idMesa;
       }
     }
@@ -556,7 +556,7 @@
       .then(data => {
         if (data.success) {
           cerrarMeseroModal();
-          // Redirigir al menÃº ya inicializado
+          // Redirigir al menú ya inicializado
           window.location.href = BASE_URL + "index.php?url=menu&mesa=" + idMesa;
         } else {
           showGlobalNotification("Error al asignar el mesero en el servidor.", "error");
@@ -564,7 +564,7 @@
       })
       .catch(err => {
         console.error("Error:", err);
-        showGlobalNotification("Error de conexiÃ³n con el servidor.", "error");
+        showGlobalNotification("Error de conexión con el servidor.", "error");
       });
     }
 

@@ -579,7 +579,7 @@
     <div class="header-content">
       <div class="brand">
         <i class="fas fa-coins"></i>
-        <span>TaquerÃ­a El InformÃ¡tico</span>
+        <span>Taquería El Informático</span>
       </div>
       <div class="header-title-panel">
         <i class="fas fa-cash-register"></i>
@@ -601,14 +601,14 @@
 
       <div class="caja-search-box">
         <i class="fas fa-search"></i>
-        <input type="text" class="caja-search-input" id="cajaSearchInput" placeholder="Buscar ticket por nÃºmero de mesa o pedido (ej. M01 o #5)..." autocomplete="off">
+        <input type="text" class="caja-search-input" id="cajaSearchInput" placeholder="Buscar ticket por número de mesa o pedido (ej. M01 o #5)..." autocomplete="off">
       </div>
 
       <section style="margin-bottom: 40px;">
         <h2 class="section-title"><i class="fas fa-hourglass-half"></i> Ventas Pendientes de Pago</h2>
         <?php if (!empty($data['ventas_pendientes'])): ?>
           <div class="acciones-generales" style="margin-bottom: 20px; display: flex; justify-content: flex-end;">
-            <form method="POST" action="<?php echo BASE_URL; ?>index.php?url=caja/borrarPendientes" onsubmit="return confirm('Â¿EstÃ¡s seguro de borrar todos los tickets pendientes?');">
+            <form method="POST" action="<?php echo BASE_URL; ?>index.php?url=caja/borrarPendientes" onsubmit="return confirm('¿Estás seguro de borrar todos los tickets pendientes?');">
               <button type="submit" class="btn-checkout-cancel" style="padding: 10px 20px; width: auto; font-size: 0.85rem;"><i class="fas fa-trash-sweep"></i> Limpiar Todo lo Pendiente</button>
             </form>
           </div>
@@ -651,7 +651,7 @@
                         <li><?php echo htmlspecialchars($detalle['nombre']); ?> x<?php echo $detalle['cantidad']; ?></li>
                       <?php endforeach; ?>
                       <?php if (count($venta['detalles']) > 3): ?>
-                        <li style="list-style:none; font-style:italic; margin-top:2px;">+ <?php echo (count($venta['detalles']) - 3); ?> mÃ¡s...</li>
+                        <li style="list-style:none; font-style:italic; margin-top:2px;">+ <?php echo (count($venta['detalles']) - 3); ?> más...</li>
                       <?php endif; ?>
                     </ul>
                   </div>
@@ -695,7 +695,7 @@
         <?php else: ?>
           <div class="no-ventas">
             <i class="fas fa-money-bill-wave"></i>
-            <p>No hay ventas pagadas recientes en esta sesiÃ³n.</p>
+            <p>No hay ventas pagadas recientes en esta sesión.</p>
           </div>
         <?php endif; ?>
       </section>
@@ -703,7 +703,7 @@
 
     <!-- Columna Derecha: Sidebar Checkout de Pago -->
     <div class="main-right-column">
-      <!-- Estado vacÃ­o inicial del panel de cobro -->
+      <!-- Estado vacío inicial del panel de cobro -->
       <div class="pos-checkout-sidebar empty-state" id="checkoutPanelEmpty">
         <i class="fas fa-cash-register"></i>
         <h3>Listo para Cobrar</h3>
@@ -718,7 +718,7 @@
         </div>
 
         <div class="checkout-items-list" id="checkoutItemsList">
-          <!-- DinÃ¡mico -->
+          <!-- Dinámico -->
         </div>
 
         <div class="checkout-summary">
@@ -755,7 +755,7 @@
           <button type="submit" class="btn-checkout-pay">CONFIRMAR PAGO</button>
         </form>
 
-        <form method="POST" action="<?php echo BASE_URL; ?>index.php?url=caja/cancelar" onsubmit="return confirm('Â¿EstÃ¡s seguro de que deseas CANCELAR esta comanda por completo?');">
+        <form method="POST" action="<?php echo BASE_URL; ?>index.php?url=caja/cancelar" onsubmit="return confirm('¿Estás seguro de que deseas CANCELAR esta comanda por completo?');">
           <input type="hidden" name="venta_id" id="cancelFormVentaId">
           <button type="submit" class="btn-checkout-cancel">Cancelar Comanda</button>
         </form>
@@ -764,9 +764,9 @@
   </main>
 
   <footer class="footer-panel">
-    <p>Comanda Digital - TaquerÃ­a El InformÃ¡tico &copy; 2026. Todos los derechos reservados.</p>
+    <p>Comanda Digital - Taquería El Informático &copy; 2026. Todos los derechos reservados.</p>
     <div id="refresh-indicator" style="margin-top: 8px;">
-      ðŸ”„ Sondeo automÃ¡tico de pedidos activos. SincronizaciÃ³n en <span id="countdown">30</span> segundos.
+      🔄 Sondeo automático de pedidos activos. Sincronización en <span id="countdown">30</span> segundos.
     </div>
   </footer>
 
@@ -887,6 +887,12 @@
     const countdownElement = document.getElementById('countdown');
     
     const countdownInterval = setInterval(() => {
+      // Pausar si el panel de cobro está activo
+      if (document.getElementById('checkoutPanelActive').style.display === 'flex') {
+        if (countdownElement) countdownElement.textContent = 'Pausado (Cobrando)';
+        return;
+      }
+      
       countdown--;
       if (countdownElement) countdownElement.textContent = countdown;
       if (countdown <= 0) {

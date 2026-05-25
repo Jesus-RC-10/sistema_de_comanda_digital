@@ -50,8 +50,8 @@ class VentaModel {
             $stmtDetalles->execute([$pedido_id]);
             $detalles = $stmtDetalles->fetchAll(PDO::FETCH_ASSOC);
 
-            require_once __DIR__ . '/../observers/NotificationManager.php';
-            require_once __DIR__ . '/../observers/StockObserver.php';
+            require_once __DIR__ . '/observers/NotificationManager.php';
+            require_once __DIR__ . '/observers/StockObserver.php';
             $notificationManager = new NotificationManager();
             $notificationManager->attach(new StockObserver());
 

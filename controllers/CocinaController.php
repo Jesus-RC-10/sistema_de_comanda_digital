@@ -43,27 +43,24 @@ class CocinaController {
         exit; 
     }
 
-    // Función para filtrar solo tacos y postres (excluye cancelados y pendientes de pago)
     private function filtrarTacosYPostres($pedidos) {
         $pedidosFiltrados = [];
 
         foreach ($pedidos as $pedido) {
-            // Solo cocina ve pedidos pagados (es decir, en estado confirmado o en_preparacion)
             if ($pedido['estado'] === 'pendiente') {
                 continue;
             }
 
             $detallesFiltrados = [];
+            $tienePendientesCocina = false;
 
             foreach ($pedido['detalles'] as $detalle) {
-                // Saltar detalles cancelados
                 if (isset($detalle['estado']) && $detalle['estado'] === 'cancelado') {
                     continue;
                 }
 
                 $nombre = strtolower($detalle['nombre']);
                 
-                // Filtrar solo tacos y postres
                 if (strpos($nombre, 'taco') !== false || 
                     strpos($nombre, 'postre') !== false ||
                     strpos($nombre, 'flan') !== false ||
@@ -71,11 +68,15 @@ class CocinaController {
                     strpos($nombre, 'pastel') !== false) {
                     
                     $detallesFiltrados[] = $detalle;
+                    
+                    if ($detalle['estado'] === 'pendiente' || $detalle['estado'] === 'en_preparacion') {
+                        $tienePendientesCocina = true;
+                    }
                 }
             }
 
-            // Solo incluir el pedido si tiene tacos o postres
-            if (!empty($detallesFiltrados)) {
+            // Solo incluir si tiene tacos/postres Y al menos uno NO está listo
+            if (!empty($detallesFiltrados) && $tienePendientesCocina) {
                 $pedidoFiltrado = $pedido;
                 $pedidoFiltrado['detalles'] = $detallesFiltrados;
                 $pedidosFiltrados[] = $pedidoFiltrado;

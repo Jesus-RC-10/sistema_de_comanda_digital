@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MenÃº - Mesa <?php echo $data['mesa']; ?></title>
+  <title>Menú - Mesa <?php echo $data['mesa']; ?></title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="<?php echo ASSETS_URL; ?>css/estilos.css?v=6">
   <link rel="stylesheet" href="<?php echo ASSETS_URL; ?>css/help-buttons.css?v=1">
@@ -13,7 +13,7 @@
     <div class="header-top">
       <div class="header-brand">
         <i class="fas fa-utensils"></i>
-        <span>TaquerÃ­a El InformÃ¡tico</span>
+        <span>Taquería El Informático</span>
       </div>
       <div class="header-mesa">
         <i class="fas fa-chair"></i>
@@ -22,7 +22,7 @@
     </div>
     <div class="search-container">
       <i class="fas fa-search search-icon"></i>
-      <input type="text" class="search-bar" id="searchInput" placeholder="Buscar en el menÃº..." autocomplete="off">
+      <input type="text" class="search-bar" id="searchInput" placeholder="Buscar en el menú..." autocomplete="off">
     </div>
   </header>
 
@@ -142,14 +142,14 @@
   <div class="modal" id="helpModal">
     <div class="modal-content help-modal">
       <div class="modal-header">
-        <h1>Â¿CÃ³mo usar el menÃº?</h1>
+        <h1>¿Cómo usar el menú?</h1>
         <span class="close-modal" id="closeHelpModal">&times;</span>
       </div>
       <div class="help-content">
         <ul>
-          <li><i class="fas fa-search"></i> Usa el buscador para encontrar productos rÃ¡pido</li>
-          <li><i class="fas fa-folder-open"></i> Filtra por categorÃ­as con las pestaÃ±as</li>
-          <li><i class="fas fa-mouse-pointer"></i> Haz clic en "Agregar" para aÃ±adir items a tu pedido</li>
+          <li><i class="fas fa-search"></i> Usa el buscador para encontrar productos rápido</li>
+          <li><i class="fas fa-folder-open"></i> Filtra por categorías con las pestañas</li>
+          <li><i class="fas fa-mouse-pointer"></i> Haz clic en "Agregar" para añadir items a tu pedido</li>
           <li><i class="fas fa-shopping-cart"></i> Usa el carrito para ver y modificar tu pedido</li>
           <li><i class="fas fa-plus-minus"></i> Puedes ajustar cantidades con los botones + y -</li>
           <li><i class="fas fa-paper-plane"></i> Presiona "FINALIZAR PEDIDO" cuando termines</li>
@@ -161,7 +161,7 @@
     </div>
   </div>
 
-  <!-- Modal de PersonalizaciÃ³n de Platillo (Ingredientes y Notas) -->
+  <!-- Modal de Personalización de Platillo (Ingredientes y Notas) -->
   <div class="modal" id="customiseModal" style="display: none; justify-content: center; align-items: center; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.8); z-index: 1000; backdrop-filter: blur(5px);">
     <div class="modal-content" style="background: #1e1e1e; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 24px; padding: 30px; max-width: 450px; width: 90%; color: white; max-height: 85vh; overflow-y: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
       <div class="modal-header" style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px; margin-bottom: 20px;">
@@ -169,9 +169,9 @@
         <span class="close-modal" id="closeCustomiseModal" style="font-size: 2rem; cursor: pointer; color: #aaa; line-height: 1;">&times;</span>
       </div>
       <div id="customiseBody">
-        <p style="color: #bbb; font-size: 0.95rem; margin-bottom: 20px;">Elige quÃ© ingredientes deseas quitar de tu preparaciÃ³n:</p>
+        <p style="color: #bbb; font-size: 0.95rem; margin-bottom: 20px;">Elige qué ingredientes deseas quitar de tu preparación:</p>
         
-        <!-- Contenedor dinÃ¡mico de ingredientes -->
+        <!-- Contenedor dinámico de ingredientes -->
         <div id="ingredientsListContainer" style="display: flex; flex-direction: column; gap: 15px; margin-bottom: 25px;">
           <!-- Cargando... -->
         </div>
@@ -216,7 +216,7 @@
     </div>
   </div>
 
-  <!-- Modal de confirmaciÃ³n de pedido -->
+  <!-- Modal de confirmación de pedido -->
   <div class="modal" id="orderModal">
     <div class="modal-content">
       <div class="modal-header">
@@ -242,7 +242,7 @@
   </script>
 
   <script>
-    // Tabs de categorÃ­as
+    // Tabs de categorías
     document.querySelectorAll('.category-tab').forEach(tab => {
       tab.addEventListener('click', () => {
         document.querySelectorAll('.category-tab').forEach(t => t.classList.remove('active'));
@@ -260,12 +260,12 @@
       });
     });
 
-    // Normalizar texto (quitar acentos, pasar a minÃºsculas)
+    // Normalizar texto (quitar acentos, pasar a minúsculas)
     function normalizeText(text) {
       return text.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
     }
 
-    // BÃºsqueda en tiempo real
+    // Búsqueda en tiempo real
     const searchInput = document.getElementById('searchInput');
     if (searchInput) {
       searchInput.addEventListener('input', function() {

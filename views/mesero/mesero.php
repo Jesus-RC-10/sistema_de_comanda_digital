@@ -632,7 +632,7 @@
     <div class="header-content">
       <div class="brand">
         <i class="fas fa-utensils"></i>
-        <span>TaquerÃ­a El InformÃ¡tico</span>
+        <span>Taquería El Informático</span>
       </div>
       <div class="header-center">
         <i class="fas fa-bell-concierge"></i>
@@ -688,7 +688,7 @@
         <div class="empty-state">
           <i class="fas fa-check-circle"></i>
           <p>No hay pedidos activos</p>
-          <small>Los nuevos pedidos aparecerÃ¡n automÃ¡ticamente</small>
+          <small>Los nuevos pedidos aparecerán automáticamente</small>
         </div>
       <?php else: ?>
         <div class="pedidos-grid">
@@ -702,7 +702,7 @@
 
               <?php if ($isListo): ?>
                 <div class="ready-banner">
-                  <i class="fas fa-bell"></i> Â¡PEDIDO LISTO PARA ENTREGAR!
+                  <i class="fas fa-bell"></i> ¡PEDIDO LISTO PARA ENTREGAR!
                 </div>
               <?php endif; ?>
 
@@ -778,7 +778,7 @@
   <!-- ============ SCRIPTS ============ -->
   <script>
     const BASE_URL = '<?php echo BASE_URL; ?>';
-    const MESERO_URL = '<?php echo BASE_URL; ?>mesero/';
+    const MESERO_URL = '<?php echo BASE_URL; ?>index.php?url=mesero/';
   </script>
 
   <script src="<?php echo BASE_URL; ?>assets/js/mesero.js?v=5"></script>

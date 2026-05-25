@@ -42,17 +42,13 @@ document.querySelectorAll('.add-to-cart').forEach(btn => {
         fetch(BASE_URL + 'index.php?url=menu/obtenerIngredientesProducto&id=' + id)
             .then(res => res.json())
             .then(data => {
-                if (data.success && data.ingredientes && data.ingredientes.length > 0) {
-                    // Abrir modal de personalización
-                    abrirModalPersonalizacion(data.ingredientes);
-                } else {
-                    // Si no tiene ingredientes de receta (ej. bebidas), agregar directo al carrito
-                    agregarAlCarritoDirecto();
-                }
+                const ingredientes = (data.success && data.ingredientes) ? data.ingredientes : [];
+                // Siempre abrir el modal de personalización, incluso sin ingredientes configurados
+                abrirModalPersonalizacion(ingredientes);
             })
             .catch(err => {
                 console.error("Error al cargar ingredientes:", err);
-                agregarAlCarritoDirecto();
+                abrirModalPersonalizacion([]);
             });
     });
 });
@@ -89,42 +85,49 @@ function abrirModalPersonalizacion(ingredientes) {
     ingredientsListContainer.innerHTML = '';
     customiseNotes.value = '';
 
-    ingredientes.forEach(ing => {
-        const div = document.createElement('div');
-        div.style.cssText = `
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 10px 14px;
-            background: rgba(255,255,255,0.04);
-            border-radius: 12px;
-            border: 1px solid rgba(255,255,255,0.06);
-        `;
-        
-        div.innerHTML = `
-            <span style="font-weight:600; font-size:0.95rem; color:#eee;">${ing.nombre}</span>
-            <label class="switch-premium" style="position: relative; display: inline-block; width: 44px; height: 24px;">
-                <input type="checkbox" class="ingrediente-checkbox" data-nombre="${ing.nombre}" checked style="opacity: 0; width: 0; height: 0;">
-                <span class="slider-premium" style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #555; transition: .3s; border-radius: 24px;"></span>
-            </label>
-        `;
+    if (ingredientes && ingredientes.length > 0) {
+        ingredientes.forEach(ing => {
+            const div = document.createElement('div');
+            div.style.cssText = `
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 10px 14px;
+                background: rgba(255,255,255,0.04);
+                border-radius: 12px;
+                border: 1px solid rgba(255,255,255,0.06);
+            `;
+            
+            div.innerHTML = `
+                <span style="font-weight:600; font-size:0.95rem; color:#eee;">${ing.nombre}</span>
+                <label class="switch-premium" style="position: relative; display: inline-block; width: 44px; height: 24px;">
+                    <input type="checkbox" class="ingrediente-checkbox" data-nombre="${ing.nombre}" checked style="opacity: 0; width: 0; height: 0;">
+                    <span class="slider-premium" style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #555; transition: .3s; border-radius: 24px;"></span>
+                </label>
+            `;
 
-        ingredientsListContainer.appendChild(div);
+            ingredientsListContainer.appendChild(div);
 
-        // Estilos rápidos para el switch
-        const input = div.querySelector('input');
-        const slider = div.querySelector('.slider-premium');
-        
-        input.addEventListener('change', function() {
-            if (this.checked) {
-                slider.style.backgroundColor = '#43A047';
-            } else {
-                slider.style.backgroundColor = '#d32f2f';
-            }
+            // Estilos rápidos para el switch
+            const input = div.querySelector('input');
+            const slider = div.querySelector('.slider-premium');
+            
+            input.addEventListener('change', function() {
+                if (this.checked) {
+                    slider.style.backgroundColor = '#43A047';
+                } else {
+                    slider.style.backgroundColor = '#d32f2f';
+                }
+            });
+            // trigger color por defecto
+            slider.style.backgroundColor = '#43A047';
         });
-        // trigger color por defecto
-        slider.style.backgroundColor = '#43A047';
-    });
+    } else {
+        const p = document.createElement('p');
+        p.style.cssText = 'color: #888; font-style: italic; font-size: 0.9rem; text-align: center; margin: 10px 0;';
+        p.innerHTML = '<i class="fas fa-info-circle"></i> No hay ingredientes configurados para remover en este producto.';
+        ingredientsListContainer.appendChild(p);
+    }
 
     customiseModal.style.display = 'flex';
 }
