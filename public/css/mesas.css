@@ -1,27 +1,226 @@
-.mesas {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  margin: 30px;
-  gap: 20px;
+.mesas-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 24px;
+  padding: 20px 0;
+  width: 100%;
 }
-.mesa {
-  background: #fff;
-  border: 2px solid #8B0000;
-  border-radius: 12px;
-  width: 120px;
-  height: 120px;
+
+.mesa-card {
+  background: var(--card-bg);
+  border-radius: 16px;
+  padding: 24px 16px;
+  text-align: center;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: cardFadeIn 0.5s ease both;
+  border: 2px solid transparent;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.mesa-card.libre {
+  border-color: #e0e0e0;
+}
+
+.mesa-card.libre:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 30px rgba(76, 175, 80, 0.2);
+  border-color: #4CAF50;
+}
+
+.mesa-card.ocupada {
+  opacity: 0.6;
+  cursor: not-allowed;
+  border-color: #ffcdd2;
+  background: #fafafa;
+}
+
+.mesa-card.ocupada:hover {
+  transform: none;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+@keyframes cardFadeIn {
+  from { opacity: 0; transform: translateY(30px) scale(0.95); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.mesa-status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.status-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.status-dot.green {
+  background: #4CAF50;
+  box-shadow: 0 0 6px rgba(76, 175, 80, 0.5);
+}
+
+.status-dot.red {
+  background: #f44336;
+  box-shadow: 0 0 6px rgba(244, 67, 54, 0.5);
+}
+
+.status-text {
+  color: #666;
+}
+
+.mesa-card.libre .status-text {
+  color: #4CAF50;
+}
+
+.mesa-card.ocupada .status-text {
+  color: #f44336;
+}
+
+.mesa-icon {
+  font-size: 2.2rem;
+  color: var(--primary-color);
+  margin: 4px 0;
+  transition: transform 0.3s ease;
+}
+
+.mesa-card.libre:hover .mesa-icon {
+  transform: scale(1.15);
+}
+
+.mesa-number {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: var(--primary-color);
+  letter-spacing: 1px;
+}
+
+.mesa-ubicacion {
+  font-size: 0.8rem;
+  color: #888;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 4px;
+}
+
+.mesa-ubicacion i {
+  font-size: 0.7rem;
+}
+
+.mesa-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255,255,255,0.3);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: #f44336;
+  font-weight: bold;
+  font-size: 1rem;
+  backdrop-filter: blur(1px);
+}
+
+.mesa-overlay i {
+  font-size: 1.5rem;
+}
+
+.no-mesas {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 60px 20px;
+  color: #999;
+}
+
+.no-mesas i {
+  font-size: 3rem;
+  margin-bottom: 16px;
+  color: var(--primary-color);
+}
+
+.help-fab {
+  position: fixed;
+  bottom: 25px;
+  right: 25px;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  color: white;
   display: flex;
   align-items: center;
   justify-content: center;
+  font-size: 1.3rem;
   cursor: pointer;
-  font-weight: bold;
-  font-size: 18px;
-  color: #8B0000;
-  transition: transform 0.2s, background 0.3s;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+  transition: all 0.3s ease;
+  border: 3px solid white;
+  z-index: 100;
 }
-.mesa:hover {
-  transform: scale(1.1);
-  background: #DC143C;
-  color: white;
+
+.help-fab:hover {
+  transform: scale(1.15) rotate(10deg);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.brand i {
+  font-size: 1.5rem;
+}
+
+@media (max-width: 600px) {
+  .mesas-container {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 16px;
+  }
+
+  .mesa-card {
+    padding: 16px 12px;
+  }
+
+  .mesa-number {
+    font-size: 1.4rem;
+  }
+
+  .mesa-icon {
+    font-size: 1.8rem;
+  }
+
+  .header-content {
+    flex-direction: column;
+    text-align: center;
+  }
 }
