@@ -60,6 +60,11 @@ class VentaModel {
                 $cantidad_pedido = intval($detalle['cantidad']);
                 $notas = $detalle['notas'] ?? '';
 
+                // 1. Descontar el stock directo del producto (ej: para controlar inventario de bebidas o porciones preparadas)
+                $sqlStockProd = "UPDATE productos SET stock = GREATEST(0, stock - ?) WHERE id = ?";
+                $stmtStockProd = $this->conn->prepare($sqlStockProd);
+                $stmtStockProd->execute([$cantidad_pedido, $producto_id]);
+
                 // Analizar personalizaciones de ingredientes en las notas
                 // Ejemplos: "Sin cebolla", "Sin Cebolla", "Sin Tomate"
                 $excluidos = [];
