@@ -302,7 +302,7 @@
   </script>
 
   <script src="<?php echo ASSETS_URL; ?>js/carrito.js?v=5"></script>
-  <script src="<?php echo ASSETS_URL; ?>js/help-buttons.js"></script>
+  <script src="<?php echo ASSETS_URL; ?>js/help-buttons.js?v=7"></script>
 </body>
 </html>
 

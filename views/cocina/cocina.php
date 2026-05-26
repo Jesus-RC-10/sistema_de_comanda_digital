@@ -7,6 +7,32 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="<?php echo ASSETS_URL; ?>css/estilos.css?v=6">
   <link rel="stylesheet" href="<?php echo BASE_URL; ?>public/css/cocina.css?v=5">
+  <style>
+    .btn-todo-listo {
+      background: linear-gradient(135deg, #1976D2, #1565C0);
+      color: white;
+      border: 1px solid #0D47A1;
+      padding: 6px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: bold;
+      margin-left: 10px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.2);
+      transition: all 0.2s ease;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .btn-todo-listo:hover {
+      background: linear-gradient(135deg, #2196F3, #1976D2);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 8px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.3);
+    }
+    .btn-todo-listo:active {
+      transform: translateY(1px);
+      box-shadow: 0 2px 3px rgba(0,0,0,0.3);
+    }
+  </style>
 </head>
 <body>
   <header>

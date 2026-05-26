@@ -44,9 +44,13 @@ document.addEventListener('DOMContentLoaded', function() {
     // Agregar efecto de pulso
     assistanceBtn.classList.add('pulsing');
     
-    // Obtener número de mesa del título
-    const mesaMatch = document.querySelector('h1').textContent.match(/Mesa (\d+)/);
-    const mesaId = mesaMatch ? mesaMatch[1] : '1';
+    // Obtener número de mesa del header-mesa
+    const mesaHeader = document.querySelector('.header-mesa span');
+    let mesaId = '1';
+    if (mesaHeader) {
+      const mesaMatch = mesaHeader.textContent.match(/Mesa 0*(\d+)/);
+      if (mesaMatch) mesaId = mesaMatch[1];
+    }
     
     console.log('Solicitando asistencia para mesa:', mesaId);
     

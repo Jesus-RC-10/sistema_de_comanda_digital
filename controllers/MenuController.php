@@ -103,7 +103,7 @@ class MenuController {
 
         $ticket = "🍽️ TAQUERÍA EL INFORMÁTICO\n";
         $ticket .= "═══════════════════════════════\n\n";
-        $ticket .= "📍 Mesa: M" . str_pad($mesa, 2, '0', STR_PAD_LEFT) . "\n\n";
+        $ticket .= "📍 Mesa: " . str_pad($mesa, 2, '0', STR_PAD_LEFT) . "\n\n";
         $ticket .= "📅 Fecha: $fecha\n";
         $ticket .= "🕐 Hora: $hora\n";
         $ticket .= "═══════════════════════════════\n";
@@ -119,7 +119,6 @@ class MenuController {
         $ticket .= "💰 TOTAL: $" . number_format($total, 2) . "\n";
         $ticket .= "═══════════════════════════════\n\n";
         $ticket .= "🙏 ¡Gracias por tu pedido!\n\n";
-        $ticket .= "🍽️ Recoge tu pedido en caja cuando esté listo.\n";
 
         return $ticket;
     }

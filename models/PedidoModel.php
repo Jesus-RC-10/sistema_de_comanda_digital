@@ -22,13 +22,21 @@ class PedidoModel {
             $pedido_id = $this->conn->lastInsertId();
 
             $total = 0;
+            $todosListos = true;
+
             foreach ($items as $item) {
                 $subtotal = $item['precio'] * $item['cantidad'];
                 $total += $subtotal;
 
                 $notas = !empty($item['notas']) ? $item['notas'] : null;
+
+                // Todos los items entran como pendiente.
+                // Las bebidas se marcarán como 'listo' cuando el cajero confirme el pago.
+                $estado = 'pendiente';
+                $todosListos = false;
+
                 $sqlDetalle = "INSERT INTO pedido_detalles (pedido_id, producto_id, cantidad, precio_unitario, subtotal, notas, estado) 
-                               VALUES (?, ?, ?, ?, ?, ?, 'pendiente')";
+                               VALUES (?, ?, ?, ?, ?, ?, ?)";
                 $stmtDetalle = $this->conn->prepare($sqlDetalle);
                 $stmtDetalle->execute([
                     $pedido_id,
@@ -36,12 +44,13 @@ class PedidoModel {
                     $item['cantidad'],
                     $item['precio'],
                     $subtotal,
-                    $notas
+                    $notas,
+                    $estado
                 ]);
             }
 
-            // Actualizar total del pedido
-            $sqlUpdate = "UPDATE pedidos SET total = ? WHERE id = ?";
+            // Actualizar total y mantener el pedido como pendiente hasta que se pague en caja
+            $sqlUpdate = "UPDATE pedidos SET total = ?, estado = 'pendiente' WHERE id = ?";
             $stmtUpdate = $this->conn->prepare($sqlUpdate);
             $stmtUpdate->execute([$total, $pedido_id]);
 
@@ -157,9 +166,42 @@ class PedidoModel {
      * Confirmar un pedido (marcar como confirmado para cocina al pagarse en caja)
      */
     public function confirmarPedido($pedido_id) {
-        $sql = "UPDATE pedidos SET estado = 'confirmado' WHERE id = ?";
-        $stmt = $this->conn->prepare($sql);
-        return $stmt->execute([$pedido_id]);
+        try {
+            $this->conn->beginTransaction();
+            
+            // 1. Marcar pedido como confirmado
+            $sql = "UPDATE pedidos SET estado = 'confirmado' WHERE id = ?";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->execute([$pedido_id]);
+            
+            // 2. Marcar bebidas (categoria_id = 3) como 'listo' automáticamente al pagar
+            $sqlBebidas = "UPDATE pedido_detalles d 
+                           JOIN productos p ON d.producto_id = p.id 
+                           SET d.estado = 'listo' 
+                           WHERE d.pedido_id = ? AND p.categoria_id = 3";
+            $stmtBebidas = $this->conn->prepare($sqlBebidas);
+            $stmtBebidas->execute([$pedido_id]);
+            
+            // 3. Verificar si todos los detalles están listos (ej. si el pedido era solo de bebidas)
+            $sqlCheck = "SELECT COUNT(*) FROM pedido_detalles 
+                         WHERE pedido_id = ? AND estado IN ('pendiente', 'en_preparacion')";
+            $stmtCheck = $this->conn->prepare($sqlCheck);
+            $stmtCheck->execute([$pedido_id]);
+            $detallesActivos = $stmtCheck->fetchColumn();
+            
+            if ($detallesActivos == 0) {
+                // Si todo está listo, pasar el pedido a listo directamente
+                $sqlUpdate = "UPDATE pedidos SET estado = 'listo' WHERE id = ?";
+                $stmtUpdate = $this->conn->prepare($sqlUpdate);
+                $stmtUpdate->execute([$pedido_id]);
+            }
+            
+            $this->conn->commit();
+            return true;
+        } catch (Exception $e) {
+            $this->conn->rollBack();
+            return false;
+        }
     }
 }
 ?>

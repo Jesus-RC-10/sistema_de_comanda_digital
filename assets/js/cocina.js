@@ -54,6 +54,7 @@ function actualizarVistaPedidos(pedidos) {
                         </div>
                         <div class="pedido-meta">
                             <span class="meta-time"><i class="fas fa-clock"></i> <span class="order-time" data-time="${fec}">${fec ? new Date(fec + 'Z').toLocaleTimeString() : '--:--'}</span></span>
+                            <button class="btn-todo-listo" onclick="marcarPedidoListo(${pedido.id}, this)"><i class="fas fa-check-double"></i> Todo Listo</button>
                             <span class="estado-pedido estado-${estado}">${estadoDisplay}</span>
                         </div>
                     </div>
@@ -114,6 +115,31 @@ function cambiarEstado(element) {
             element.textContent = currentState.toUpperCase().replace('_', ' ');
             element.style.pointerEvents = 'auto';
             element.style.opacity = '1';
+        });
+}
+
+function marcarPedidoListo(pedidoId, btnElement) {
+    if (!pedidoId) return;
+
+    btnElement.textContent = '...';
+    btnElement.style.pointerEvents = 'none';
+    btnElement.style.opacity = '0.6';
+
+    const formData = new FormData();
+    formData.append('pedido_id', pedidoId);
+
+    const baseUrl = ESTADO_URL.replace('actualizarDetalle', 'marcarPedidoListo');
+
+    fetch(baseUrl, { method: 'POST', body: formData })
+        .then(r => r.json())
+        .then(data => {
+            if (data.success) actualizarPedidos();
+            else location.reload();
+        })
+        .catch(() => {
+            btnElement.innerHTML = '<i class="fas fa-check-double"></i> Todo Listo';
+            btnElement.style.pointerEvents = 'auto';
+            btnElement.style.opacity = '1';
         });
 }
 

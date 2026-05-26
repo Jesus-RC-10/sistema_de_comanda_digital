@@ -105,4 +105,29 @@ class CocinaController {
             exit; 
         }
     }
+
+    // Marcar todo el pedido como listo desde cocina (AJAX)
+    public function marcarPedidoListo() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $pedido_id = filter_input(INPUT_POST, 'pedido_id', FILTER_VALIDATE_INT);
+            if ($pedido_id) {
+                $db = Database::getConnection();
+                
+                // Actualizar los detalles (tacos, postres, etc.) a listo
+                $sql = "UPDATE pedido_detalles SET estado = 'listo' WHERE pedido_id = ? AND estado != 'cancelado'";
+                $stmt = $db->prepare($sql);
+                $stmt->execute([$pedido_id]);
+                
+                // Actualizar el pedido en sí a listo
+                $sqlP = "UPDATE pedidos SET estado = 'listo' WHERE id = ?";
+                $stmtP = $db->prepare($sqlP);
+                $stmtP->execute([$pedido_id]);
+                
+                echo json_encode(['success' => true]);
+            } else {
+                 echo json_encode(['success' => false, 'error' => 'Datos inválidos.']);
+            }
+            exit; 
+        }
+    }
 }
