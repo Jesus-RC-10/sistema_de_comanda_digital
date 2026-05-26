@@ -1411,7 +1411,7 @@ main {
 
 .ticket-info {
   font-size: 0.85rem;
-  color: var(--text-color);
+  color: #555;
   margin: 6px 0;
   display: flex;
   justify-content: space-between;
@@ -1436,6 +1436,8 @@ main {
   padding: 10px 0;
   border-bottom: 1px dotted #e0e0e0;
   transition: all 0.3s ease;
+  font-size: 0.9rem;
+  color: #333;
 }
 
 .ticket-item:hover {
@@ -1449,7 +1451,7 @@ main {
 .item-name {
   flex: 1;
   font-weight: 600;
-  color: var(--text-color);
+  color: #333;
 }
 
 .item-qty {
@@ -1488,16 +1490,16 @@ main {
 }
 
 .ticket-thanks {
-  font-size: 1.2rem;
-  color: var(--primary-color);
+  font-size: 1rem;
+  color: #333;
   font-weight: bold;
-  margin-bottom: 10px;
+  margin-bottom: 5px;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .ticket-note {
-  font-size: 0.9rem;
-  color: #666;
+  font-size: 0.8rem;
+  color: #777;
   font-style: italic;
   background: rgba(139, 0, 0, 0.05);
   padding: 10px;

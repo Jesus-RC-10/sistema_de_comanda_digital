@@ -3,7 +3,7 @@ require_once __DIR__ . '/../models/PedidoModel.php';
 
 class MeseroController {
     public function __construct() {
-        if (!isset($_SESSION['usuario_id']) || !in_array($_SESSION['usuario_rol'], ['mesero', 'admin'])) {
+        if (!isset($_SESSION['usuario_id']) || !in_array($_SESSION['usuario_rol'], ['mesero', 'admin', 'caja', 'cocina'])) {
             header('Location: ' . BASE_URL . 'index.php?action=login');
             exit();
         }
